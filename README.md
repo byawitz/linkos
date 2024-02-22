@@ -4,12 +4,14 @@
 
 ### Stack:
 
-| What     | Tech       |
-|----------|------------|
-| Backend  | Bun        |
-| Links DB | PostgreSQL |
-| OLAP DB  | ClickHouse |
-| Frontend | Vue        |
+| What          | Tech          |
+|---------------|---------------|
+| Backend       | Bun           |
+| Links DB      | PostgreSQL    |
+| OLAP DB       | ClickHouse    |
+| Message Queue | Kafka + KRaft |
+| Cache         | Redis         |
+| Frontend      | Vue           |
 
 #### Notes:
 
@@ -41,6 +43,7 @@
 | UTM Builder & Forwarder | Easy UTM builder and forward the UTM data                                                                                                                                | ✅             |
 | Parameter passing       | Pass all other parameters                                                                                                                                                | ✅             |
 | API                     | The same API being used by the dashboard but with a Token                                                                                                                | ✅             |
+| Backup                  | Easy automate backup to any S3-compatible storage                                                                                                                        | ✅             |
 | OAuth2 login            | For now Google, Apple & Facebook                                                                                                                                         | ✅             |
 | 2FA                     | Enable 2fa with SMS (Plivo, Twilio) and OTPT                                                                                                                             | ✅             |
 | Easy firewalling        | For easy endpoint firewalling all api would be behind `/v1/api` endpoint<br/>And, all management would be behind `admin` endpoint and it's changeable in the `.env` file | ✅             |
@@ -59,10 +62,14 @@
 
 ### Deploying
 
-| Container  | Description         |
-|------------|---------------------|
-| Backend    | A stateless backend |
-| Postgres   | Clicks DB           |
-| ClickHouse | OLAP DB             |
+| Container  | Description           |
+|------------|-----------------------|
+| Traefik    | Application Proxy     |
+| Postgres   | Clicks DB             |
+| ClickHouse | OLAP DB               |
+| Redis      | Cache DB              |
+| Kafka      | Message Queue         |
+| Linkos     | A stateless backend   |
+| Static     | Compiled Vue frontend |
 
 As the backend is stateless horizontal scaling is very easy.
