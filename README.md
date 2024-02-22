@@ -1,4 +1,4 @@
-<div style="text-align: center;padding:30px 0">
+<div style="text-align: center;padding:30px 0" align="center">
 
 <img src="apps/extension/public/linkos.svg" width="100" />
 
