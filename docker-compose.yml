@@ -7,7 +7,6 @@ x-logging: &x-logging
       max-file: '5'
       max-size: '10m'
 
-
 services:
   traefik:
     image: traefik:2.9
@@ -26,7 +25,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - linkos
-
 
   linkos:
     image: linkos/api
@@ -87,20 +85,7 @@ services:
     environment:
       - ENV
 
-  postgres:
-    container_name: postgres
-    hostname: postgres
-    <<: *x-logging
-    image: postgres:15.2
-    restart: unless-stopped
-    environment:
-      POSTGRES_PASSWORD: ${_POSTGRES_PASSWORD}
-      POSTGRES_USER: ${_POSTGRES_USER}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - postgres:/var/lib/postgresql/data/pgdata
-    networks:
-      - linkos
+
 
   redis:
     image: redis:7.2.4-bookworm
@@ -131,16 +116,14 @@ services:
     volumes:
       - kafka:/bitnami
     environment:
-      # KRaft settings
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      # Listeners
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CFG_NODE_ID
+      - KAFKA_CFG_PROCESS_ROLES
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+      - KAFKA_CFG_LISTENERS
+      - KAFKA_CFG_ADVERTISED_LISTENERS
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME
 
   clickhouse:
     image: clickhouse/clickhouse-server
@@ -154,6 +137,10 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    environment:
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
     volumes:
       - clickhouse:/var/lib/clickhouse
 

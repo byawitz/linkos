@@ -1,17 +1,24 @@
-# Linkos
+<div style="text-align: center;padding:30px 0">
 
-## Fully featured Open-source URL Shortener
+<img src="apps/extension/public/linkos.svg" width="100" />
+
+Fully featured Open-source URL Shortener
+
+</div>
+
+----
 
 ### Stack:
 
-| What          | Tech          |
-|---------------|---------------|
-| Backend       | Bun           |
-| Links DB      | PostgreSQL    |
-| OLAP DB       | ClickHouse    |
-| Message Queue | Kafka + KRaft |
-| Cache         | Redis         |
-| Frontend      | Vue           |
+| What          | Tech                                                                                        |
+|---------------|---------------------------------------------------------------------------------------------|
+| Backend       | [Bun](https://bun.sh), [Hono](https://hono.dev)                                             |
+| Links DB      | [PostgreSQL](https://www.postgresql.org/)                                                   |
+| OLAP DB       | [ClickHouse](https://clickhouse.com/)                                                       |
+| Message Queue | [Kafka](https://kafka.apache.org/) + [KRaft](https://kafka.apache.org/documentation/#kraft) |
+| Cache         | [Redis](https://redis.io/)                                                                  |
+| Frontend      | [Vue](https://vuejs.org/)                                                                   |
+| Extension     | [Vue](https://vuejs.org/) with [WXT](https://wxt.dev/)                                      |
 
 #### Notes:
 
