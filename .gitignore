@@ -72,3 +72,8 @@ out
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+.output
+stats.html
+stats-*.json
+.wxt
+web-ext.config.ts
