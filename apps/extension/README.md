@@ -1,0 +1,1 @@
+# Linkos Web extension
