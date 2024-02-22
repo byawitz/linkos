@@ -1,6 +1,10 @@
 import Log from "../../utils/Log.ts";
 import KafkaService from "../../services/kafka/KafkaService.ts";
 
+/**
+ * App command:
+ * Linkos --install starting point
+ */
 export default class Install {
     public static async init() {
         Log.instructions('Starting Linkos installation process.');

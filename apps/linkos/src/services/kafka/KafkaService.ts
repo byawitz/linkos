@@ -1,5 +1,11 @@
 import {type Consumer, Kafka, type Producer} from "kafkajs";
 
+/**
+ * Kafka Service
+ *
+ * In charge of initializing the kafka engine and
+ * setting static versions of the producer and the consumer.
+ */
 export default class KafkaService {
     static readonly CLIENT_ID = 'linkos-kafka';
     static readonly TOPIC     = 'linkos-analytics';

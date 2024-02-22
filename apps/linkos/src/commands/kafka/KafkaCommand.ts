@@ -2,6 +2,10 @@ import Log from "../../utils/Log.ts";
 import KafkaService from "../../services/kafka/KafkaService.ts";
 import ClickhouseService from "../../services/clickhouse/ClickhouseService.ts";
 
+/**
+ * App command:
+ * Linkos --kafka starting point
+ */
 export default class KafkaCommand {
     private static tries = 1;
 

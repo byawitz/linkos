@@ -1,5 +1,8 @@
 import chalk from "chalk";
 
+/**
+ * Colorful log wrapper using the chalk package.
+ */
 export default class Log {
     public static error(text: string, boldText: string = '') {
         console.log(chalk.red.bold(boldText), chalk.red(text))
@@ -8,6 +11,7 @@ export default class Log {
     public static instructions(text: string, boldText: string = '') {
         console.log(chalk.cyan.bold(boldText), chalk.cyan(text))
     }
+
     public static info(text: string, boldText: string = '') {
         console.log(chalk.white.bold(boldText), chalk.white(text))
     }

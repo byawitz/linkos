@@ -1,10 +1,15 @@
 import Log from "./Log.ts";
 import {Hono} from "hono";
-import API from "../app/api/API.ts";
-import Backup from "../app/backup/Backup.ts";
-import Install from "../app/install/Install.ts";
-import KafkaCommand from "../app/kafka/KafkaCommand.ts";
+import API from "../commands/api/API.ts";
+import Backup from "../commands/backup/Backup.ts";
+import Install from "../commands/install/Install.ts";
+import KafkaCommand from "../commands/kafka/KafkaCommand.ts";
 
+/**
+ * App main entry.
+ *
+ * Running any app command based on the cli-passed argument.
+ */
 export default class CLI {
     /**
      * Load the app
@@ -14,6 +19,7 @@ export default class CLI {
 
         if (Bun.argv.length <= 2) {
             CLI.printUsages();
+
             process.exit(-1);
         }
 
@@ -21,17 +27,21 @@ export default class CLI {
             case '-s':
             case '--serve':
                 return API.init();
+
             case '-k':
             case '--kafka':
                 return KafkaCommand.init();
+
             case '-b':
             case '--backup':
                 Backup.init();
                 return process.exit(0);
+
             case '-i':
             case '--install':
                 await Install.init();
                 return process.exit(0);
+
             default:
                 CLI.printUsages();
         }
