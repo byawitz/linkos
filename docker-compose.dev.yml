@@ -48,6 +48,7 @@ services:
       - CLICKHOUSE_DB
       - CLICKHOUSE_USER
       - CLICKHOUSE_PASSWORD
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT
     volumes:
       - clickhouse:/var/lib/clickhouse
 
@@ -72,7 +73,30 @@ services:
     entrypoint: bun
     command: --watch "/app/src/index.ts" --serve
     environment:
-      - ENV
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - KAFKA_CFG_NODE_ID
+      - KAFKA_CFG_PROCESS_ROLES
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+      - KAFKA_CFG_LISTENERS
+      - KAFKA_CFG_ADVERTISED_LISTENERS
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
   postgres:
     image: postgres:15.2

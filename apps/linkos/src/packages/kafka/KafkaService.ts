@@ -56,16 +56,7 @@ export default class KafkaService {
         return this.consumer;
     }
 
-    public static async createTopic() {
-        if (this.kafka === undefined) return false;
-        const admin = this.kafka.admin();
-
-        try {
-            await admin.createTopics({topics: [{topic: this.TOPIC}]});
-        } catch (e) {
-            return false;
-        }
-
-        return true;
+    public static getKafka() {
+        return this.kafka;
     }
 }

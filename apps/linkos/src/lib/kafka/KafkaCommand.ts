@@ -1,6 +1,6 @@
 import Log from "../../utils/Log.ts";
-import KafkaService from "../../services/kafka/KafkaService.ts";
-import ClickhouseService from "../../services/clickhouse/ClickhouseService.ts";
+import KafkaService from "../../packages/kafka/KafkaService.ts";
+import RedisService from "../../packages/redis/RedisService.ts";
 
 /**
  * App command:
@@ -24,7 +24,7 @@ export default class KafkaCommand {
                 // Parse the message through the analytics model deserializer.
                 for (let message of batch.messages) {
                     if (!isRunning() || isStale()) break
-                    await ClickhouseService.addLinkAnalyticsData(/*message*/);
+                    await RedisService.addLinkAnalyticsData(/*message*/);
                     resolveOffset(message.offset)
                     await heartbeat()
                 }

@@ -1,24 +1,19 @@
-import Log from "./Log.ts";
-import {Hono} from "hono";
-import API from "../commands/api/API.ts";
-import Backup from "../commands/backup/Backup.ts";
-import Install from "../commands/install/Install.ts";
-import KafkaCommand from "../commands/kafka/KafkaCommand.ts";
+import Log from "./utils/Log.ts";
+import API from "./lib/api/API.ts";
+import Backup from "./lib/backup/Backup.ts";
+import Install from "./lib/install/Install.ts";
+import KafkaCommand from "./lib/kafka/KafkaCommand.ts";
 
 /**
  * App main entry.
  *
  * Running any app command based on the cli-passed argument.
  */
-export default class CLI {
-    /**
-     * Load the app
-     */
+export default class App {
     public static async main() {
-        this.printLinkosLogo();
 
         if (Bun.argv.length <= 2) {
-            CLI.printUsages();
+            App.printUsages();
 
             process.exit(-1);
         }
@@ -43,11 +38,11 @@ export default class CLI {
                 return process.exit(0);
 
             default:
-                CLI.printUsages();
+                App.printUsages();
         }
     }
 
-    private static printLinkosLogo() {
+    public static printLinkosLogo() {
         Log.instructions(`
 ██╗     ██╗███╗   ██╗██╗  ██╗ ██████╗ ███████╗
 ██║     ██║████╗  ██║██║ ██╔╝██╔═══██╗██╔════╝

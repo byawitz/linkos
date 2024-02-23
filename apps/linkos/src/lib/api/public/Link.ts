@@ -13,6 +13,11 @@ export default class Link {
 
     private static getLink(c: Context) {
         const {link} = c.req.param();
+
+        // TODO: send Kafka events
+        // - analytics
+        // - for webhooks execution
+
         return c.json({a: link});
     }
 

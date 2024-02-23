@@ -1,4 +1,4 @@
-/************************************************
+/*************************************************
  ██╗     ██╗███╗   ██╗██╗  ██╗ ██████╗ ███████╗
  ██║     ██║████╗  ██║██║ ██╔╝██╔═══██╗██╔════╝
  ██║     ██║██╔██╗ ██║█████╔╝ ██║   ██║███████╗
@@ -6,15 +6,20 @@
  ███████╗██║██║ ╚████║██║  ██╗╚██████╔╝███████║
  ╚══════╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
  ----------------------------------------------
- * *********************************************/
+ ************************************************/
 
-import CLI from "./utils/CLI.ts";
-import KafkaService from "./services/kafka/KafkaService.ts";
-import ClickhouseService from "./services/clickhouse/ClickhouseService.ts";
+import App from "./App.ts";
+import KafkaService from "./packages/kafka/KafkaService.ts";
+import RedisService from "./packages/redis/RedisService.ts";
+import PostgresService from "./packages/postgres/PostgresService.ts";
+import ClickhouseService from "./packages/clickhouse/ClickhouseService.ts";
 
+App.printLinkosLogo();
 
 // Modules init.
 KafkaService.init();
 ClickhouseService.init();
+await PostgresService.init();
+await RedisService.init();
 
-export default await CLI.main();
+export default await App.main();
