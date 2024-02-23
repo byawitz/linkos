@@ -1,1 +1,3 @@
-# Linkos Web extension
+<img src="public/linkos.svg" width="100" />
+
+### Linkos Web extension
