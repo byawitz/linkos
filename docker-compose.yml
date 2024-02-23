@@ -46,7 +46,23 @@ services:
       - traefik.http.routers.linkos_api_http.entrypoints=linkos_web
       - traefik.http.routers.linkos_api_http.service=linkos
     environment:
-      - ENV
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
   linkos-kafka:
     image: linkos/api
@@ -60,8 +76,26 @@ services:
     entrypoint: [ "bun", "index.ts","--kafka" ]
     networks:
       - linkos
+    depends_on:
+      - kafka
     environment:
-      - ENV
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
   dashboard:
     image: linkos/dashboard
