@@ -3,9 +3,10 @@ import KafkaService from "../../packages/kafka/KafkaService.ts";
 import PostgresService from "../../packages/postgres/PostgresService.ts";
 import {type QueryResult} from "pg";
 import PostgresTables from "./PostgresTables.ts";
-import RedisService from "../../packages/redis/RedisService.ts";
 import ClickHouseTables from "./ClickHouseTables.ts";
 import ClickhouseService from "../../packages/clickhouse/ClickhouseService.ts";
+import inquirer from 'inquirer';
+import chalk from "chalk";
 
 /**
  * App command:
@@ -13,11 +14,15 @@ import ClickhouseService from "../../packages/clickhouse/ClickhouseService.ts";
  */
 export default class Install {
     public static async init() {
-        Log.instructions('Starting Linkos installation process.','\n⚡️ ');
+        Log.instructions('Starting Linkos installation process.', '\n⚡️ ');
 
         await this.setPostgres();
         await this.setClickHouse();
         await this.setKafka();
+
+        const answers = await this.askQuestions();
+
+        await this.createOwnerUser(answers);
     }
 
     private static async setPostgres() {
@@ -97,5 +102,44 @@ export default class Install {
         }
     }
 
+    private static async askQuestions() {
+        return inquirer.prompt([
+            {
+                type    : "input",
+                name    : "email",
+                message : chalk.cyan('Enter admin account email:'),
+                validate: (email: string) => {
+                    if (!/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email)) {
+                        console.log('\n');
+                        Log.error('This is not a valid email\n');
 
+                        return false;
+                    }
+
+                    return true;
+                }
+            },
+            {
+                type    : "input",
+                name    : "password",
+                message : chalk.cyan('Enter admin password:'),
+                validate: (password: string) => {
+                    if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/.test(password)) {
+                        console.log('\n');
+                        Log.error('Password need to have:\n - Minimum 8 characters in length  \n - One small letter \n - One big letter \n - and one number  \n');
+
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        ]);
+    }
+
+    private static async createOwnerUser(answers: any) {
+        // TODO
+        // Encrypt password using env SSL KEY
+
+    }
 }

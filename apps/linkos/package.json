@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@clickhouse/client-web": "^0.2.10",
+    "@types/inquirer": "^9.0.7",
     "chalk": "^5.3.0",
     "clickhouse": "^2.6.0",
     "hono": "^4.0.5",
+    "inquirer": "^9.2.15",
     "kafkajs": "^2.2.4",
     "pg": "^8.11.3",
     "redis": "^4.6.13"
