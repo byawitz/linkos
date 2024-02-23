@@ -66,6 +66,7 @@ Fully featured Open-source URL Shortener
 | Country  | Country origin                                                                                                         |
 | Device   | Device type, and brand                                                                                                 |
 | Referrer | URL referrer                                                                                                           |
+| Cronjob  | [Croner](https://github.com/hexagon/croner)                                                                            |
 
 ### Deploying
 
@@ -78,5 +79,7 @@ Fully featured Open-source URL Shortener
 | Kafka      | Message Queue         |
 | Linkos     | A stateless backend   |
 | Static     | Compiled Vue frontend |
+| Consumer   | Kafka consumer worker |
+| Scheduler  | Cron -> Kafka worker  |
 
 As the backend is stateless horizontal scaling is very easy.
