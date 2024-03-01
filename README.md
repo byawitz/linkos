@@ -1,14 +1,26 @@
 <div style="text-align: center;padding:30px 0" align="center">
 
-<img src="apps/extension/public/linkos.svg" width="100" />
+<img src="assets/linkos-full.png" width="100" />
 
 Fully featured Open-source URL Shortener
 
 </div>
 
-----
 
-### Stack:
+> [!NOTE]  
+> This project is still in development    
+> We would love you to tag along,   
+> Click [here](https://github.com/byawitz/linkos/wiki/Development-phases) to see the development planned process.
+>
+> | 🏗️ Current | 👉 Next |
+> | --- |---------|
+> | Pre-alpha | Alpha   |
+
+## Architecture
+
+<img src="assets/linkos.svg" />
+
+## Stack:
 
 | What          | Tech                                                                                        |
 |---------------|---------------------------------------------------------------------------------------------|
@@ -24,7 +36,7 @@ Fully featured Open-source URL Shortener
 
 - _For SSL use either Nginx & certbot, or any domain-level SSL as Cloudflare._
 
-### Features:
+## Features:
 
 | Feature                 | Description                                                                                                                                                              | Quota / Notes |
 |-------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
@@ -68,7 +80,7 @@ Fully featured Open-source URL Shortener
 | Referrer | URL referrer                                                                                                           |
 | Cronjob  | [Croner](https://github.com/hexagon/croner)                                                                            |
 
-### Deploying
+## Deploying
 
 | Container  | Description           |
 |------------|-----------------------|
