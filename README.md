@@ -29,8 +29,9 @@ Fully featured Open-source URL Shortener
 | OLAP DB       | [ClickHouse](https://clickhouse.com/)                                                       |
 | Message Queue | [Kafka](https://kafka.apache.org/) + [KRaft](https://kafka.apache.org/documentation/#kraft) |
 | Cache         | [Redis](https://redis.io/)                                                                  |
-| Frontend      | [Vue](https://vuejs.org/)                                                                   |
+| Frontend      | [Vue](https://vuejs.org/) with [Tabler](https://tabler.io) theme                            |
 | Extension     | [Vue](https://vuejs.org/) with [WXT](https://wxt.dev/)                                      |
+| Cronjob       | [Croner](https://github.com/hexagon/croner)                                                 |
 
 #### Notes:
 
@@ -78,7 +79,6 @@ Fully featured Open-source URL Shortener
 | Country  | Country origin                                                                                                         |
 | Device   | Device type, and brand                                                                                                 |
 | Referrer | URL referrer                                                                                                           |
-| Cronjob  | [Croner](https://github.com/hexagon/croner)                                                                            |
 
 ## Deploying
 
