@@ -1,0 +1,3 @@
+#!/bin/sh
+
+bun "/usr/server/app/src/index.ts" --webhooks
