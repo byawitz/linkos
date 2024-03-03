@@ -1,10 +1,7 @@
 <template>
-  <div class="text-center" >
+  <div class="text-center">
     <slot></slot>
   </div>
 </template>
 
-<script setup lang="ts">
-defineProps<{
-}>()
-</script>
+<script setup lang="ts"></script>

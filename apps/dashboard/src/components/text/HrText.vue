@@ -1,10 +1,7 @@
 <template>
-  <div class="hr-text" >
+  <div class="hr-text">
     <slot></slot>
   </div>
 </template>
 
-<script setup lang="ts">
-defineProps<{
-}>()
-</script>
+<script setup lang="ts"></script>

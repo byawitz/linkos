@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
+import type { PropType } from 'vue';
 
 declare type BadgeType =
   | 'blue'
@@ -29,11 +29,11 @@ declare type BadgeType =
   | 'bg-lime-lt'
   | 'bg-green-lt'
   | 'bg-teal-lt'
-  | 'bg-cyan-lt'
+  | 'bg-cyan-lt';
 
 defineProps({
-  bType: { type: String as PropType<BadgeType> }
-})
+  bType: { type: String as PropType<BadgeType>, default: 'bg-azure-lt' }
+});
 </script>
 
 <style scoped></style>
