@@ -1,6 +1,7 @@
 import PostgresProvider from "../../providers/PostgresProvider.ts";
 import Log from "../../utils/Log.ts";
 import crypto from "crypto";
+import type User from "./User.ts";
 
 export default class Token {
     public id: string            = '';
@@ -45,5 +46,26 @@ export default class Token {
 
         return (decrypted + decipher.final('utf8'));
 
+    }
+
+    public static async getUser(encrypted: string): Promise<User | undefined> {
+        try {
+            const pg = PostgresProvider.getClient();
+
+            const text   = `SELECT users.*
+                            FROM users
+                                     LEFT JOIN tokens ON tokens.user_id = users.id
+                            WHERE tokens.token = $1;`
+            const values = [encrypted]
+
+            const res = await pg?.query<any>(text, values);
+            if (res) {
+                return res.rows[0];
+            }
+        } catch (e: any) {
+            Log.error(e, 'ERROR');
+        }
+
+        return undefined;
     }
 }

@@ -141,7 +141,7 @@ export default class PostgresTables {
             user_id         BIGINT,
 
             title           VARCHAR(255) NOT NULL,
-            token           TEXT         NOT NULL,
+            token           TEXT  UNIQUE NOT NULL,
             expiration_date TIMESTAMP    NOT NULL,
 
             created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
