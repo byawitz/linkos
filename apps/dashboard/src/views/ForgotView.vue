@@ -7,7 +7,7 @@
 
       <Card card-size="card-md">
         <CardBody>
-          <h2 class="h2 text-center mb-4">Login to your account</h2>
+          <h2 class="h2 text-center mb-4">Reset your password</h2>
 
           <form autocomplete="off">
             <div class="mb-3">
@@ -15,56 +15,16 @@
               <input type="email" v-model="state.email" class="form-control" placeholder="your@email.com" autocomplete="off">
             </div>
 
-            <div class="mb-2">
-              <FormLabel label="Password" :with-description="true">
-                <RouterLink to="/forgot">I forgot password</RouterLink>
-              </FormLabel>
-
-              <InputGroup :is-flat="true">
-                <input :type="state.showPassword ? 'text': 'password'" v-model="state.password" class="form-control" placeholder="Your password" autocomplete="off">
-
-                <InputGroupText class="is-pointer">
-                  <IconEye v-if="!state.showPassword" @click="state.showPassword = !state.showPassword" class="icon"/>
-                  <IconEyeOff v-if="state.showPassword" @click="state.showPassword = !state.showPassword" class="icon"/>
-                </InputGroupText>
-              </InputGroup>
-            </div>
-
-            <div class="mb-2">
-              <FormLabel class="form-check">
-                <input type="checkbox" class="form-check-input" v-model="state.rememberMe">
-
-                <span class="form-check-label">Remember me on this device</span>
-              </FormLabel>
-            </div>
-
             <div class="form-footer">
-              <Button type="submit" b-type="btn-primary">Sign in</Button>
+              <Button type="submit" b-type="btn-primary">Reset your password</Button>
             </div>
           </form>
-
-        </CardBody>
-
-        <HrText>or</HrText>
-
-        <CardBody>
-          <div class="row">
-            <div class="col">
-              <Button :is-link="true" href="#">
-                <IconBrandGithub class="icon"/>
-                Login with Github
-              </Button>
-            </div>
-
-            <div class="col">
-              <Button :is-link="true" href="#">
-                <IconBrandTwitter class="icon text-twitter"/>
-                Login with Twitter
-              </Button>
-            </div>
-          </div>
         </CardBody>
       </Card>
+
+      <div class="text-center text-secondary mt-3">
+        Forget it, <RouterLink to="/login">send me back</RouterLink> to the sign in screen.
+      </div>
     </Container>
   </Page>
 </template>

@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linkos Dashboard</title>
+    <style>
+        #page-loader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+    </style>
 </head>
 <body>
 <div id="page-loader">
@@ -25,17 +36,5 @@
 
 <div id="app"></div>
 <script type="module" src="/src/main.ts"></script>
-
-<style>
-    #page-loader {
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        background: #f6f6f6;
-    }
-
-</style>
 </body>
 </html>
