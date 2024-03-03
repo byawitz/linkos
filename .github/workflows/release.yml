@@ -33,7 +33,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./docker/backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           build-args: |
             VERSION=${{ steps.meta.outputs.version }}
