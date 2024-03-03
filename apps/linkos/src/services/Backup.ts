@@ -1,4 +1,4 @@
-import Log from "../../utils/Log.ts";
+import Log from "../utils/Log.ts";
 
 /**
  * App command:

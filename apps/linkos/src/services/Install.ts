@@ -1,17 +1,18 @@
-import Log from "../../utils/Log.ts";
-import KafkaService from "../../packages/kafka/KafkaService.ts";
-import PostgresService from "../../packages/postgres/PostgresService.ts";
+import Log from "../utils/Log.ts";
+import KafkaProvider from "../providers/KafkaProvider.ts";
+import PostgresProvider from "../providers/PostgresProvider.ts";
 import {type QueryResult} from "pg";
-import PostgresTables from "./PostgresTables.ts";
-import ClickHouseTables from "./ClickHouseTables.ts";
-import ClickhouseService from "../../packages/clickhouse/ClickhouseService.ts";
+import PostgresTables from "../install/PostgresTables.ts";
+import ClickHouseTables from "../install/ClickHouseTables.ts";
+import ClickhouseProvider from "../providers/ClickhouseProvider.ts";
 import inquirer from 'inquirer';
 import chalk from "chalk";
+import Analytics from "./Analytics.ts";
+import WebHooks from "./WebHooks.ts";
+import User from "../models/db/User.ts";
+import Token from "../models/db/Token.ts";
 
-/**
- * App command:
- * Linkos --install starting point
- */
+
 export default class Install {
     public static async init() {
         Log.instructions('Starting Linkos installation process.', '\n⚡️ ');
@@ -22,11 +23,13 @@ export default class Install {
 
         const answers = await this.askQuestions();
 
-        await this.createOwnerUser(answers);
+        const user = await this.createOwnerUser(answers);
+        await this.generateToken(user);
+
     }
 
     private static async setPostgres() {
-        const pg = PostgresService.getClient();
+        const pg = PostgresProvider.getClient();
 
         if (pg === null) return;
         Log.info('\n- Creating Postgres tables');
@@ -54,7 +57,7 @@ export default class Install {
     }
 
     private static async setClickHouse() {
-        const ch = ClickhouseService.getClient();
+        const ch = ClickhouseProvider.getClient();
         Log.info('\n- Creating ClickHouse tables');
 
         try {
@@ -74,7 +77,7 @@ export default class Install {
     }
 
     private static async setKafka(): Promise<void> {
-        const kafka = KafkaService.getKafka();
+        const kafka = KafkaProvider.getKafka();
 
         if (kafka === undefined) {
             Log.error('Error running Kafka installation commands.')
@@ -82,12 +85,17 @@ export default class Install {
         }
         Log.info('\n- Creating Kafka topic');
 
-        const admin = kafka.admin();
+        const admin        = kafka.admin();
+        const linkosTopics = [Analytics.TOPIC, WebHooks.TOPIC];
 
         try {
+
             const topics = await admin.listTopics()
-            if (!topics.includes(KafkaService.TOPIC)) {
-                await admin.createTopics({topics: [{topic: KafkaService.TOPIC}]});
+
+            for (const topic of linkosTopics) {
+                if (!topics.includes(topic)) {
+                    await admin.createTopics({topics: [{topic}]});
+                }
             }
 
             Log.good('Kafka topic successfully created');
@@ -107,9 +115,9 @@ export default class Install {
             {
                 type    : "input",
                 name    : "email",
-                message : chalk.cyan('Enter admin account email:'),
+                message : chalk.cyan('Enter appwrite user email for the admin account:'),
                 validate: (email: string) => {
-                    if (!/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email)) {
+                    if (!/^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>().,;\s@"]+\.?)+([^<>().,;:\s@"]{2,}|[\d.]+))$/.test(email)) {
                         console.log('\n');
                         Log.error('This is not a valid email\n');
 
@@ -119,27 +127,33 @@ export default class Install {
                     return true;
                 }
             },
-            {
-                type    : "input",
-                name    : "password",
-                message : chalk.cyan('Enter admin password:'),
-                validate: (password: string) => {
-                    if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/.test(password)) {
-                        console.log('\n');
-                        Log.error('Password need to have:\n - Minimum 8 characters in length  \n - One small letter \n - One big letter \n - and one number  \n');
-
-                        return false;
-                    }
-
-                    return true;
-                }
-            }
         ]);
     }
 
     private static async createOwnerUser(answers: any) {
-        // TODO
-        // Encrypt password using env SSL KEY
+        const user = await User.create(answers.email, 'owner')
 
+        if (user) {
+            Log.good('Owner user created')
+            return user;
+        }
+
+        Log.error('Creating owner user', 'Error')
+        process.exit(-1);
+    }
+
+    private static async generateToken(user: User) {
+        const expiration_date = new Date()
+        expiration_date.setTime((new Date()).getTime() + (365 * 24 * 60 * 60 * 1000));
+
+        // Todo: generate strong token using nanoid
+        const token = Token.encrypt('token', process.env.APP_SSL_KEY ?? '');
+
+        if (await Token.create(user.id, 'Owner Token', token, expiration_date)) {
+            Log.good('Owner token created')
+            return;
+        }
+
+        Log.error('Creating owner token', 'Error')
     }
 }

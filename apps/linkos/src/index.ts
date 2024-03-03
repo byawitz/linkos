@@ -1,25 +1,15 @@
-/*************************************************
- ██╗     ██╗███╗   ██╗██╗  ██╗ ██████╗ ███████╗
- ██║     ██║████╗  ██║██║ ██╔╝██╔═══██╗██╔════╝
- ██║     ██║██╔██╗ ██║█████╔╝ ██║   ██║███████╗
- ██║     ██║██║╚██╗██║██╔═██╗ ██║   ██║╚════██║
- ███████╗██║██║ ╚████║██║  ██╗╚██████╔╝███████║
- ╚══════╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
- ----------------------------------------------
- ************************************************/
-
 import App from "./App.ts";
-import KafkaService from "./packages/kafka/KafkaService.ts";
-import RedisService from "./packages/redis/RedisService.ts";
-import PostgresService from "./packages/postgres/PostgresService.ts";
-import ClickhouseService from "./packages/clickhouse/ClickhouseService.ts";
+import KafkaProvider from "./providers/KafkaProvider.ts";
+import RedisProvider from "./providers/RedisProvider.ts";
+import PostgresProvider from "./providers/PostgresProvider.ts";
+import ClickhouseProvider from "./providers/ClickhouseProvider.ts";
 
 App.printLinkosLogo();
 
 // Modules init.
-KafkaService.init();
-ClickhouseService.init();
-await PostgresService.init();
-await RedisService.init();
+KafkaProvider.init();
+await ClickhouseProvider.init();
+await PostgresProvider.init();
+await RedisProvider.init();
 
 export default await App.main();

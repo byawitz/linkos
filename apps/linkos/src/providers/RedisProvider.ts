@@ -1,10 +1,10 @@
 import {createClient, type RedisClientType, type RedisDefaultModules, type RedisFunctions, type RedisModules, type RedisScripts} from 'redis';
-import Log from "../../utils/Log.ts";
+import Log from "../utils/Log.ts";
 
 /**
  * Redis Service
  */
-export default class RedisService {
+export default class RedisProvider {
     private static client: RedisClientType<RedisDefaultModules & RedisModules, RedisFunctions, RedisScripts>;
 
     public static async init() {

@@ -1,6 +1,6 @@
 import Token from "../Models/Token.ts";
 import type TokenAdapter from "./TokenAdapter.ts";
-import Log from "../../../utils/Log.ts";
+import Log from "../../../../utils/Log.ts";
 
 /**
  * Manage your token locally.

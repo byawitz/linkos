@@ -1,5 +1,5 @@
 import {createClient} from "@clickhouse/client-web";
-import Log from "../../utils/Log.ts";
+import Log from "../utils/Log.ts";
 import type {WebClickHouseClient} from "@clickhouse/client-web/dist/client";
 
 /**
@@ -7,7 +7,7 @@ import type {WebClickHouseClient} from "@clickhouse/client-web/dist/client";
  *
  * Using the web client as the node version won't work with Bun.
  */
-export default class ClickhouseService {
+export default class ClickhouseProvider {
     private static client: WebClickHouseClient;
 
     public static async init() {

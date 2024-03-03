@@ -1,7 +1,7 @@
 import {Client} from 'pg';
-import Log from "../../utils/Log.ts";
+import Log from "../utils/Log.ts";
 
-export default class PostgresService {
+export default class PostgresProvider {
     private static client?: Client;
 
     public static async init() {
