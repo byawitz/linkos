@@ -1,5 +1,4 @@
 import type {Context, Next} from "hono";
-import {HTTPException} from 'hono/http-exception'
 import Token from "../../models/db/Token.ts";
 import API from "../../services/API.ts";
 

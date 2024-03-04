@@ -13,7 +13,8 @@ export default class Scheduler {
         }
 
         Cron(cron, () => {
-            //TODO: Backup
+            // TODO: Backup
+            // TODO: Monitor monitored links.
             Log.good(`Cron successfully finished at ${new Date().toISOString()}`);
         });
     }

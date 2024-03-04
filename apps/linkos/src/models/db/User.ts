@@ -2,6 +2,7 @@ import PostgresProvider from "../../providers/PostgresProvider.ts";
 import Log from "../../utils/Log.ts";
 
 declare type UserLevel = 'owner' | 'admin' | 'editor' | 'writer' | 'reader';
+export type {UserLevel};
 
 export default class User {
     public id: string       = '';
