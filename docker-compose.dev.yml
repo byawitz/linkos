@@ -153,6 +153,8 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - NANOID_LETTERS
+      - NANOID_LENGTH
 
   linkos-links:
     image: linkos/linkos
