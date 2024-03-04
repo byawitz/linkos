@@ -35,18 +35,15 @@
           <template #dropdown>
             <DropdownColumns>
               <DropdownColumn>
-                <DropdownItem to="/">
+                <DropdownItem to="/links">
                   <span>All Links</span>
-                  <Badge class="text-uppercase ms-auto" b-type="bg-pink-lt">OLD</Badge>
+                </DropdownItem>
+
+                <DropdownItem to="/links">
+                  <span>Tags</span>
                 </DropdownItem>
               </DropdownColumn>
             </DropdownColumns>
-          </template>
-        </NavItem>
-
-        <NavItem text="Links" href="/links">
-          <template #icon>
-            <IconLink class="icon" />
           </template>
         </NavItem>
 

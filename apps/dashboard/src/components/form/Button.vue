@@ -1,7 +1,7 @@
 <template>
-  <a v-if="isLink" class="btn" :class="{ [width]: true, [bType]: true }">
+  <router-link :to="to" v-if="isLink" class="btn" :class="{ [width]: true, [bType]: true }">
     <slot></slot>
-  </a>
+  </router-link>
 
   <button v-else class="btn" :class="{ [width]: true, [bType]: true }">
     <slot></slot>
@@ -34,7 +34,8 @@ declare type ButtonType =
 defineProps({
   width: { type: String as PropType<ButtonWidth>, default: 'w-100' },
   bType: { type: String as PropType<ButtonType>, default: 'w-25' },
-  isLink: { default: false }
+  isLink: { default: false, type: Boolean },
+  to: { type: String, default: '' }
 });
 </script>
 

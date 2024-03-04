@@ -1,5 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import PageHeader from '@/components/layouts/PageHeader.vue';
+</script>
 
 <template>
-  <main>Users</main>
+  <PageHeader title="Users"></PageHeader>
 </template>
