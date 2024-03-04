@@ -6,6 +6,7 @@ Fully featured Open-source URL Shortener
 
 </div>
 
+<img src="assets/screenshot.png" width="800px" />
 
 > [!NOTE]  
 > This project is still in development    
