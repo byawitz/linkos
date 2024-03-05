@@ -132,7 +132,7 @@ services:
       - traefik.http.routers.linkos_api_http.entrypoints=linkos_web
       - traefik.http.routers.linkos_api_http.service=linkos
     volumes:
-      - ./apps/linkos/src:/usr/server/app/src
+      - ./apps/:/usr/server/app/src
     entrypoint: serve-watch
     environment:
       - ENVIRONMENT
@@ -173,7 +173,7 @@ services:
       - traefik.http.routers.linkos_links_http.entrypoints=linkos_web
       - traefik.http.routers.linkos_links_http.service=linkos-links
     volumes:
-      - ./apps/linkos/src:/usr/server/app/src
+      - ./apps/:/usr/server/app/src
     entrypoint: serve-links-watch
     environment:
       - ENVIRONMENT
@@ -203,7 +203,7 @@ services:
     restart: unless-stopped
     <<: *x-logging
     volumes:
-      - ./apps/linkos/src:/usr/server/app/src
+      - ./apps/:/usr/server/app/src
     entrypoint: analytics-watch
     networks:
       - linkos
@@ -236,7 +236,7 @@ services:
     restart: unless-stopped
     <<: *x-logging
     volumes:
-      - ./apps/linkos/src:/usr/server/app/src
+      - ./apps/:/usr/server/app/src
     entrypoint: webhooks-watch
     networks:
       - linkos
@@ -270,7 +270,7 @@ services:
     restart: unless-stopped
     <<: *x-logging
     volumes:
-      - ./apps/linkos/src:/usr/server/app/src
+      - ./apps/:/usr/server/app/src
     entrypoint: scheduler-watch
     networks:
       - linkos

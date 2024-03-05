@@ -5,26 +5,29 @@ RUN mkdir -p /tmp/frontend
 WORKDIR /tmp/frontend
 
 COPY apps/dashboard  /tmp/frontend
+COPY apps/models /tmp/models
 
 RUN npm ci
 
 RUN npm run build
 
-FROM oven/bun:1.0.29-debian as backendBuild
+FROM oven/bun:1.0.30-debian as backendBuild
 
 RUN mkdir -p /tmp/backend
 
 WORKDIR /tmp/backend
 
 COPY  apps/linkos/ /tmp/backend
+COPY apps/models /tmp/models
 
 RUN bun install
 
-FROM oven/bun:1.0.29-debian
+FROM oven/bun:1.0.30-debian
 
 RUN mkdir -p /usr/server/app
 
 COPY --from=backendBuild /tmp/backend /usr/server/app/
+COPY --from=backendBuild /tmp/models /usr/server/models/
 
 RUN mkdir -p /usr/server/app/frontend/dashboard
 COPY --from=dashboardBuild /tmp/frontend/dist /usr/server/app/frontend/dashboard

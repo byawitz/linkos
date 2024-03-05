@@ -1,16 +1,9 @@
-import PostgresProvider from "../../providers/PostgresProvider.ts";
-import Log from "../../utils/Log.ts";
+import UserModel, {type UserLevel} from "@@/db/UserModel.ts";
+import Log from "@/utils/Log.ts";
+import PostgresProvider from "@/providers/PostgresProvider.ts";
 
-declare type UserLevel = 'owner' | 'admin' | 'editor' | 'writer' | 'reader';
-export type {UserLevel};
 
-export default class User {
-    public id: string       = '';
-    public email: string    = '';
-    public level: UserLevel = 'reader';
-    public created_at: Date = new Date();
-    public updated_at: Date = new Date();
-    public last_login: Date = new Date();
+export default class User extends UserModel {
 
     public static async create(email: string, level: UserLevel = 'reader') {
         try {

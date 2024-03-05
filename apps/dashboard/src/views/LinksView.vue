@@ -50,8 +50,9 @@ import NetworkHelper from '@/heplers/NetworkHelper';
 import { onMounted, ref, type Ref } from 'vue';
 import Button from '@/components/form/Button.vue';
 import PageHeader from '@/components/layouts/PageHeader.vue';
+import type LinkModel from '@@/db/LinkModel';
 
-const links = ref();
+const links: Ref<LinkModel[]> = ref([]);
 
 onMounted(async () => {
   try {

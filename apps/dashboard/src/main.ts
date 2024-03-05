@@ -11,7 +11,9 @@ const app = createApp(App);
 
 app.use(createPinia());
 
-await useUserStore().loadUser();
-
-app.use(router);
-app.mount('#app');
+useUserStore()
+  .loadUser()
+  .then(() => {
+    app.use(router);
+    app.mount('#app');
+  });

@@ -2,16 +2,10 @@ import PostgresProvider from "../../providers/PostgresProvider.ts";
 import Log from "../../utils/Log.ts";
 import crypto from "crypto";
 import type User from "./User.ts";
+import TokenModel from "@@/db/TokenModel.ts";
 
-export default class Token {
-    public id: string            = '';
-    public user_id: number       = 0;
-    public title: string         = '';
-    public token: string         = '';
-    public expiration_date: Date = new Date();
+export default class Token extends TokenModel {
 
-    public created_at: Date = new Date();
-    public updated_at: Date = new Date();
 
     public static async create(user_id: string, title: string, token: string, expiration_date: Date) {
         try {
