@@ -3,9 +3,9 @@ import BaseDBModel from "./base/BaseDBModel";
 export default class LinkModel extends BaseDBModel {
     public dest: string  = '';
     public short: string = '';
-    public description?: string;
+    public title: string = '';
     public password?: string;
-    public title?: string;
+    public description?: string;
 
     public user_id?: number;
     public campaign_id?: number;
