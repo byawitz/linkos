@@ -4,10 +4,10 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "../models/**/*"
+    "./models/**/*"
   ],
   "exclude": [
-    "src/**/__tests__/*"
+    "./dashboard/src/**/__tests__/*"
   ],
   "compilerOptions": {
     "composite": true,
@@ -18,7 +18,7 @@
         "./src/*"
       ],
       "@@/*": [
-        "../models/*"
+        "./models/*"
       ]
     }
   }

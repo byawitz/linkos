@@ -1,7 +1,7 @@
 <template>
   <PageHeader title="Links" sub-title="all">
     <template #buttons>
-      <Button :is-link="true" to="/" b-type="btn-primary">New Link</Button>
+      <Button :is-link="true" to="/links/add" b-type="btn-primary">New LinkAPI</Button>
     </template>
   </PageHeader>
 
@@ -29,7 +29,7 @@
                       <a href="#" class="text-reset">https://linkos.app/{{ link.short }}</a>
                     </td>
                     <td class="text-secondary">
-                      <p :title="link.dest">{{ link.dest.substring(0, 50) }}...</p>
+                      <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
                     </td>
                     <td>
                       <a href="#">Edit</a>
@@ -50,7 +50,7 @@ import NetworkHelper from '@/heplers/NetworkHelper';
 import { onMounted, ref, type Ref } from 'vue';
 import Button from '@/components/form/Button.vue';
 import PageHeader from '@/components/layouts/PageHeader.vue';
-import type LinkModel from '@@/db/LinkModel';
+import type LinkModel from '../models/db/LinkModel';
 
 const links: Ref<LinkModel[]> = ref([]);
 
@@ -58,6 +58,8 @@ onMounted(async () => {
   try {
     const res = await NetworkHelper.get(NetworkHelper.getLinks);
     if (res.success) links.value = res.data;
-  } catch (e) {}
+  } catch (e) {
+    // TODO: Toast for error
+  }
 });
 </script>
