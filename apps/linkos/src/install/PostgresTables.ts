@@ -11,6 +11,7 @@ export default class PostgresTables {
 
             email      VARCHAR(255) UNIQUE NOT NULL,
             level      userlevel default 'reader',
+            deleted              BOOLEAN   default false,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -25,6 +26,7 @@ export default class PostgresTables {
 
             title       VARCHAR(255) NOT NULL,
             description TEXT,
+            deleted              BOOLEAN   default false,
 
             created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -37,10 +39,10 @@ export default class PostgresTables {
             id                   BIGSERIAL PRIMARY KEY,
 
             dest                 TEXT               NOT NULL,
-            description          TEXT               NOT NULL, /*for informal redirection*/
+            description          TEXT               NULL, /*for informal redirection*/
             short                VARCHAR(13) UNIQUE NOT NULL, /* aka 63B IDs */
             password             VARCHAR(255) NULL,
-            title                VARCHAR(255) NULL, /*for informal redirection*/
+            title                VARCHAR(255) NOT NULL, 
             user_id              BIGINT          NOT NULL,
             campaign_id          BIGINT NULL,
             password_protected   BOOLEAN   DEFAULT false,
@@ -48,7 +50,8 @@ export default class PostgresTables {
             informal_redirection BOOLEAN   default false,
             monitor              BOOLEAN   default false,
             plus_enabled         BOOLEAN   default true,
-
+            deleted              BOOLEAN   default false,
+            
             expiration_date      TIMESTAMP NULL,
             created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -64,6 +67,7 @@ export default class PostgresTables {
             id         BIGSERIAL PRIMARY KEY,
 
             name       VARCHAR(255) UNIQUE NOT NULL,
+            deleted              BOOLEAN   default false,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -76,6 +80,7 @@ export default class PostgresTables {
             id         BIGSERIAL PRIMARY KEY,
             link_id    BIGINT NOT NULL,
             tag_id     BIGINT NOT NULL,
+            deleted              BOOLEAN   default false,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -90,6 +95,7 @@ export default class PostgresTables {
         (
             id           BIGSERIAL PRIMARY KEY,
             link_id      BIGINT,
+            deleted              BOOLEAN   default false,
 
             device_type  devicetype  default 'other',
             device_brand devicebrand default 'other',
@@ -126,7 +132,8 @@ export default class PostgresTables {
             secret          TEXT               NOT NULL,
             content_type    webhookcontenttype NOT NULL,
             headers         TEXT,
-            
+            deleted              BOOLEAN   default false,
+
             created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -143,6 +150,7 @@ export default class PostgresTables {
             title           VARCHAR(255) NOT NULL,
             token           TEXT  UNIQUE NOT NULL,
             expiration_date TIMESTAMP    NOT NULL,
+            deleted              BOOLEAN   default false,
 
             created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

@@ -1,6 +1,7 @@
 import type {Context, Next} from "hono";
-import User, {type UserLevel} from "../../models/db/User.ts";
+import User from "../../models/db/User.ts";
 import Log from "../../utils/Log.ts";
+import type {UserLevel} from "@@/db/UserModel.ts";
 
 export interface LevelOptions {
     level: UserLevel,
