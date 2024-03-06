@@ -1,4 +1,7 @@
 export default class Env {
+    public static ENVIRONMENT_PRODUCTION = 'production';
+    public static ENVIRONMENT_DEVELOPMENT = 'development';
+
     public static ENVIRONMENT                = process.env.ENVIRONMENT ?? '';
     public static TOKEN_DRIVER               = process.env.TOKEN_DRIVER ?? '';
     public static APP_SSL_KEY                = process.env.APP_SSL_KEY ?? '';

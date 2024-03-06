@@ -28,14 +28,14 @@ export default class Analytics {
                             const aMessage = AnalyticsMessage.toJSON(message.value.toString());
 
                             const chInsert = await ClickhouseProvider.addLinkAnalyticsData(aMessage);
-                            const pgUpdate = await Link.updateClicks(aMessage.link.id);
+                            const pgUpdate = await Link.updateClicks(aMessage.linkId);
 
                             if (chInsert.executed) {
-                                console.log('resolved');
+                                Log.debug('Clickhouse was inserted');
                                 resolveOffset(message.offset);
                             }
-                        } catch (e) {
-                            console.log(e);
+                        } catch (e: any) {
+                            Log.error(e);
                         }
 
                     }

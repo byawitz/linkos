@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import Env from "@/utils/Env.ts";
 
 /**
  * Colorful log wrapper using the chalk package.
@@ -18,5 +19,10 @@ export default class Log {
 
     public static good(text: string, boldText: string = '✅ ') {
         console.log(chalk.green.bold(boldText), chalk.green(text))
+    }
+
+    static debug(debug: string) {
+        if (Env.ENVIRONMENT.toLowerCase() !== Env.ENVIRONMENT_PRODUCTION)
+            console.log(chalk.blue.bold(debug))
     }
 }

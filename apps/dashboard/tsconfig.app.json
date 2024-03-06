@@ -4,7 +4,7 @@
     "env.d.ts",
     "src/**/*",
     "src/**/*.vue",
-    "./models/**/*"
+    "../models/**/*"
   ],
   "exclude": [
     "./dashboard/src/**/__tests__/*"
@@ -18,7 +18,7 @@
         "./src/*"
       ],
       "@@/*": [
-        "./models/*"
+        "../models/*"
       ]
     }
   }

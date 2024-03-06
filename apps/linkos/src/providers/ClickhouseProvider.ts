@@ -45,7 +45,7 @@ export default class ClickhouseProvider {
             format: "JSONEachRow",
             values: [
                 {
-                    link_id     : parseInt(message.link.id),
+                    link_id     : parseInt(message.linkId),
                     is_qr       : message.qr,
                     is_i        : false, //TODO
                     is_plus_view: false,//TODO

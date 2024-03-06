@@ -5,6 +5,7 @@ import KafkaProvider from "@/providers/KafkaProvider.ts";
 import Analytics from "@/services/Analytics.ts";
 import type {Producer} from "kafkajs";
 import AnalyticsMessage from "@/models/AnalyticsMessage.ts";
+import Log from "@/utils/Log.ts";
 
 
 /**
@@ -14,7 +15,7 @@ export default class LinkAPI {
     private static producer: Producer | false;
 
     public static async init() {
-        this.producer = await KafkaProvider.initProducer();
+        LinkAPI.producer = await KafkaProvider.initProducer();
 
     }
 
@@ -36,9 +37,9 @@ export default class LinkAPI {
             const linkFormRedis = await RedisProvider.getClient().get(link);
             if (linkFormRedis !== null) {
                 const cachedLink: Link = JSON.parse(linkFormRedis);
-
                 await LinkAPI.missions(cachedLink, qr, c);
-                return c.redirect(cachedLink.dest + appendQuery, 301);
+
+                return LinkAPI.redirect(cachedLink.dest + appendQuery, c);
             }
 
             const dbLink = await Link.getLink(link);
@@ -47,7 +48,7 @@ export default class LinkAPI {
                 await RedisProvider.getClient().set(link, JSON.stringify(dbLink));
 
                 await LinkAPI.missions(dbLink, qr, c);
-                return c.redirect(dbLink.dest + appendQuery, 301);
+                return LinkAPI.redirect(dbLink.dest + appendQuery, c);
             }
         } catch (e) {
             // TODO
@@ -58,18 +59,32 @@ export default class LinkAPI {
 
     }
 
+    private static redirect(link: string, c: Context) {
+        const text = `redirecting to ${link}`;
+
+        return c.text(text, {
+            status : 301,
+            headers: {
+                'content-length'         : text.length.toString(),
+                'cache-control'          : 'private, max-age = 90',
+                'content-security-policy': 'referrer always;',
+                'location'               : link
+
+            }
+        })
+    }
+
     private static async missions(link: Link | false, qr: boolean, c: Context) {
         const start = +new Date();
 
         const message = new AnalyticsMessage(link, qr, c.req.header('referer'), c.req.header('user-agent'), c.req.header('x-forwarded-for'), c.req.header('host'));
-
-        if (this.producer)
-            await this.producer.send({
+        if (LinkAPI.producer)
+            await LinkAPI.producer.send({
                 topic   : Analytics.TOPIC,
                 messages: [{value: message.toString()}]
             });
 
-        console.log(`Kafka took ${(+new Date()) - start}ms`);
+        Log.debug(`Kafka took ${(+new Date()) - start}ms`);
     }
 
 
