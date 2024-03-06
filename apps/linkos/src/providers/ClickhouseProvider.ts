@@ -1,6 +1,8 @@
 import {createClient} from "@clickhouse/client-web";
 import Log from "../utils/Log.ts";
 import type {WebClickHouseClient} from "@clickhouse/client-web/dist/client";
+import AnalyticsMessage from "@/models/AnalyticsMessage.ts";
+import {UAParser} from 'ua-parser-js';
 
 /**
  * ClickHouse Service
@@ -34,8 +36,29 @@ export default class ClickhouseProvider {
         return this.client;
     }
 
-    public static async addLinkAnalyticsData() {
+    public static async addLinkAnalyticsData(message: AnalyticsMessage) {
+        const ua     = UAParser(message.userAgent);
+        const client = ClickhouseProvider.getClient();
 
+        return await client.insert({
+            table : 'linkos.links_clicks',
+            format: "JSONEachRow",
+            values: [
+                {
+                    link_id     : parseInt(message.link.id),
+                    is_qr       : message.qr,
+                    is_i        : false, //TODO
+                    is_plus_view: false,//TODO
+                    domain      : message.host,
+                    country     : 'USA',//TODO
+                    referrer    : message.referer,
+                    timestamp   : new Date().toISOString().slice(0, -5),
+                    city        : 'LA',//TODO
+                    device_type : ua.device.type,
+                    device_brand: ua.device.vendor
+                }
+            ],
+        });
     }
 
     private static gethost() {

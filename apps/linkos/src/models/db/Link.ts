@@ -54,9 +54,11 @@ export default class Link extends LinkModel {
     public static async getAll() {
         try {
             const pg = PostgresProvider.getClient();
-
             // TODO: join user and campaign
-            const res = await pg?.query<Link>('SELECT id,title,short,dest FROM links WHERE deleted=false ORDER BY id DESC');
+            const res = await pg?.query<Link>(`SELECT id, title, short as short_url, dest, clicks
+                                               FROM links
+                                               WHERE deleted = false
+                                               ORDER BY id DESC`);
             if (res) {
                 return res.rows;
             }
@@ -136,4 +138,26 @@ export default class Link extends LinkModel {
     }
 
 
+    static async updateClicks(id: string) {
+        try {
+            const pg = PostgresProvider.getClient();
+
+            const text   = `UPDATE links
+                            set clicks     = clicks + 1,
+                                updated_at = $1
+                            WHERE id = $2
+                            RETURNING *`
+            const values = [new Date(), id];
+
+            const res = await pg?.query<Link>(text, values);
+
+            if (res) {
+                return res.rows[0];
+            }
+        } catch (e: any) {
+            Log.error(e);
+        }
+
+        return false;
+    }
 }

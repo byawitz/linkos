@@ -2,11 +2,10 @@ import Log from "../utils/Log.ts";
 import KafkaProvider from "../providers/KafkaProvider.ts";
 import RedisProvider from "../providers/RedisProvider.ts";
 import ClickhouseProvider from "../providers/ClickhouseProvider.ts";
+import AnalyticsMessage from "@/models/AnalyticsMessage.ts";
+import PostgresProvider from "@/providers/PostgresProvider.ts";
+import Link from "@/models/db/Link.ts";
 
-/**
- * App command:
- * Linkos --kafka starting point
- */
 export default class Analytics {
     private static tries  = 1;
     static readonly TOPIC = 'linkos-analytics';
@@ -15,7 +14,7 @@ export default class Analytics {
     public static async init(): Promise<void> {
         Log.instructions('Starting Linkos Analytics Kafka consumer.');
 
-        const consumer = await KafkaProvider.generateConsumer(this.TOPIC, this.GROUP);
+        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC, Analytics.GROUP);
 
         await consumer.run({
             eachBatch: async ({batch, resolveOffset, heartbeat, isRunning, isStale}) => {
@@ -24,8 +23,23 @@ export default class Analytics {
                 for (let message of batch.messages) {
                     if (!isRunning() || isStale()) break
 
-                    await ClickhouseProvider.addLinkAnalyticsData(/*message*/);
-                    resolveOffset(message.offset);
+                    if (message.value) {
+                        try {
+                            const aMessage = AnalyticsMessage.toJSON(message.value.toString());
+
+                            const chInsert = await ClickhouseProvider.addLinkAnalyticsData(aMessage);
+                            const pgUpdate = await Link.updateClicks(aMessage.link.id);
+
+                            if (chInsert.executed) {
+                                console.log('resolved');
+                                resolveOffset(message.offset);
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+
+                    }
+
                     await heartbeat();
                 }
             }

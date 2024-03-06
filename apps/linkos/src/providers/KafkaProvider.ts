@@ -36,6 +36,8 @@ export default class KafkaProvider {
         return this.producer;
     }
 
+
+
     public static async generateConsumer(topic: string, groupId: string): Promise<Consumer> {
         let tries = 0;
 
@@ -57,7 +59,7 @@ export default class KafkaProvider {
         const consumer = this.kafka.consumer({groupId})
 
         await consumer.connect()
-        await consumer.subscribe({topic, fromBeginning: true})
+        await consumer.subscribe({topic, fromBeginning: true,})
 
         process.on("SIGINT", async () => {
             if (consumer !== undefined)

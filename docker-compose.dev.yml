@@ -155,6 +155,8 @@ services:
       - POSTGRES_PASSWORD
       - NANOID_LETTERS
       - NANOID_LENGTH
+      - KAFKA_NUMBER_OF_PARTITIONS
+      - MAIN_DOMAIN
 
   linkos-links:
     image: linkos/linkos
@@ -209,6 +211,7 @@ services:
       - linkos
     depends_on:
       - kafka
+      - clickhouse
     environment:
       - ENVIRONMENT
       - TOKEN_DRIVER

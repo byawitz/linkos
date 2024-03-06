@@ -23,6 +23,7 @@
                     <th class="w-1">#</th>
                     <th>Title</th>
                     <th>Short</th>
+                    <th class="w-1">Clicks</th>
                     <th>Destination</th>
                     <th class="w-1"></th>
                   </tr>
@@ -32,8 +33,9 @@
                     <td>{{ link.id }}</td>
                     <td class="text-secondary">{{ link.title }}</td>
                     <td class="text-secondary">
-                      <a href="#" class="text-reset">https://linkos.app/{{ link.short }}</a>
+                      <a :href="`http://${store.server.host}/${link.short_url}`" target="_blank">{{ link.short_url }}</a>
                     </td>
+                    <td class="text-secondary">{{ link.clicks }}</td>
                     <td class="text-secondary">
                       <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
                     </td>
@@ -69,6 +71,9 @@ import Button from '@/components/form/Button.vue';
 import NetworkHelper from '@/heplers/NetworkHelper';
 import PageHeader from '@/components/layouts/PageHeader.vue';
 import type { SweetAlertResult, SweetAlertCustomClass } from 'sweetalert2';
+import { useUserStore } from '@/stores/user';
+
+const store = useUserStore();
 
 const links: Ref<LinkModel[]> = ref([]);
 const tableLoading = ref(false);

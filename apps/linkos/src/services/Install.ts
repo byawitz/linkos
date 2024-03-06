@@ -11,6 +11,7 @@ import Analytics from "./Analytics.ts";
 import WebHooks from "./WebHooks.ts";
 import User from "../models/db/User.ts";
 import Token from "../models/db/Token.ts";
+import Env from "@/utils/Env.ts";
 
 
 export default class Install {
@@ -94,7 +95,7 @@ export default class Install {
 
             for (const topic of linkosTopics) {
                 if (!topics.includes(topic)) {
-                    await admin.createTopics({topics: [{topic}]});
+                    await admin.createTopics({topics: [{topic, numPartitions: parseInt(Env.KAFKA_NUMBER_OF_PARTITIONS)}]});
                 }
             }
 

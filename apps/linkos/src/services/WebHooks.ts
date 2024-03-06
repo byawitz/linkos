@@ -3,10 +3,6 @@ import KafkaProvider from "../providers/KafkaProvider.ts";
 import RedisProvider from "../providers/RedisProvider.ts";
 import ClickhouseProvider from "../providers/ClickhouseProvider.ts";
 
-/**
- * App command:
- * Linkos --kafka starting point
- */
 export default class WebHooks {
     private static tries  = 1;
     static readonly TOPIC = 'linkos-webhooks';
