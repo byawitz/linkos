@@ -58,7 +58,9 @@
 
               <div class="card-footer text-end">
                 <div class="d-flex">
-                  <button type="submit" class="btn btn-primary ms-auto" :class="{ 'btn-loading': submitting }">Add link</button>
+                  <button type="submit" class="btn btn-primary ms-auto" :class="{ 'btn-loading': submitting }">
+                    {{ isEdit ? 'Update' : 'Add' }} Link
+                  </button>
                 </div>
               </div>
             </form>
