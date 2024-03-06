@@ -2,7 +2,7 @@ export default class NetworkHelper {
   static readonly whoAmI = '/whoami';
   static readonly addLink = '/links/add';
   static readonly getLinks = '/links/';
-  static readonly getLink = '/links/get/:id';
+  static readonly getLink = '/links/';
   static readonly updateLink = '/links/update/:id';
   static readonly deleteLink = '/links/delete/:id';
 
@@ -15,10 +15,22 @@ export default class NetworkHelper {
     }
   }
 
-  public static async post(url: string, body: Record<string, any>) {
+  public static async post(url: string, body: Record<string, any> = {}) {
+    return this.withBody(url, body, 'POST');
+  }
+
+  public static async patch(url: string, body: Record<string, any> = {}) {
+    return this.withBody(url, body, 'PATCH');
+  }
+
+  public static async delete(url: string, body: Record<string, any> = {}) {
+    return this.withBody(url, body, 'DELETE');
+  }
+
+  public static async withBody(url: string, body: Record<string, any>, method = 'post') {
     try {
       const res = await fetch(NetworkHelper.baseUrl(url), {
-        method: 'POST',
+        method,
         body: JSON.stringify(body),
         headers: {
           'Content-Type': 'application/json;'
