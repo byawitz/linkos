@@ -21,7 +21,8 @@
     "pinia": "^2.1.7",
     "sass": "^1.71.1",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue-sweetalert2": "^5.0.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",

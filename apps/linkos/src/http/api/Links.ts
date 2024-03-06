@@ -1,5 +1,4 @@
-import {type Context, type Env, Hono} from "hono";
-import type {BlankSchema} from "hono/types";
+import {type Context} from "hono";
 import API from "../../services/API.ts";
 import Link, {type MaybeLink} from "../../models/db/Link.ts";
 import RedisProvider from "@/providers/RedisProvider.ts";
@@ -57,18 +56,23 @@ export default class Links {
         const link: MaybeLink = await Link.update(updatedLink);
 
         if (link) {
-            // redis delete
             await RedisProvider.getClient().del(link.short)
             return c.json(API.response(true, link));
         }
 
 
-        return c.json(API.response())
+        return c.json(API.response());
     }
 
-    public static delete(c: Context) {
-        //TODO: delete set [Item].deleted as true and changing unique id to something random with the row id
-        return c.json(API.response())
+    public static async delete(c: Context) {
+        const {id} = c.req.param()
+        const link = await Link.delete(id);
+        if (link !== false) {
+            await RedisProvider.getClient().del(link.short)
+
+            return c.json(API.response(true))
+        }
+        return c.json(API.response());
     }
 
 }

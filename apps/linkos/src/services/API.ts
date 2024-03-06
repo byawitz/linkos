@@ -30,11 +30,11 @@ export default class API {
         const closedApi = api.use('*', TokenMiddleware.getMiddleware({headerName: 'x-linkos-token', allowWhenSet: 'user-is-authorized'}));
         closedApi.get('/whoami', General.whoAmI)
 
-        closedApi.post('/links/add', LevelMiddleware.getMiddleware({level: 'writer'}), Links.add);
+        closedApi.post('/links', LevelMiddleware.getMiddleware({level: 'writer'}), Links.add);
         closedApi.get('/links', LevelMiddleware.getMiddleware({level: 'reader'}), Links.list);
         closedApi.get('/links/:id', LevelMiddleware.getMiddleware({level: 'reader'}), Links.get);
-        closedApi.patch('/links/update/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.patch);
-        closedApi.delete('/links/delete/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.delete);
+        closedApi.patch('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.patch);
+        closedApi.delete('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.delete);
 
 
         return app;

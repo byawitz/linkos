@@ -56,7 +56,7 @@ export default class Link extends LinkModel {
             const pg = PostgresProvider.getClient();
 
             // TODO: join user and campaign
-            const res = await pg?.query<Link>('SELECT id,title,short,dest FROM links ORDER BY id');
+            const res = await pg?.query<Link>('SELECT id,title,short,dest FROM links WHERE deleted=false ORDER BY id DESC');
             if (res) {
                 return res.rows;
             }
@@ -89,10 +89,34 @@ export default class Link extends LinkModel {
                                 informal_redirection = $10,
                                 monitor              = $11,
                                 plus_enabled         = $12,
-                                expiration_date      = $13
-                            WHERE id = $14
+                                expiration_date      = $13,
+                                updated_at           = $14
+                            WHERE id = $15
                             RETURNING *`
-            const values = [...this.updateValues(link), link.id];
+            const values = [...this.updateValues(link), new Date(), link.id];
+
+            const res = await pg?.query<Link>(text, values);
+
+            if (res) {
+                return res.rows[0];
+            }
+        } catch (e: any) {
+            Log.error(e);
+        }
+
+        return false;
+    }
+
+    public static async delete(id: string) {
+        try {
+            const pg = PostgresProvider.getClient();
+
+            const text   = `UPDATE links
+                            set deleted    = true,
+                                updated_at = $1
+                            WHERE id = $2
+                            RETURNING *`
+            const values = [new Date(), id];
 
             const res = await pg?.query<Link>(text, values);
 
@@ -110,4 +134,6 @@ export default class Link extends LinkModel {
         return [link.dest, link.description, link.short, link.password, link.title, link.user_id, link.campaign_id, link.password_protected, link.expiring_link, link.informal_redirection, link.monitor, link.plus_enabled, link.expiration_date];
 
     }
+
+
 }

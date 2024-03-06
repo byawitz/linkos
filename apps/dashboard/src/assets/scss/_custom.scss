@@ -19,3 +19,25 @@
     background-color: rgba(0, 0, 0, 0.5);
   }
 }
+
+.table-loading {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #0000003d;
+  z-index: 1234;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  .tl-inner-text {
+    background-color: #070b0f;
+    padding: 15px 25px 0;
+    border-radius: 5px;
+    line-height: 2.5;
+  }
+}
+

@@ -112,8 +112,8 @@ async function submitForm() {
   submitting.value = true;
 
   const res = !isEdit.value
-    ? await NetworkHelper.post(NetworkHelper.addLink, link.value)
-    : await NetworkHelper.patch(NetworkHelper.updateLink, link.value);
+    ? await NetworkHelper.post(NetworkHelper.links, link.value)
+    : await NetworkHelper.patch(NetworkHelper.links + id, link.value);
   if (res.success) {
     await router.push('/links');
   } else {
@@ -124,7 +124,7 @@ async function submitForm() {
 }
 
 async function getLink() {
-  const res = await NetworkHelper.get(NetworkHelper.getLink + router.currentRoute.value.params.id);
+  const res = await NetworkHelper.get(NetworkHelper.links + router.currentRoute.value.params.id);
   if (res.success) {
     link.value = res.data;
   } else {

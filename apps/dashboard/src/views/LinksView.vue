@@ -11,6 +11,12 @@
         <div class="col">
           <div class="card">
             <div class="table-responsive">
+              <div class="table-loading" v-if="tableLoading">
+                <div class="tl-inner-text">
+                  <div class="spinner-border text-blue" role="status"></div>
+                  <p>Just a moment</p>
+                </div>
+              </div>
               <table class="table table-vcenter card-table">
                 <thead>
                   <tr>
@@ -32,7 +38,17 @@
                       <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
                     </td>
                     <td>
-                      <RouterLink :to="`/links/${link.id}`">Edit</RouterLink>
+                      <div class="btn-list flex-nowrap">
+                        <div class="dropdown">
+                          <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                            <IconSettings :size="15" />
+                          </button>
+                          <div class="dropdown-menu dropdown-menu-end" style="">
+                            <RouterLink class="dropdown-item" :to="`/links/${link.id}`">Edit</RouterLink>
+                            <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link.id)" href="#"> Delete </a>
+                          </div>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -46,20 +62,57 @@
 </template>
 
 <script setup lang="ts">
-import NetworkHelper from '@/heplers/NetworkHelper';
-import { onMounted, ref, type Ref } from 'vue';
-import Button from '@/components/form/Button.vue';
-import PageHeader from '@/components/layouts/PageHeader.vue';
 import type LinkModel from '@@/db/LinkModel';
+import { inject, onMounted, ref, type Ref } from 'vue';
+import { IconSettings } from '@tabler/icons-vue';
+import Button from '@/components/form/Button.vue';
+import NetworkHelper from '@/heplers/NetworkHelper';
+import PageHeader from '@/components/layouts/PageHeader.vue';
+import type { SweetAlertResult, SweetAlertCustomClass } from 'sweetalert2';
 
 const links: Ref<LinkModel[]> = ref([]);
+const tableLoading = ref(false);
+const swal: any = inject('$swal');
 
 onMounted(async () => {
   try {
-    const res = await NetworkHelper.get(NetworkHelper.getLinks);
+    const res = await NetworkHelper.get(NetworkHelper.links);
     if (res.success) links.value = res.data;
   } catch (e) {
     // TODO: Toast for error
   }
 });
+
+async function deleteLink(id: string) {
+  tableLoading.value = true;
+
+  if (await NetworkHelper.delete(NetworkHelper.links + id)) {
+    links.value.splice(
+      links.value.findIndex((link) => link.id === id),
+      1
+    );
+  } else {
+    swal.fire({
+      title: 'Error',
+      text: 'Error while deleting link, please try again.',
+      icon: 'error'
+    });
+  }
+
+  tableLoading.value = false;
+}
+
+async function askToDeleteLink(id: string) {
+  swal
+    .fire({
+      title: 'Are you sure?',
+      showCancelButton: true,
+      confirmButtonText: 'Yes'
+    })
+    .then((result: SweetAlertResult) => {
+      if (result.isConfirmed) {
+        deleteLink(id);
+      }
+    });
+}
 </script>
