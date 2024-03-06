@@ -21,6 +21,8 @@ services:
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`linkos`)
       - --entrypoints.linkos_web.address=:80
     restart: unless-stopped
+    depends_on:
+      - linkos
     ports:
       - "8081:80"
       - "8080:8080"
@@ -40,6 +42,11 @@ services:
     ports:
       - '8123:8123'
       - '9000:9000'
+    healthcheck:
+      test: [ 'CMD', 'wget', 'http://localhost:8123' ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ulimits:
       nofile:
         soft: 262144
@@ -69,6 +76,11 @@ services:
       - postgres:/var/lib/postgresql/data/pgdata
     networks:
       - linkos
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7.2.4-bookworm
@@ -89,6 +101,11 @@ services:
       - linkos
     volumes:
       - redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: bitnami/kafka:3.6
@@ -111,6 +128,12 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+    healthcheck:
+      test: kafka-topics.sh --bootstrap-server kafka:9092 --list --topic-id 1
+      start_period: 15s
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   linkos:
     image: linkos/linkos
@@ -158,6 +181,12 @@ services:
       - KAFKA_NUMBER_OF_PARTITIONS
       - MAIN_DOMAIN
 
+    depends_on:
+      - kafka
+      - clickhouse
+      - postgres
+      - redis
+
   linkos-links:
     image: linkos/linkos
     hostname: linkos-links
@@ -196,7 +225,10 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
-
+    depends_on:
+      - kafka
+      - postgres
+      - redis
 
   linkos-analytics-consumer:
     image: linkos/linkos
@@ -212,6 +244,7 @@ services:
     depends_on:
       - kafka
       - clickhouse
+      - postgres
     environment:
       - ENVIRONMENT
       - TOKEN_DRIVER
@@ -245,6 +278,8 @@ services:
       - linkos
     depends_on:
       - kafka
+      - postgres
+      - clickhouse
     environment:
       - ENVIRONMENT
       - TOKEN_DRIVER
@@ -265,7 +300,6 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
 
-
   linkos-scheduler:
     image: linkos/linkos
     hostname: linkos-scheduler
@@ -279,6 +313,8 @@ services:
       - linkos
     depends_on:
       - kafka
+      - postgres
+      - clickhouse
     environment:
       - ENVIRONMENT
       - TOKEN_DRIVER
@@ -300,6 +336,24 @@ services:
       - POSTGRES_PASSWORD
       - BACKUP_CRON
 
+  # 👇👇 For Development 👇👇
+  console:
+    image: docker.redpanda.com/redpandadata/console:v2.3.8
+    restart: on-failure
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka:9092"]
+
+    ports:
+      - "8088:8080"
+    depends_on:
+      - kafka
+    networks:
+      - linkos
 
 networks:
   linkos:
