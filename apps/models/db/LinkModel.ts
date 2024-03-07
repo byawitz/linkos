@@ -4,7 +4,6 @@ export default class LinkModel extends BaseDBModel {
     public dest: string      = '';
     public short: string     = '';
     public title: string     = '';
-    public short_url: string = '';
     public password?: string;
     public description?: string;
 
@@ -20,4 +19,6 @@ export default class LinkModel extends BaseDBModel {
 
     public expiration_date?: Date;
 
+    // For view
+    public copying = false;
 }
