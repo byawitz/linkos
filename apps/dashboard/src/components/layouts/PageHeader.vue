@@ -1,6 +1,6 @@
 <template>
   <div class="page-header d-print-none">
-    <div class="container-xl">
+    <Container :isXL="true">
       <div class="row g-2 align-items-center">
         <div class="col">
           <div class="page-pretitle">{{ subTitle }}</div>
@@ -13,12 +13,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   </div>
 </template>
 
 <script setup lang="ts">
 import Button from '@/components/form/Button.vue';
+import Container from '@/components/layouts/Container.vue';
 
 defineProps({
   title: { type: String },

@@ -4,7 +4,7 @@
   <template v-else>
     <PageHeader :title="pageTitle" :sub-title="pageSubTitle"></PageHeader>
     <div class="page-body">
-      <div class="container-xl">
+      <Container :isXL="true">
         <div class="row">
           <div class="col">
             <form class="card" @submit.prevent="submitForm">
@@ -66,7 +66,7 @@
             </form>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   </template>
 </template>
@@ -83,6 +83,7 @@ import TextArea from '@/components/form/TextArea.vue';
 import SlideCheckbox from '@/components/form/SlideCheckbox.vue';
 import InputDate from '@/components/form/InputDate.vue';
 import InputSelect from '@/components/form/InputSelect.vue';
+import Container from '@/components/layouts/Container.vue';
 
 const router = useRouter();
 

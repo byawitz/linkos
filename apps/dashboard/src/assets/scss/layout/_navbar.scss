@@ -46,6 +46,7 @@
         }
 
         &.active,
+        &.router-link-active,
         &:active {
           background: var(--#{$prefix}navbar-active-bg);
         }

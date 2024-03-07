@@ -1,6 +1,6 @@
 <template>
   <aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
-    <div class="container-fluid">
+    <Container :is-fluid="true">
       <button
         class="navbar-toggler"
         type="button"
@@ -95,7 +95,7 @@
           </template>
         </NavItem>
       </NavBar>
-    </div>
+    </Container>
   </aside>
 </template>
 
@@ -118,4 +118,5 @@ import DropdownColumn from '@/components/view/DropdownColumn.vue';
 import DropdownItem from '@/components/view/DropdownItem.vue';
 import DropdownColumns from '@/components/view/DropdownColumns.vue';
 import Badge from '@/components/form/Badge.vue';
+import Container from '@/components/layouts/Container.vue';
 </script>

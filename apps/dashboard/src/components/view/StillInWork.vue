@@ -7,7 +7,7 @@
             <div class="card-stamp-icon bg-yellow"><IconClockFilled :size="70" /></div>
           </div>
           <div class="card-body">
-            <h2 class="h2 card-title">Still in a work</h2>
+            <h2 class="h2 card-title">Still in the work</h2>
             <p>This page is still in the working make sure to follow our <a href="https://github.com/byawitz/linkos">repo</a></p>
           </div>
         </div>

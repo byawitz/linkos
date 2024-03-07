@@ -13,6 +13,7 @@ import { useUserStore } from '@/stores/user';
 import ProfileView from '@/views/ProfileView.vue';
 import LinkFormView from '@/views/LinkFormView.vue';
 import TagsView from '@/views/TagsView.vue';
+import LinkView from '@/views/LinkView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -23,7 +24,8 @@ const router = createRouter({
     { path: '/links', name: 'links', component: LinksView, meta: { authorizedOnly: true } },
     { path: '/tags', name: 'tags', component: TagsView, meta: { authorizedOnly: true } },
     { path: '/links/add', name: 'add-link', component: LinkFormView, meta: { authorizedOnly: true } },
-    { path: '/links/:id', name: 'edit-link', component: LinkFormView, meta: { authorizedOnly: true } },
+    { path: '/links/:id', name: 'view-link', component: LinkView, meta: { authorizedOnly: true } },
+    { path: '/links/:id/edit', name: 'edit-link', component: LinkFormView, meta: { authorizedOnly: true } },
     { path: '/campaigns', name: 'campaigns', component: CampaignsView, meta: { authorizedOnly: true } },
     { path: '/domains', name: 'domains', component: DomainsView, meta: { authorizedOnly: true } },
     { path: '/importer', name: 'importer', component: ImporterView, meta: { authorizedOnly: true } },

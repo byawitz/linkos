@@ -6,72 +6,90 @@
   </PageHeader>
 
   <div class="page-body">
-    <div class="container-xl">
+    <Container :isXL="true">
       <div class="row">
         <div class="col">
           <div class="card">
-            <div class="table-responsive">
-              <div class="table-loading" v-if="tableLoading">
-                <div class="tl-inner-text">
-                  <div class="spinner-border text-blue" role="status"></div>
-                  <p>Just a moment</p>
+            <div class="card-body">
+              <div class="table-responsive">
+                <div class="table-loading" v-if="tableLoading">
+                  <div class="tl-inner-text">
+                    <div class="spinner-border text-blue" role="status"></div>
+                    <p>Just a moment</p>
+                  </div>
                 </div>
-              </div>
-              <table class="table table-vcenter card-table">
-                <thead>
-                  <tr>
-                    <th class="w-1">#</th>
-                    <th>Title</th>
-                    <th>Short</th>
-                    <th class="w-1">Clicks</th>
-                    <th>Destination</th>
-                    <th class="w-1"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="link in links" :key="link.id">
-                    <td>{{ link.id }}</td>
-                    <td class="text-secondary">{{ link.title }}</td>
-                    <td class="text-secondary">
-                      <a :href="`http://${store.server.host}/${link.short_url}`" target="_blank">{{ link.short_url }}</a>
-                    </td>
-                    <td class="text-secondary">{{ link.clicks }}</td>
-                    <td class="text-secondary">
-                      <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
-                    </td>
-                    <td>
-                      <div class="btn-list flex-nowrap">
-                        <div class="dropdown">
-                          <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
-                            <IconSettings :size="15" />
-                          </button>
-                          <div class="dropdown-menu dropdown-menu-end" style="">
-                            <RouterLink class="dropdown-item" :to="`/links/${link.id}`">Edit</RouterLink>
-                            <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link.id)" href="#"> Delete </a>
+                <table class="table table-vcenter card-table">
+                  <thead>
+                    <tr>
+                      <th class="w-1">#</th>
+                      <th>Title</th>
+                      <th>Short</th>
+                      <th class="w-1">Clicks</th>
+                      <th>Destination</th>
+                      <th class="w-1"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="link in links" :key="link.id">
+                      <td>{{ link.id }}</td>
+                      <td class="text-secondary">
+                        <RouterLink :to="`/links/${link.id}`">{{ link.title }}</RouterLink>
+                      </td>
+                      <td class="text-secondary">
+                        <div class="badge py-2">
+                          {{ link.short }}
+
+                          <a href="#" @click.prevent="copyToClipboard(link)" class="px-2">
+                            <IconCopy :size="18" v-if="!link.copying" />
+                            <template v-else>copied</template>
+                          </a>
+
+                          <a :href="getShort(link)" target="_blank">
+                            <IconExternalLink :size="18" />
+                          </a>
+                        </div>
+                      </td>
+                      <td class="text-secondary">{{ link.clicks }}</td>
+                      <td class="text-secondary">
+                        <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
+                      </td>
+                      <td>
+                        <div class="btn-list flex-nowrap">
+                          <div class="dropdown">
+                            <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
+                              <IconSettings :size="15" />
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" style="">
+                              <RouterLink class="dropdown-item" :to="`/links/${link.id}/edit`">Edit</RouterLink>
+                              <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link.id)" href="#"> Delete </a>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   </div>
+
+  <input type="hidden" name="tmp-link-holder" id="tmp-link-holder" />
 </template>
 
 <script setup lang="ts">
 import type LinkModel from '@@/db/LinkModel';
 import { inject, onMounted, ref, type Ref } from 'vue';
-import { IconSettings } from '@tabler/icons-vue';
+import { IconSettings, IconCopy, IconExternalLink } from '@tabler/icons-vue';
 import Button from '@/components/form/Button.vue';
 import NetworkHelper from '@/heplers/NetworkHelper';
 import PageHeader from '@/components/layouts/PageHeader.vue';
 import type { SweetAlertResult, SweetAlertCustomClass } from 'sweetalert2';
 import { useUserStore } from '@/stores/user';
+import Container from '@/components/layouts/Container.vue';
 
 const store = useUserStore();
 
@@ -105,6 +123,17 @@ async function deleteLink(id: string) {
   }
 
   tableLoading.value = false;
+}
+
+async function copyToClipboard(link: LinkModel) {
+  await navigator.clipboard.writeText(getShort(link));
+
+  link.copying = true;
+  setTimeout(() => (link.copying = false), 450);
+}
+
+function getShort(link: LinkModel) {
+  return `${store.server.host}/${link.short}`;
 }
 
 async function askToDeleteLink(id: string) {

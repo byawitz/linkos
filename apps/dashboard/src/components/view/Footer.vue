@@ -1,6 +1,6 @@
 <template>
   <footer class="footer footer-transparent d-print-none">
-    <div class="container-xl">
+    <Container :isXL="true">
       <div class="row text-center align-items-center flex-row-reverse">
         <div class="col-lg-auto ms-lg-auto">
           <ul class="list-inline list-inline-dots mb-0">
@@ -21,10 +21,12 @@
           </ul>
         </div>
       </div>
-    </div>
+    </Container>
   </footer>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Container from '@/components/layouts/Container.vue';
+</script>
 
 <style scoped></style>
