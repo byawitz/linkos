@@ -5,45 +5,75 @@ import ClickhouseProvider from "../providers/ClickhouseProvider.ts";
 import AnalyticsMessage from "@/models/AnalyticsMessage.ts";
 import PostgresProvider from "@/providers/PostgresProvider.ts";
 import Link from "@/models/db/Link.ts";
+import type {EachBatchPayload, KafkaMessage} from "kafkajs";
 
 export default class Analytics {
-    private static tries  = 1;
-    static readonly TOPIC = 'linkos-analytics';
-    static readonly GROUP = 'linkos-analytics-group';
+    private static tries             = 1;
+    static readonly TOPIC_CLICKHOUSE = 'linkos-analytics-clickhouse';
+    static readonly TOPIC_POSTGRES   = 'linkos-analytics-postgres';
+    static readonly TOPIC_SOKETI     = 'linkos-analytics-soketi';
+    static readonly GROUP            = 'linkos-analytics-group';
 
     public static async init(): Promise<void> {
         Log.instructions('Starting Linkos Analytics Kafka consumer.');
 
-        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC, Analytics.GROUP);
+        await Promise.all([
+            Analytics.initClickHouse(),
+            Analytics.initPostgres()
+        ]);
+    }
+
+    private static async consumerCallback(batcher: EachBatchPayload, cb: (msg: KafkaMessage) => void) {
+
+        for (let message of batcher.batch.messages) {
+            if (!batcher.isRunning() || batcher.isStale()) break
+
+            if (message && message.value) {
+                cb(message);
+            }
+
+            await batcher.heartbeat();
+        }
+    }
+
+    private static async initClickHouse() {
+        Log.debug('Starting Linkos Clickhouse consumer.');
+
+        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC_CLICKHOUSE, Analytics.TOPIC_CLICKHOUSE + Analytics.GROUP);
 
         await consumer.run({
-            eachBatch: async ({batch, resolveOffset, heartbeat, isRunning, isStale}) => {
-                // Insert into Clickhouse and commit messages
-                // Parse the message through the analytics model deserializer.
-                for (let message of batch.messages) {
-                    if (!isRunning() || isStale()) break
+            eachBatch: async (b) => {
+                await Analytics.consumerCallback(b, async (msg) => {
+                    const chInsert = await ClickhouseProvider.addLinkAnalyticsData(AnalyticsMessage.toJSON(msg.value!.toString()));
 
-                    if (message.value) {
-                        try {
-                            const aMessage = AnalyticsMessage.toJSON(message.value.toString());
-
-                            const chInsert = await ClickhouseProvider.addLinkAnalyticsData(aMessage);
-                            const pgUpdate = await Link.updateClicks(aMessage.linkId);
-
-                            if (chInsert.executed) {
-                                Log.debug('Clickhouse was inserted');
-                                resolveOffset(message.offset);
-                            }
-                        } catch (e: any) {
-                            Log.error(e);
-                        }
-
+                    if (chInsert.executed) {
+                        Log.debug('Clickhouse was inserted');
+                        b.resolveOffset(msg.offset);
                     }
-
-                    await heartbeat();
-                }
+                });
             }
         })
     }
 
+    private static async initPostgres() {
+        Log.debug('Starting Linkos Postgres consumer.');
+
+        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC_POSTGRES, Analytics.TOPIC_POSTGRES + Analytics.GROUP);
+
+        await consumer.run({
+            eachBatch: async (b) => {
+                await Analytics.consumerCallback(b, async (msg) => {
+                    const aMessage = AnalyticsMessage.toJSON(msg.value!.toString());
+
+                    const pgUpdate = await Link.updateClicks(aMessage.linkId);
+
+                    if (pgUpdate !== false) {
+                        Log.debug('Postgres clicks incremented');
+                        b.resolveOffset(msg.offset);
+                    }
+
+                });
+            }
+        })
+    }
 }

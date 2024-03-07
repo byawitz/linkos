@@ -87,7 +87,7 @@ export default class Install {
         Log.info('\n- Creating Kafka topic');
 
         const admin        = kafka.admin();
-        const linkosTopics = [Analytics.TOPIC, WebHooks.TOPIC];
+        const linkosTopics = [Analytics.TOPIC_CLICKHOUSE,Analytics.TOPIC_POSTGRES,Analytics.TOPIC_SOKETI, WebHooks.TOPIC];
 
         try {
 

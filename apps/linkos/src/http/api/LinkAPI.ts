@@ -75,14 +75,18 @@ export default class LinkAPI {
     }
 
     private static async missions(link: Link | false, qr: boolean, c: Context) {
+        if(!link) return;
+
         const start = +new Date();
 
-        const message = new AnalyticsMessage(link, qr, c.req.header('referer'), c.req.header('user-agent'), c.req.header('x-forwarded-for'), c.req.header('host'));
-        if (LinkAPI.producer)
-            await LinkAPI.producer.send({
-                topic   : Analytics.TOPIC,
-                messages: [{value: message.toString()}]
-            });
+        const message = new AnalyticsMessage(link.id, qr, c.req.header('referer'), c.req.header('user-agent'), c.req.header('x-forwarded-for'), c.req.header('host'));
+        if (LinkAPI.producer) {
+            await LinkAPI.producer.send({topic: Analytics.TOPIC_CLICKHOUSE, messages: [{value: message.toString()}]});
+            await LinkAPI.producer.send({topic: Analytics.TOPIC_POSTGRES, messages: [{value: message.toString()}]});
+
+            // TODO: with soketi in realtime.
+            // await LinkAPI.producer.send({topic: Analytics.TOPIC_SOKETI, messages: [{value: message.toString()}]});
+        }
 
         Log.debug(`Kafka took ${(+new Date()) - start}ms`);
     }

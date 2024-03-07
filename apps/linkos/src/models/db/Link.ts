@@ -55,7 +55,7 @@ export default class Link extends LinkModel {
         try {
             const pg = PostgresProvider.getClient();
             // TODO: join user and campaign
-            const res = await pg?.query<Link>(`SELECT id, title, short as short_url, dest, clicks
+            const res = await pg?.query<Link>(`SELECT id, title, short, dest, clicks
                                                FROM links
                                                WHERE deleted = false
                                                ORDER BY id DESC`);
@@ -147,10 +147,9 @@ export default class Link extends LinkModel {
                                 updated_at = $1
                             WHERE id = $2
                             RETURNING *`
-            const values = [new Date(), id];
+            const values = [new Date(), parseInt(id)];
 
             const res = await pg?.query<Link>(text, values);
-
             if (res) {
                 return res.rows[0];
             }

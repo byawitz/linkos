@@ -8,8 +8,8 @@ export default class AnalyticsMessage {
     public readonly ip: string;
     public readonly host: string;
 
-    constructor(link: Link | false, qr: boolean = false, referer?: string, userAgent?: string, ip?: string, host?: string) {
-        this.linkId    = (link !== false ? link : new Link()).id;
+    constructor(linkId: string, qr: boolean = false, referer?: string, userAgent?: string, ip?: string, host?: string) {
+        this.linkId    = linkId;
         this.qr        = qr;
         this.referer   = referer ?? '';
         this.userAgent = userAgent ?? '';
@@ -31,7 +31,6 @@ export default class AnalyticsMessage {
 
     public static toJSON(json: string): AnalyticsMessage {
         const parsed = JSON.parse(json);
-
-        return new AnalyticsMessage(parsed.linkId, parsed.qr ?? false, parsed.referer, parsed.userAgent, parsed.ip, parsed.host)
+        return  new AnalyticsMessage(parsed.linkId, parsed.qr ?? false, parsed.referer, parsed.userAgent, parsed.ip, parsed.host);
     }
 }
