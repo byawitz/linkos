@@ -39,7 +39,7 @@
                   <span>All Links</span>
                 </DropdownItem>
 
-                <DropdownItem to="/links">
+                <DropdownItem to="/tags">
                   <span>Tags</span>
                 </DropdownItem>
               </DropdownColumn>

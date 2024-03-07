@@ -12,6 +12,7 @@ import LinksView from '@/views/LinksView.vue';
 import { useUserStore } from '@/stores/user';
 import ProfileView from '@/views/ProfileView.vue';
 import LinkFormView from '@/views/LinkFormView.vue';
+import TagsView from '@/views/TagsView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -20,6 +21,7 @@ const router = createRouter({
     { path: '/login', name: 'login', component: LoginView, meta: { authorizedOnly: false } },
     { path: '/forgot', name: 'forgot', component: ForgotView, meta: { authorizedOnly: false } },
     { path: '/links', name: 'links', component: LinksView, meta: { authorizedOnly: true } },
+    { path: '/tags', name: 'tags', component: TagsView, meta: { authorizedOnly: true } },
     { path: '/links/add', name: 'add-link', component: LinkFormView, meta: { authorizedOnly: true } },
     { path: '/links/:id', name: 'edit-link', component: LinkFormView, meta: { authorizedOnly: true } },
     { path: '/campaigns', name: 'campaigns', component: CampaignsView, meta: { authorizedOnly: true } },
