@@ -49,7 +49,7 @@
                           </a>
                         </div>
                       </td>
-                      <td class="text-secondary">{{ link.clicks }}</td>
+                      <td class="text-secondary">{{ parseInt(link.clicks.toString()).toLocaleString() }}</td>
                       <td class="text-secondary">
                         <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
                       </td>

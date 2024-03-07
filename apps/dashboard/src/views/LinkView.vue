@@ -33,9 +33,9 @@
                     </a>
                   </DatagridItem>
                   <DatagridItem itemTitle="Destination" :value="link.dest" />
-                  <DatagridItem itemTitle="Campaign" :value="link.campaign_id" />
+                  <DatagridItem itemTitle="Campaign" :value="link.campaign_id?.toString()" />
                   <!-- TODO: -->
-                  <DatagridItem itemTitle="User" :value="link.user_id" />
+                  <DatagridItem itemTitle="User" :value="link.user_id?.toString()" />
                   <!-- TODO: -->
                   <DatagridItem itemTitle="Description" :value="link.description" />
 
