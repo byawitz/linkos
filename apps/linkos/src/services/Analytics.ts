@@ -23,13 +23,13 @@ export default class Analytics {
         ]);
     }
 
-    private static async consumerCallback(batcher: EachBatchPayload, cb: (msg: KafkaMessage) => void) {
+    private static async consumerCallback(batcher: EachBatchPayload, cb: (msg: KafkaMessage) => Promise<void>) {
 
         for (let message of batcher.batch.messages) {
             if (!batcher.isRunning() || batcher.isStale()) break
 
             if (message && message.value) {
-                cb(message);
+                await cb(message);
             }
 
             await batcher.heartbeat();
