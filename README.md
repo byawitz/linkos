@@ -6,7 +6,7 @@ Fully featured Open-source URL Shortener
 
 </div>
 
-<img src="assets/screenshot.png" width="800px" />
+<img src="assets/linkos_laptop.jpg" />
 
 > [!NOTE]  
 > This project is still in development    
@@ -14,8 +14,8 @@ Fully featured Open-source URL Shortener
 > Click [here](https://github.com/byawitz/linkos/wiki/Development-phases) to see the development planned process.
 >
 > | 🏗️ Current | 👉 Next |
-> | --- |---------|
-> | Pre-alpha | Alpha   |
+> |-------------|---------|
+> | Pre-alpha   | Alpha   |
 
 ## Architecture
 
@@ -33,6 +33,7 @@ Fully featured Open-source URL Shortener
 | Frontend      | [Vue](https://vuejs.org/) with [Tabler](https://tabler.io) theme                            |
 | Extension     | [Vue](https://vuejs.org/) with [WXT](https://wxt.dev/)                                      |
 | Cronjob       | [Croner](https://github.com/hexagon/croner)                                                 |
+| Realtime      | [Soketi](https://docs.soketi.app/)                                                          |
 
 #### Notes:
 
@@ -83,16 +84,17 @@ Fully featured Open-source URL Shortener
 
 ## Deploying
 
-| Container  | Description           |
-|------------|-----------------------|
-| Traefik    | Application Proxy     |
-| Postgres   | Clicks DB             |
-| ClickHouse | OLAP DB               |
-| Redis      | Cache DB              |
-| Kafka      | Message Queue         |
-| Linkos     | A stateless backend   |
-| Static     | Compiled Vue frontend |
-| Consumer   | Kafka consumer worker |
-| Scheduler  | Cron -> Kafka worker  |
+| Container    | Description         |                  Notes |
+|--------------|---------------------|-----------------------:|
+| Traefik      | Application Proxy   | Standalone application |
+| Postgres     | Clicks DB           | Standalone application |
+| ClickHouse   | OLAP DB             | Standalone application |
+| Redis        | Cache DB            | Standalone application |
+| Kafka        | Message Queue       | Standalone application |
+| Linkos       | A stateless backend |        API & Dashboard |
+| Linkos Links | Links entrypoint    |               Provider |
+| Analytics    | Kafka consumer      |                 Worker |
+| Webhooks     | Kafka consumer      |                 Worker |
+| Scheduler    | Cron                |                 Runner |
 
 As the backend is stateless horizontal scaling is very easy.
