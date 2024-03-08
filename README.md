@@ -6,7 +6,7 @@ Fully featured Open-source URL Shortener
 
 </div>
 
-<img src="assets/linkos_laptop.jpg" />
+<img src="assets/linkosbg2.jpg" />
 
 > [!NOTE]  
 > This project is still in development    
