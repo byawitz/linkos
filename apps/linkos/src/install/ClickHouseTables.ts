@@ -45,7 +45,7 @@ export default class ClickHouseTables {
             city         Nullable(String),
             device_type  Nullable(String),
             device_brand Nullable(String),
-            referrer     Nullable(String),
+            referer     Nullable(String),
             timestamp    DateTime('UTC')
         ) ENGINE = MergeTree()
       PRIMARY KEY (link_id, timestamp)

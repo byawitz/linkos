@@ -80,7 +80,7 @@ Fully featured Open-source URL Shortener
 | QR scans | How many times the link was accessed through the QR code<br/>it will work as links with QR code have a `qr` in the URL |
 | Country  | Country origin                                                                                                         |
 | Device   | Device type, and brand                                                                                                 |
-| Referrer | URL referrer                                                                                                           |
+| Referer  | URL referrer                                                                                                           |
 
 ## Deploying
 
