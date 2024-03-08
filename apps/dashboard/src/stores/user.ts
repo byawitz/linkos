@@ -24,8 +24,8 @@ export const useUserStore = defineStore('user', () => {
 
     if (res.success) {
       user.value.isLoggedIn = true;
+      server.value.host = res.data.server.host;
     }
-    server.value.host = res.data.server.host;
   }
 
   return { user, loadUser, server };

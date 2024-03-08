@@ -1,7 +1,7 @@
 export default class NetworkHelper {
   static readonly whoAmI = '/whoami';
-  static readonly links = '/links/';
-  static readonly linkWithStat = '/links/stat/';
+  static readonly links     = '/links/';
+  static readonly linkStats = '/links/stat/';
 
   public static async get(url: string) {
     try {

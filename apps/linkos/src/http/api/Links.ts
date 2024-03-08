@@ -23,16 +23,16 @@ export default class Links {
         return c.json(API.response());
     }
 
-    public static async getWithStats(c: Context) {
-        const {id} = c.req.param();
+    public static async getStats(c: Context) {
+        const {id, days} = c.req.param();
 
-        const link = await Link.getLink(id, 'id');
+        const stats = await Link.getStats(parseInt(id), parseInt(days));
 
-        if (!link) {
+        if (!stats) {
             return c.json(API.response(false));
         }
 
-        return c.json(API.response(true, link));
+        return c.json(API.response(true, stats));
     }
 
     public static async get(c: Context) {

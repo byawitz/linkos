@@ -3,6 +3,7 @@ import Log from "../../utils/Log.ts";
 import LinkModel from "@@/db/LinkModel.ts";
 import {customAlphabet} from 'nanoid';
 import Env from "@/utils/Env.ts";
+import ClickhouseProvider from "@/providers/ClickhouseProvider.ts";
 
 declare type MaybeLink = LinkModel | boolean;
 
@@ -24,6 +25,29 @@ export default class Link extends LinkModel {
             }
         } catch (e: any) {
             Log.error(e);
+        }
+
+        return false;
+    }
+
+    public static async getStats(id: number, days: number) {
+        try {
+            const ch = ClickhouseProvider.getClient();
+
+            const basic     = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkClickAndDevices(), query_params: {id, days}});
+            const cities    = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkCities(), query_params: {id, days}});
+            const countries = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkCountries(), query_params: {id, days}});
+            const referrers = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkReferrers(), query_params: {id, days}});
+
+            return {
+                basic    : await basic.json(),
+                cities   : await cities.json(),
+                countries: await countries.json(),
+                referrers: await referrers.json(),
+            };
+
+        } catch (e) {
+            // TODO
         }
 
         return false;
@@ -53,7 +77,7 @@ export default class Link extends LinkModel {
 
     public static async getAll() {
         try {
-            const pg = PostgresProvider.getClient();
+            const pg  = PostgresProvider.getClient();
             // TODO: join user and campaign
             const res = await pg?.query<Link>(`SELECT id, title, short, dest, clicks
                                                FROM links

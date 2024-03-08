@@ -51,14 +51,64 @@ export default class ClickhouseProvider {
                     is_plus_view: false,//TODO
                     domain      : message.host,
                     country     : 'USA',//TODO
-                    referrer    : message.referer,
+                    referer     : message.referer,
                     timestamp   : new Date().toISOString().slice(0, -5),
                     city        : 'LA',//TODO
                     device_type : ua.device.type,
-                    device_brand: ua.device.vendor
+                    device_brand: ua.os.name
                 }
             ],
         });
+    }
+
+
+    public static getLinkCountries() {
+        return `SELECT DISTINCT on (country) country, count(*) as total
+                FROM linkos.links_clicks
+                WHERE link_id = {id: Int64}
+                  AND timestamp >= now() - INTERVAL {days: Int32} DAY
+                group by country
+                ORDER BY total DESC
+                LIMIT 10;`
+    }
+
+    public static getLinkReferrers() {
+        return `SELECT DISTINCT on (referer) referer, count(*) as total
+                FROM linkos.links_clicks
+                WHERE link_id = {id: Int64}
+                  AND timestamp >= now() - INTERVAL {days: Int32} DAY
+                group by referer
+                ORDER BY total DESC
+                LIMIT 10;`;
+    }
+
+    public static getLinkCities() {
+        return `SELECT DISTINCT on (city) city, count(*) as total
+                FROM linkos.links_clicks
+                WHERE link_id = {id: Int64}
+                  AND timestamp >= now() - INTERVAL {days: Int32} DAY
+                group by city
+                ORDER BY total DESC
+                LIMIT 10;`
+    }
+
+    public static getLinkClickAndDevices() {
+        return `SELECT count(*)                                                                                                                                  as clicks,
+                       sum(is_qr = false)                                                                                                                        as direct,
+                       sum(is_qr)                                                                                                                                as qr,
+                       sum(device_type like 'mobile' AND isNotNull(device_type))                                                                                 as mobile,
+                       sum(device_type not like 'mobile' AND isNotNull(device_type))                                                                             as unknown_type,
+                       sum(isNull (device_type))                                                                                                                 as desktop,
+                       sum(lower(device_brand) LIKE 'apple' AND isNotNull(device_brand))                                                                         as apple,
+                       sum(lower(device_brand) LIKE 'android' AND isNotNull(device_brand))                                                                       as android,
+                       sum(isNull (device_brand) OR (lower(links_clicks.device_brand) not like 'apple' AND lower(links_clicks.device_brand) not like 'android')) as unknown_brand,
+                       toMonth(timestamp)                                                                                                                        AS month,
+                       toDayOfMonth(timestamp)                                                                                                                   AS day
+                FROM linkos.links_clicks
+                WHERE link_id = {id: Int64}
+                  AND timestamp >= now() - INTERVAL {days : Int32} DAY
+                GROUP BY month, day
+                ORDER BY day, month;`
     }
 
     private static gethost() {

@@ -33,7 +33,7 @@ export default class API {
         closedApi.post('/links', LevelMiddleware.getMiddleware({level: 'writer'}), Links.add);
         closedApi.get('/links', LevelMiddleware.getMiddleware({level: 'reader'}), Links.list);
         closedApi.get('/links/:id', LevelMiddleware.getMiddleware({level: 'reader'}), Links.get);
-        closedApi.get('/links/stat/:id', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getWithStats);
+        closedApi.get('/links/stat/:id/:days', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getStats);
         closedApi.patch('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.patch);
         closedApi.delete('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.delete);
 
