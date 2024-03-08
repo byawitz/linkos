@@ -6,6 +6,7 @@ import Analytics from "./services/Analytics.ts";
 import GetLink from "./services/GetLink.ts";
 import WebHooks from "./services/WebHooks.ts";
 import Scheduler from "./services/Scheduler.ts";
+import Seeder from "@/services/Seeder.ts";
 
 export default class App {
     public static async main() {
@@ -41,6 +42,11 @@ export default class App {
                 Backup.init();
                 return process.exit(0);
 
+            case '-dbs':
+            case '--databases-seeder':
+                return Seeder.init();
+
+
             case '-i':
             case '--install':
                 await Install.init();
@@ -65,6 +71,7 @@ export default class App {
         Log.instructions('- Start Linkos scheduler', '  -sc --scheduler');
         Log.instructions('- Install Linkos', '  -i --install');
         Log.instructions('- Run full backup', '  -b --backup');
+        Log.instructions('- Seed the database with demo data', '  -dbs --databases-seeder');
 
         process.exit(-1);
     }
