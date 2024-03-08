@@ -2,6 +2,11 @@ import Log from "../utils/Log.ts";
 import PostgresProvider from "@/providers/PostgresProvider.ts";
 import ClickhouseProvider from "@/providers/ClickhouseProvider.ts";
 
+
+const countries = ['Italy', 'Germany', 'Morocco', 'Lebanon', 'Canada'];
+const sites     = ['twitter.com', 'facebook.com', 'www.google.com', '', 'facebook.com'];
+const cities    = ['London', 'Los Angels', 'New York', 'New York', 'Jerusalem'];
+
 export default class Seeder {
     public static async init() {
         Log.instructions('Seeding your databases...');
@@ -19,19 +24,19 @@ export default class Seeder {
             const ch = ClickhouseProvider.getClient();
 
             let values = [];
-            for (let i = 1; i < 1_000_000; i++) {
+            for (let i = 1; i < 1_000_000_000; i++) {
                 values.push({
-                    link_id     : Seeder.getRandomArbitrary(1, 100_000),
-                    is_qr       : Seeder.getRandomArbitrary(1, 2) == 1,
-                    is_i        : Seeder.getRandomArbitrary(1, 2) == 1,
-                    is_plus_view: Seeder.getRandomArbitrary(1, 2) == 1,//TODO
+                    link_id     : Seeder.getRandomArbitrary(1, 100),
+                    is_qr       : Seeder.getRandomArbitrary(1, 3) == 1,
+                    is_i        : Seeder.getRandomArbitrary(1, 3) == 1,
+                    is_plus_view: Seeder.getRandomArbitrary(1, 3) == 1,//TODO
                     domain      : '',
-                    country     : 'USA',//TODO
-                    referer     : '',
-                    timestamp   : new Date().toISOString().slice(0, -5),
-                    city        : 'LA',//TODO
-                    device_type : Seeder.getRandomArbitrary(1, 2) == 1 ? 'desktop' : 'mobile',
-                    device_brand: Seeder.getRandomArbitrary(1, 2) == 1 ? 'apple' : 'android',
+                    country     : countries.sort(() => 0.5 - Math.random())[0],
+                    referer     : sites.sort(() => 0.5 - Math.random())[0],
+                    timestamp   : (new Date(new Date() - Math.random() * (84600 * 90 * 1000))).toISOString().slice(0, -5),
+                    city        : cities.sort(() => 0.5 - Math.random())[0],
+                    device_type : Seeder.getRandomArbitrary(1, 3) == 1 ? 'desktop' : 'mobile',
+                    device_brand: Seeder.getRandomArbitrary(1, 3) == 1 ? 'apple' : 'android',
                 });
 
                 if (i % 100000 === 0) {
@@ -62,10 +67,10 @@ export default class Seeder {
             const date = (new Date()).toISOString().slice(0, -5);
             let data   = '';
 
-            for (let i = 1; i < 100_001; i++) {
+            for (let i = 1; i < 101; i++) {
 
                 data += `('http://localhost/', 'Link description', '${i}', '${i}', 'Link ${i} title', '1', null, false, false, false, false, false, '${date}'), `;
-                if (i % 10_000 === 0) {
+                if (i % 100 === 0) {
                     const query = 'INSERT INTO links( dest, description, short, password, title, user_id, campaign_id, password_protected, expiring_link, informal_redirection, monitor, plus_enabled, expiration_date) ' +
                         `VALUES
                     ${data}
