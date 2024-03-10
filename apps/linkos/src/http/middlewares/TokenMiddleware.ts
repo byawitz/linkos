@@ -1,16 +1,23 @@
 import type {Context, Next} from "hono";
 import Token from "../../models/db/Token.ts";
 import API from "../../services/API.ts";
+import {getCookie} from "hono/cookie";
 
 export interface TokenOptions {
     headerName: string,
-    allowWhenSet: string,
+    skipIfSet: string,
 }
 
 export default class TokenMiddleware {
     public static getMiddleware(options: TokenOptions) {
 
         return async (c: Context, next: Next) => {
+            if (getCookie(c, options.skipIfSet)) {
+                await next();
+
+                return;
+            }
+
             const tokenKey = c.req.header(options.headerName);
 
             if (!tokenKey) {
@@ -26,12 +33,8 @@ export default class TokenMiddleware {
             }
 
             c.set('user', user);
-            // To be used when Appwrite user will be added
-            // As middleware
-            c.set(options.allowWhenSet, true);
-
             //TODO: send event to Kafka for adding token usages to Clickhouse
-
+            c.set('loginOkay', true);
             await next();
         }
     }

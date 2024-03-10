@@ -180,6 +180,9 @@ services:
       - NANOID_LENGTH
       - KAFKA_NUMBER_OF_PARTITIONS
       - MAIN_DOMAIN
+      - APPWRITE_ENDPOINT
+      - APPWRITE_PROJECT_ID
+      - APPWRITE_API_KEY
 
     depends_on:
       - kafka

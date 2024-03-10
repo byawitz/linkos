@@ -1,11 +1,14 @@
 export default class NetworkHelper {
+  static readonly login = '/login';
   static readonly whoAmI = '/whoami';
-  static readonly links     = '/links/';
+  static readonly links = '/links/';
   static readonly linkStats = '/links/stat/';
 
   public static async get(url: string) {
     try {
-      const res = await fetch(NetworkHelper.baseUrl(url));
+      const res = await fetch(NetworkHelper.baseUrl(url), {
+        credentials: 'include'
+      });
       return await res.json();
     } catch (e) {
       return { success: false };
@@ -29,6 +32,7 @@ export default class NetworkHelper {
       const res = await fetch(NetworkHelper.baseUrl(url), {
         method,
         body: JSON.stringify(body),
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json;'
         }
