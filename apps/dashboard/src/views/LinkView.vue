@@ -207,12 +207,12 @@ const store = useUserStore();
 const directs = ref(<number[]>[]);
 const qrs = ref(<number[]>[]);
 const clicks = ref(<string[]>[]);
-const apple = ref(<string[]>[]);
-const android = ref(<string[]>[]);
-const mobile = ref(<string[]>[]);
-const desktop = ref(<string[]>[]);
-const unknownType = ref(<string[]>[]);
-const unknownBrand = ref(<string[]>[]);
+const apple = ref(<number[]>[]);
+const android = ref(<number[]>[]);
+const mobile = ref(<number[]>[]);
+const desktop = ref(<number[]>[]);
+const unknownType = ref(<number[]>[]);
+const unknownBrand = ref(<number[]>[]);
 const cityNames = ref(<string[]>[]);
 const citiesCount = ref(<number[]>[]); // TODO gather with names
 const countryNames = ref(<string[]>[]);
@@ -432,7 +432,7 @@ async function loadAnalytics() {
     const _citiesNames = <any[]>[]; // TODO: types.
     const _citiesCount = <any[]>[]; // TODO: types.
 
-    analytics.data.cities.forEach((item) => {
+    analytics.data.cities.forEach((item: any) => {
       _citiesNames.push(item.city);
       _citiesCount.push(parseInt(item.total));
     });
@@ -444,7 +444,7 @@ async function loadAnalytics() {
     const _countryNames = <any[]>[]; // TODO: types.
     const _countryCount = <any[]>[]; // TODO: types.
 
-    analytics.data.countries.forEach((item) => {
+    analytics.data.countries.forEach((item: any) => {
       _countryNames.push(item.country);
       _countryCount.push(parseInt(item.total));
     });
@@ -456,7 +456,7 @@ async function loadAnalytics() {
     const _refererNames = <any[]>[]; // TODO: types.
     const _refererCount = <any[]>[]; // TODO: types.
 
-    analytics.data.referrers.forEach((item) => {
+    analytics.data.referrers.forEach((item: any) => {
       _refererNames.push((item.referer == '' ? 'direct' : item.referer).replace(/^https?:\/\//, ''));
       _refererCount.push(parseInt(item.total)); // TODO create parse int or 0
     });
