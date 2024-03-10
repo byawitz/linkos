@@ -12,7 +12,7 @@ export default class Seeder {
         Log.instructions('Seeding your databases...');
 
 
-        // await Seeder.seedPostgres();
+        await Seeder.seedPostgres();
         await Seeder.seedClickHouse();
         Log.good('Finished seeding');
 
@@ -24,16 +24,16 @@ export default class Seeder {
             const ch = ClickhouseProvider.getClient();
 
             let values = [];
-            for (let i = 1; i < 1_000_000_000; i++) {
+            for (let i = 1; i < 10_000_000; i++) {
                 values.push({
-                    link_id     : Seeder.getRandomArbitrary(1, 100),
+                    link_id     : Seeder.getRandomArbitrary(1, 101),
                     is_qr       : Seeder.getRandomArbitrary(1, 3) == 1,
                     is_i        : Seeder.getRandomArbitrary(1, 3) == 1,
                     is_plus_view: Seeder.getRandomArbitrary(1, 3) == 1,//TODO
                     domain      : '',
                     country     : countries.sort(() => 0.5 - Math.random())[0],
                     referer     : sites.sort(() => 0.5 - Math.random())[0],
-                    timestamp   : (new Date(new Date() - Math.random() * (84600 * 90 * 1000))).toISOString().slice(0, -5),
+                    timestamp   : (new Date((+new Date()) - Math.random() * (84600 * 90 * 1000))).toISOString().slice(0, -5),
                     city        : cities.sort(() => 0.5 - Math.random())[0],
                     device_type : Seeder.getRandomArbitrary(1, 3) == 1 ? 'desktop' : 'mobile',
                     device_brand: Seeder.getRandomArbitrary(1, 3) == 1 ? 'apple' : 'android',
@@ -65,18 +65,17 @@ export default class Seeder {
             const pg = PostgresProvider.getClient();
 
             const date = (new Date()).toISOString().slice(0, -5);
-            let data   = '';
+            let data   = [];
 
             for (let i = 1; i < 101; i++) {
 
-                data += `('http://localhost/', 'Link description', '${i}', '${i}', 'Link ${i} title', '1', null, false, false, false, false, false, '${date}'), `;
+                data.push(`('http://localhost/', 'Link description', '${i}', '${i}', 'Link ${i} title', '1', null, false, false, false, false, false, '${date}')`);
                 if (i % 100 === 0) {
                     const query = 'INSERT INTO links( dest, description, short, password, title, user_id, campaign_id, password_protected, expiring_link, informal_redirection, monitor, plus_enabled, expiration_date) ' +
                         `VALUES
-                    ${data}
-                   ('http://localhost/', 'Link description', 'i-${i}', '${i}', 'Link ${i} title', '1', null, false, false, false, false, false, '${date}') RETURNING *`;
+                    ${data.join(',')} RETURNING *`;
                     const d     = await pg!.query(query);
-                    data        = '';
+                    data        = [];
                     console.log('Inserted 10K rows');
                 }
             }
