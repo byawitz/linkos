@@ -98,3 +98,10 @@ Fully featured Open-source URL Shortener
 | Scheduler    | Cron                |                 Runner |
 
 As the backend is stateless horizontal scaling is very easy.
+
+
+## Tests
+You can run the `e2e` tests locally using [act](https://github.com/nektos/act) by running
+```shell
+act -W ".github/workflows/test.yml" pull_request -P ubuntu-latest=catthehacker/ubuntu:act-22.04 --cache-server-addr host.docker.internal
+```

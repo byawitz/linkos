@@ -102,6 +102,7 @@ export default class Link extends LinkModel {
         try {
             const pg = PostgresProvider.getClient();
 
+            // TODO: update what needed!
             const text   = `UPDATE links
                             set dest                 = $1,
                                 description          = $2,

@@ -1,0 +1,330 @@
+version: '3.8'
+
+x-logging: &x-logging
+  logging:
+    driver: 'json-file'
+    options:
+      max-file: '5'
+      max-size: '10m'
+
+
+services:
+  traefik:
+    image: traefik:2.11
+    container_name: traefik
+    hostname: traefik
+    <<: *x-logging
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`linkos`)
+      - --entrypoints.linkos_web.address=:80
+    restart: unless-stopped
+    depends_on:
+      - linkos
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - linkos
+
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: clickhouse
+    hostname: clickhouse
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - linkos
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    healthcheck:
+      test: [ 'CMD', 'wget', 'http://localhost:8123' ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    environment:
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT
+    volumes:
+      - clickhouse:/var/lib/clickhouse
+
+  postgres:
+    image: postgres:15.2
+    container_name: postgres
+    hostname: postgres
+    <<: *x-logging
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD:
+      POSTGRES_USER:
+      POSTGRES_DB:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres:/var/lib/postgresql/data/pgdata
+    networks:
+      - linkos
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.2.4-bookworm
+    container_name: redis
+    hostname: redis
+    <<: *x-logging
+    restart: unless-stopped
+    command: >
+      redis-server 
+      --save 3600 1 300 100 60 1000 
+      --loglevel warning
+      --maxmemory            1g
+      --maxmemory-policy     allkeys-lru
+      --maxmemory-samples    5
+    networks:
+      - linkos
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: bitnami/kafka:3.6
+    container_name: kafka
+    hostname: kafka
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - linkos
+    volumes:
+      - kafka:/bitnami
+    environment:
+      - KAFKA_CFG_NODE_ID
+      - KAFKA_CFG_PROCESS_ROLES
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+      - KAFKA_CFG_LISTENERS
+      - KAFKA_CFG_ADVERTISED_LISTENERS
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+    healthcheck:
+      test: kafka-topics.sh --bootstrap-server kafka:9092 --list --topic-id 1
+      start_period: 15s
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  linkos:
+    image: linkos-dev
+    hostname: linkos
+    container_name: linkos
+    restart: unless-stopped
+    <<: *x-logging
+    networks:
+      - linkos
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=linkos
+      - traefik.docker.network=linkos
+      - traefik.http.services.linkos.loadbalancer.server.port=3000
+      - traefik.http.routers.linkos_api_http.rule=PathPrefix(`/v1/api`) || PathPrefix(`/dashboard`)
+      - traefik.http.routers.linkos_api_http.entrypoints=linkos_web
+      - traefik.http.routers.linkos_api_http.service=linkos
+    entrypoint: serve
+    environment:
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - API_ENDPOINT
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - NANOID_LETTERS
+      - NANOID_LENGTH
+      - KAFKA_NUMBER_OF_PARTITIONS
+      - MAIN_DOMAIN
+      - APPWRITE_ENDPOINT
+      - APPWRITE_PROJECT_ID
+      - APPWRITE_API_KEY
+    depends_on:
+      - kafka
+      - clickhouse
+      - postgres
+      - redis
+
+  linkos-links:
+    image: linkos-dev
+    hostname: linkos-links
+    container_name: linkos-links
+    restart: unless-stopped
+    <<: *x-logging
+    networks:
+      - linkos
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=linkos
+      - traefik.docker.network=linkos
+      - traefik.http.services.linkos-links.loadbalancer.server.port=3000
+      - traefik.http.routers.linkos_links_http.rule=PathPrefix(`/`)
+      - traefik.http.routers.linkos_links_http.entrypoints=linkos_web
+      - traefik.http.routers.linkos_links_http.service=linkos-links
+    entrypoint: serve-links
+    environment:
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - API_ENDPOINT
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    depends_on:
+      - kafka
+      - postgres
+      - redis
+
+  linkos-analytics-consumer:
+    image: linkos-dev
+    hostname: linkos-analytics-consumer
+    container_name: linkos-analytics-consumer
+    restart: unless-stopped
+    <<: *x-logging
+    entrypoint: analytics
+    networks:
+      - linkos
+    depends_on:
+      - kafka
+      - clickhouse
+      - postgres
+    environment:
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - API_ENDPOINT
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+
+  linkos-webhooks-consumer:
+    image: linkos-dev
+    hostname: linkos-webhooks-consumer
+    container_name: linkos-webhooks-consumer
+    restart: unless-stopped
+    <<: *x-logging
+    entrypoint: webhooks
+    networks:
+      - linkos
+    depends_on:
+      - kafka
+      - postgres
+      - clickhouse
+    environment:
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - API_ENDPOINT
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+
+  linkos-scheduler:
+    image: linkos-dev
+    hostname: linkos-scheduler
+    container_name: linkos-scheduler
+    restart: unless-stopped
+    <<: *x-logging
+    entrypoint: scheduler
+    networks:
+      - linkos
+    depends_on:
+      - kafka
+      - postgres
+      - clickhouse
+    environment:
+      - ENVIRONMENT
+      - TOKEN_DRIVER
+      - APP_SSL_KEY
+      - API_ENDPOINT
+      - REDIS_HOST
+      - REDIS_PORT
+      - KAFKA_HOSTS
+      - CLICKHOUSE_PROTOCOL
+      - CLICKHOUSE_HOST
+      - CLICKHOUSE_PORT
+      - CLICKHOUSE_DB
+      - CLICKHOUSE_USER
+      - CLICKHOUSE_PASSWORD
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - BACKUP_CRON
+
+networks:
+  linkos:
+    name: linkos
+
+volumes:
+  redis:
+  postgres:
+  clickhouse:
+  kafka:
