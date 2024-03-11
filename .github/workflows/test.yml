@@ -59,10 +59,48 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Load Linkos
+        env:
+          ENVIRONMENT: ${{secrets.ENVIRONMENT}}
+          TOKEN_DRIVER: ${{secrets.TOKEN_DRIVER}}
+          APP_SSL_KEY: ${{secrets.APP_SSL_KEY}}
+          API_ENDPOINT: ${{secrets.API_ENDPOINT}}
+          BACKUP_CRON: ${{secrets.BACKUP_CRON}}
+          NANOID_LETTERS: ${{secrets.NANOID_LETTERS}}
+          NANOID_LENGTH: ${{secrets.NANOID_LENGTH}}
+          KAFKA_NUMBER_OF_PARTITIONS: ${{secrets.KAFKA_NUMBER_OF_PARTITIONS}}
+          MAIN_DOMAIN: ${{secrets.MAIN_DOMAIN}}
+          APPWRITE_ENDPOINT: ${{secrets.APPWRITE_ENDPOINT}}
+          APPWRITE_PROJECT_ID: ${{secrets.APPWRITE_PROJECT_ID}}
+          APPWRITE_API_KEY: ${{secrets.APPWRITE_API_KEY}}
+          REDIS_HOST: ${{secrets.REDIS_HOST}}
+          REDIS_PORT: ${{secrets.REDIS_PORT}}
+          KAFKA_HOSTS: ${{secrets.KAFKA_HOSTS}}
+          KAFKA_CFG_NODE_ID: ${{secrets.KAFKA_CFG_NODE_ID}}
+          KAFKA_CFG_PROCESS_ROLES: ${{secrets.KAFKA_CFG_PROCESS_ROLES}}
+          KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: ${{secrets.KAFKA_CFG_CONTROLLER_QUORUM_VOTERS}}
+          KAFKA_CFG_LISTENERS: ${{secrets.KAFKA_CFG_LISTENERS}}
+          KAFKA_CFG_ADVERTISED_LISTENERS: ${{secrets.KAFKA_CFG_ADVERTISED_LISTENERS}}
+          KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: ${{secrets.KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP}}
+          KAFKA_CFG_CONTROLLER_LISTENER_NAMES: ${{secrets.KAFKA_CFG_CONTROLLER_LISTENER_NAMES}}
+          KAFKA_CFG_INTER_BROKER_LISTENER_NAME: ${{secrets.KAFKA_CFG_INTER_BROKER_LISTENER_NAME}}
+          CLICKHOUSE_PROTOCOL: ${{secrets.CLICKHOUSE_PROTOCOL}}
+          CLICKHOUSE_HOST: ${{secrets.CLICKHOUSE_HOST}}
+          CLICKHOUSE_PORT: ${{secrets.CLICKHOUSE_PORT}}
+          CLICKHOUSE_DB: ${{secrets.CLICKHOUSE_DB}}
+          CLICKHOUSE_USER: ${{secrets.CLICKHOUSE_USER}}
+          CLICKHOUSE_PASSWORD: ${{secrets.CLICKHOUSE_PASSWORD}}
+          CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: ${{secrets.CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT}}
+          POSTGRES_HOST: ${{secrets.POSTGRES_HOST}}
+          POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
+          POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
         run: |
           docker load --input /tmp/${{ env.IMAGE }}.tar
           docker compose -f docker-compose.ci.yml up -d
-          sleep 10
+          sleep 20
+      - name: curl health
+        run: curl localhost/v1/api/health
       - name: Install bun
         uses: oven-sh/setup-bun@v1
       - name: run tests
