@@ -39,6 +39,44 @@ Fully featured Open-source URL Shortener
 
 - _For SSL use either Nginx & certbot, or any domain-level SSL as Cloudflare._
 
+# Installation
+
+As of now Linkos is still in alpha, that's why the installation instruction is concise  
+
+<details>
+<summary>Instructions</summary>
+
+Clone these two files to your server
+```shell
+curl https://raw.githubusercontent.com/byawitz/linkos/master/docker-compose.yml -o docker-compose.yml
+curl https://raw.githubusercontent.com/byawitz/linkos/master/.env.example -o .env
+```
+Edit the `.env` files and set the values for your `Appwrite.version >= 1.5.0` endpoint, project id and API key.
+```ini
+APPWRITE_ENDPOINT="https://cloud.appwrite.io/v1"
+APPWRITE_PROJECT_ID="project ID"
+APPWRITE_API_KEY="API key"
+```
+Run 
+```shell
+docker compose up -d
+```
+
+Now you'll need to install Linkos by entering the main container and running the following command
+```shell
+docker exec -it linkos bash
+bun src/index.ts --install
+```
+You'll be asked to enter email for the admin user; this should be a user that you've created in
+your Appwrite project.
+
+Now you can seed the database if you want to have some demo data by running
+```shell
+docker exec -it linkos bash
+bun src/index.ts --databases-seeder
+```
+</details>
+
 ## Features:
 
 | Feature                 | Description                                                                                                                                                              | Quota / Notes |
@@ -99,9 +137,10 @@ Fully featured Open-source URL Shortener
 
 As the backend is stateless horizontal scaling is very easy.
 
-
 ## Tests
+
 You can run the `e2e` tests locally using [act](https://github.com/nektos/act) by running
+
 ```shell
 act -W ".github/workflows/test.yml" pull_request -P ubuntu-latest=catthehacker/ubuntu:act-22.04 --cache-server-addr host.docker.internal
 ```
