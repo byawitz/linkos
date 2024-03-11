@@ -62,7 +62,9 @@ jobs:
         run: |
           docker load --input /tmp/${{ env.IMAGE }}.tar
           docker compose -f docker-compose.ci.yml up -d
-          sleep 10
+          sleep 20
+      - name: curl health
+        run: curl localhost/v1/api/health
       - name: Install bun
         uses: oven-sh/setup-bun@v1
       - name: run tests

@@ -1,6 +1,6 @@
 import {expect, test, describe, beforeAll} from "bun:test";
 
-const endpoint = 'http://localhost:8080/'
+const endpoint = 'http://127.0.0.1/'
 
 interface response {
     success: boolean,
