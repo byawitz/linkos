@@ -1,4 +1,4 @@
-name: "API Release"
+name: release
 
 on:
   release:
