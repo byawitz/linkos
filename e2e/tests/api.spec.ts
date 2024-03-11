@@ -1,6 +1,6 @@
 import {expect, test, describe, beforeAll} from "bun:test";
 
-const apiEndpoint = 'http://traefik:8080/v1/api'
+const apiEndpoint = 'http://localhost:8080/v1/api'
 
 interface response {
     success: boolean,
