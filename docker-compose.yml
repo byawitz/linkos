@@ -37,9 +37,6 @@ services:
     restart: unless-stopped
     networks:
       - linkos
-    ports:
-      - '8123:8123'
-      - '9000:9000'
     healthcheck:
       test: [ 'CMD', 'wget', 'http://localhost:8123' ]
       interval: 5s
@@ -68,8 +65,6 @@ services:
       POSTGRES_USER:
       POSTGRES_DB:
       PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - 5432:5432
     volumes:
       - postgres:/var/lib/postgresql/data/pgdata
     networks:
@@ -86,8 +81,6 @@ services:
     hostname: redis
     <<: *x-logging
     restart: unless-stopped
-    ports:
-      - 6379:6379
     command: >
       redis-server 
       --save 3600 1 300 100 60 1000 
@@ -111,8 +104,6 @@ services:
     hostname: kafka
     <<: *x-logging
     restart: unless-stopped
-    ports:
-      - "9092:9092"
     networks:
       - linkos
     volumes:
