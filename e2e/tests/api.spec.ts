@@ -36,7 +36,6 @@ describe('Installing & Seeding', () => {
 
         const output = await new Response(proc.stdout).text();
         expect(output).toContain('Owner token created')
-        console.log(output);
     });
 
     test('Seeding', async () => {
@@ -46,10 +45,10 @@ describe('Installing & Seeding', () => {
 
         proc.stdin!.write(`bun /usr/server/app/src/index.ts -dbs\n`);
         proc.stdin!.flush();
+        proc.stdin!.end();
 
         const output = await new Response(proc.stdout).text();
         expect(output).toContain('Finished seeding')
-        console.log(output);
     }, 60000);
 });
 
