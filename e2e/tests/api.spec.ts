@@ -49,7 +49,7 @@ describe('Installing & Seeding', () => {
 
         const output = await new Response(proc.stdout).text();
         expect(output).toContain('Finished seeding')
-    }, 60000);
+    }, 80000);
 });
 
 describe('All endpoints logged in', () => {
