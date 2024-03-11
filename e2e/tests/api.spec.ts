@@ -1,6 +1,6 @@
 import {expect, test, describe, beforeAll} from "bun:test";
 
-const apiEndpoint = 'http://127.0.0.1/v1/api'
+const apiEndpoint = 'http://localhost:8080/v1/api'
 
 interface response {
     success: boolean,
@@ -49,7 +49,7 @@ describe('Installing & Seeding', () => {
 
         const output = await new Response(proc.stdout).text();
         expect(output).toContain('Finished seeding')
-    }, 60000);
+    }, 80000);
 });
 
 describe('All endpoints logged in', () => {

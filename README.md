@@ -15,7 +15,7 @@ Fully featured Open-source URL Shortener
 >
 > | 🏗️ Current | 👉 Next |
 > |-------------|---------|
-> | Pre-alpha   | Alpha   |
+> | Alpha       | Beta    |
 
 ## Architecture
 
