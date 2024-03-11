@@ -24,7 +24,7 @@ export default class Seeder {
             const ch = ClickhouseProvider.getClient();
 
             let values = [];
-            for (let i = 1; i < 10_000_000; i++) {
+            for (let i = 1; i < 1_000_000; i++) {
                 values.push({
                     link_id     : Seeder.getRandomArbitrary(1, 101),
                     is_qr       : Seeder.getRandomArbitrary(1, 3) == 1,
