@@ -1,7 +1,7 @@
 <template>
   <PageHeader title="Links" sub-title="all">
     <template #buttons>
-      <Button :is-link="true" to="/links/add" b-type="btn-primary">New LinkAPI</Button>
+      <Button :is-link="true" to="/links/add" b-type="btn-primary">New Link</Button>
     </template>
   </PageHeader>
 

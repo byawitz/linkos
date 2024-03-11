@@ -9,7 +9,7 @@
           <div class="col">
             <form class="card" @submit.prevent="submitForm">
               <div class="card-header">
-                <h4 class="card-title">LinkAPI details</h4>
+                <h4 class="card-title">Link details</h4>
               </div>
 
               <div class="card-body" :class="{ 'block-cover-overlay': submitting }">
@@ -34,14 +34,14 @@
                     />
                     <InputText v-model="link.short" placeholder="Leave empty for auto generating" label="Short link" />
 
-                    <TextArea v-model="link.description" placeholder="Mostly relevant when using Informal redirect " label="LinkAPI description" />
+                    <TextArea v-model="link.description" placeholder="Mostly relevant when using Informal redirect " label="Link description" />
                   </div>
 
                   <div class="col-xl-6">
                     <InputSelect label="Campaign" v-model="link.campaign_id" :options="[]" />
 
                     <div class="mb-3">
-                      <div class="form-label">LinkAPI options</div>
+                      <div class="form-label">Link options</div>
                       <SlideCheckbox label="Monitor link uptime" v-model="link.monitor" />
                       <SlideCheckbox label="Informal redirect" v-model="link.informal_redirection" />
                       <SlideCheckbox label="Enable Plus page" v-model="link.plus_enabled" />
@@ -50,7 +50,7 @@
                       <InputDate v-if="link.expiring_link" label="Expiration date" placeholder="Select a date" v-model="link.expiration_date" />
 
                       <SlideCheckbox label="Password protected" v-model="link.password_protected" />
-                      <InputText v-model="link.password" placeholder="123456780" label="LinkAPI password" v-if="link.password_protected" />
+                      <InputText v-model="link.password" placeholder="123456780" label="Link password" v-if="link.password_protected" />
                     </div>
                   </div>
                 </div>
