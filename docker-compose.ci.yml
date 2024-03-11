@@ -23,7 +23,7 @@ services:
     depends_on:
       - linkos
     ports:
-      - "127.0.0.1:80:80"
+      - "8080:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
@@ -318,6 +318,8 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - BACKUP_CRON
+
+
 
 networks:
   linkos:
