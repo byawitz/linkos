@@ -12,7 +12,7 @@
       <span class="nav-link-title">{{ text }}</span>
     </RouterLink>
 
-    <div class="dropdown-menu" v-if="withDropDown">
+    <div class="dropdown-menu show" v-if="withDropDown">
       <slot name="dropdown"></slot>
     </div>
   </li>

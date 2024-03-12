@@ -1,5 +1,5 @@
 <template>
-  <PageHeader title="Links" sub-title="all">
+  <PageHeader :title="$t('Links')" :sub-title="$t('all')">
     <template #buttons>
       <Button :is-link="true" to="/links/add" b-type="btn-primary">{{ $t('New Link') }}</Button>
     </template>
