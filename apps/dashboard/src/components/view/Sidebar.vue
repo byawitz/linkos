@@ -8,7 +8,7 @@
         data-bs-target="#sidebar-menu"
         aria-controls="sidebar-menu"
         aria-expanded="false"
-        aria-label="Toggle navigation"
+        :aria-label="$t('Toggle navigation')"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -21,13 +21,13 @@
       </h1>
 
       <NavBar>
-        <NavItem text="Dashboard" href="/">
+        <NavItem :text="$t('Dashboard')" href="/">
           <template #icon>
             <IconDashboard class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Links" :with-drop-down="true">
+        <NavItem :text="$t('Links')" :with-drop-down="true">
           <template #icon>
             <IconLink class="icon" />
           </template>
@@ -36,60 +36,58 @@
             <DropdownColumns>
               <DropdownColumn>
                 <DropdownItem to="/links">
-                  <span>All Links</span>
+                  <span>{{ $t('All Links') }}</span>
                 </DropdownItem>
 
                 <DropdownItem to="/tags">
-                  <span>Tags</span>
+                  <span>{{ $t('Tags') }}</span>
+                </DropdownItem>
+
+                <DropdownItem to="/campaigns">
+                  <span>{{ $t('Campaigns') }}</span>
                 </DropdownItem>
               </DropdownColumn>
             </DropdownColumns>
           </template>
         </NavItem>
 
-        <NavItem text="Campaigns" href="/campaigns">
-          <template #icon>
-            <IconConfetti class="icon" />
-          </template>
-        </NavItem>
-
-        <NavItem text="Domains" href="/domains">
+        <NavItem :text="$t('Domains')" href="/domains">
           <template #icon>
             <IconWorldWww class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Importer" href="/importer">
+        <NavItem :text="$t('Importer')" href="/importer">
           <template #icon>
             <IconFileImport class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Tokens" href="/tokens">
+        <NavItem :text="$t('Tokens')" href="/tokens">
           <template #icon>
             <IconKey class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Users" href="/users">
+        <NavItem :text="$t('Users')" href="/users">
           <template #icon>
             <IconUsers class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Backup" href="/backups">
+        <NavItem :text="$t('Backup')" href="/backups">
           <template #icon>
             <IconFileZip class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Profile" href="profile">
+        <NavItem :text="$t('Profile')" href="profile">
           <template #icon>
             <IconUser class="icon" />
           </template>
         </NavItem>
 
-        <NavItem text="Logout" href="login">
+        <NavItem :text="$t('Logout')" href="login">
           <template #icon>
             <IconLogout class="icon" />
           </template>

@@ -7,25 +7,25 @@
 
       <Card card-size="card-md">
         <CardBody>
-          <h2 class="h2 text-center mb-4">Reset your password</h2>
+          <h2 class="h2 text-center mb-4">{{ $t('Reset your password') }}</h2>
 
           <form autocomplete="off">
             <div class="mb-3">
-              <FormLabel label="Email Address" />
-              <input type="email" v-model="state.email" class="form-control" placeholder="your@email.com" autocomplete="off" />
+              <FormLabel :label="$t('Email Address')" />
+              <input type="email" v-model="state.email" class="form-control" placeholder="email@example.com" autocomplete="off" />
             </div>
 
             <div class="form-footer">
-              <Button type="submit" b-type="btn-primary">Reset your password</Button>
+              <Button type="submit" b-type="btn-primary">{{ $t('Reset your password') }}</Button>
             </div>
           </form>
         </CardBody>
       </Card>
 
       <div class="text-center text-secondary mt-3">
-        Forget it,
-        <RouterLink to="/login">send me back</RouterLink>
-        to the sign in screen.
+        {{ $t('Forget it,') }}
+        <RouterLink to="/login">{{ $t('send me back') }}</RouterLink>
+        {{ $t('to the sign in screen.') }}
       </div>
     </Container>
   </Page>
@@ -42,18 +42,13 @@ import CardBody from '@/components/layouts/CardBody.vue';
 import FormLabel from '@/components/form/FormLabel.vue';
 import Button from '@/components/form/Button.vue';
 
-onMounted(() => {
-  DomHelper.addClassToID('app', 'page', 'page-center');
-});
-
-onUnmounted(() => {
-  DomHelper.removeClassFromID('app', 'page', 'page-center');
-});
-
 const state = reactive({
   email: '',
   password: '',
   showPassword: false,
   rememberMe: false
 });
+
+onMounted(() => DomHelper.addClassToID('app', 'page', 'page-center'));
+onUnmounted(() => DomHelper.removeClassFromID('app', 'page', 'page-center'));
 </script>

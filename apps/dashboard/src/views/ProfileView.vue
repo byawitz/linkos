@@ -4,6 +4,6 @@ import StillInWork from '@/components/view/StillInWork.vue';
 </script>
 
 <template>
-  <PageHeader title="Profile"></PageHeader>
+  <PageHeader :title="$t('Profile')"></PageHeader>
   <StillInWork />
 </template>
