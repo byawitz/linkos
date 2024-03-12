@@ -1,7 +1,7 @@
 <template>
-  <PageHeader class="mb-2" :sub-title="link.id !== '' ? `Link #${link.id}` : ''" :title="title">
+  <PageHeader class="mb-2" :sub-title="link.id !== '' ? `${$t('Link')} #${link.id}` : ''" :title="title">
     <template #buttons>
-      <Button :is-link="true" :to="`/links/${link.id}/edit`" b-type="btn-primary" v-if="link.id !== ''">Edit link</Button>
+      <Button :is-link="true" :to="`/links/${link.id}/edit`" b-type="btn-primary" v-if="link.id !== ''">{{ $t('Edit link') }}</Button>
     </template>
   </PageHeader>
 
@@ -9,7 +9,7 @@
     <div class="row">
       <Card v-if="loading">
         <CardBody class="text-center py-6">
-          <h2 class="h2 text-blue pb-4">Getting link</h2>
+          <h2 class="h2 text-blue pb-4">{{ $t('Getting link') }}</h2>
           <div class="spinner-grow text-blue" role="status"></div>
         </CardBody>
       </Card>
@@ -17,43 +17,43 @@
       <template v-else>
         <div class="col-12">
           <Card>
-            <CardHeader title="Base info" />
+            <CardHeader :title="$t('Basic info')" />
 
             <CardBody>
               <div class="datagrid">
                 <DatagridItem itemTitle="Short" :value="link.short">
                   <a href="#" @click.prevent="copyToClipboard(link)" class="px-2">
                     <IconCopy :size="18" v-if="!link.copying" />
-                    <template v-else>copied</template>
+                    <template v-else>{{ $t('copied') }}</template>
                   </a>
 
                   <a :href="getShort(link)" target="_blank">
                     <IconExternalLink :size="18" />
                   </a>
                 </DatagridItem>
-                <DatagridItem itemTitle="Destination" :value="link.dest" />
-                <DatagridItem itemTitle="Campaign" :value="link.campaign_title" />
+                <DatagridItem :itemTitle="$t('Destination')" :value="link.dest" />
+                <DatagridItem :itemTitle="$t('Campaign')" :value="link.campaign_title" />
                 <!-- TODO: -->
-                <DatagridItem itemTitle="User" :value="link.username" />
+                <DatagridItem :itemTitle="$t('User')" :value="link.username" />
                 <!-- TODO: -->
-                <DatagridItem itemTitle="Description" :value="link.description" />
+                <DatagridItem :itemTitle="$t('Description')" :value="link.description" />
 
                 <DatagridStatusItem
-                  itemTitle="Plus enabled"
+                  :itemTitle="$t('Plus enabled')"
                   :status="!link.plus_enabled ? 'status-red' : 'status-green'"
                   :value="link.plus_enabled"
                 />
 
                 <DatagridStatusItem
-                  itemTitle="Informal enabled"
+                  :itemTitle="$t('Informal enabled')"
                   :status="!link.informal_redirection ? 'status-red' : 'status-green'"
                   :value="link.informal_redirection"
                 />
 
-                <DatagridStatusItem itemTitle="Monitoring" :status="!link.monitor ? 'status-red' : 'status-green'" :value="link.monitor" />
+                <DatagridStatusItem :itemTitle="$t('Monitoring')" :status="!link.monitor ? 'status-red' : 'status-green'" :value="link.monitor" />
 
                 <DatagridStatusItem
-                  itemTitle="Password protected"
+                  :itemTitle="$t('Password protected')"
                   :status="link.password_protected ? 'status-red' : 'status-green'"
                   :value="link.password_protected"
                 >
@@ -61,7 +61,7 @@
                 </DatagridStatusItem>
 
                 <DatagridStatusItem
-                  itemTitle="Expiring link"
+                  :itemTitle="$t('Expiring link')"
                   :status="link.expiring_link ? 'status-red' : 'status-green'"
                   :value="link.expiring_link"
                 >
@@ -70,8 +70,8 @@
                   }}</span>
                 </DatagridStatusItem>
 
-                <DatagridItem itemTitle="Last edited" :value="new Date(link.updated_at).toLocaleString()" />
-                <DatagridItem itemTitle="Created at" :value="new Date(link.created_at).toLocaleString()" />
+                <DatagridItem :itemTitle="$t('Last edited')" :value="new Date(link.updated_at).toLocaleString()" />
+                <DatagridItem :itemTitle="$t('Created at')" :value="new Date(link.created_at).toLocaleString()" />
               </div>
             </CardBody>
           </Card>
@@ -80,7 +80,7 @@
         <div class="col-12 mt-4" v-if="loadingAnalytics">
           <Card>
             <CardBody class="text-center py-6">
-              <h2 class="h2 text-blue pb-4">Loading analytics</h2>
+              <h2 class="h2 text-blue pb-4">{{ $t('Loading analytics') }}</h2>
               <div class="spinner-grow text-blue" role="status"></div>
             </CardBody>
           </Card>
@@ -90,7 +90,9 @@
           <div class="col-md-6 col-xl-4 col-12">
             <Card class="mt-4">
               <CardBody>
-                <div class="d-flex"><h3 class="card-title">Clicks</h3></div>
+                <div class="d-flex">
+                  <h3 class="card-title">{{ $t('Clicks') }}</h3>
+                </div>
 
                 <div class="row">
                   <div class="col">
@@ -104,7 +106,9 @@
           <div class="col-md-6 col-xl-4 col-12">
             <Card class="mt-4">
               <CardBody>
-                <div class="d-flex"><h3 class="card-title">Device Type</h3></div>
+                <div class="d-flex">
+                  <h3 class="card-title">{{ $t('Device Type') }}</h3>
+                </div>
 
                 <div class="row">
                   <div class="col">
@@ -118,7 +122,9 @@
           <div class="col-md-6 col-xl-4 col-12">
             <Card class="mt-4">
               <CardBody>
-                <div class="d-flex"><h3 class="card-title">Device Brand</h3></div>
+                <div class="d-flex">
+                  <h3 class="card-title">{{ $t('Device Brand') }}</h3>
+                </div>
 
                 <div class="row">
                   <div class="col">
@@ -132,7 +138,9 @@
           <div class="col-md-6 col-xl-4 col-12">
             <Card class="mt-4">
               <CardBody>
-                <div class="d-flex"><h3 class="card-title">Countries</h3></div>
+                <div class="d-flex">
+                  <h3 class="card-title">{{ $t('Countries') }}</h3>
+                </div>
 
                 <div class="row">
                   <div class="col">
@@ -146,7 +154,9 @@
           <div class="col-md-6 col-xl-4 col-12">
             <Card class="mt-4">
               <CardBody>
-                <div class="d-flex"><h3 class="card-title">Cities</h3></div>
+                <div class="d-flex">
+                  <h3 class="card-title">{{ $t('Cities') }}</h3>
+                </div>
                 <div class="row">
                   <div class="col">
                     <div id="cities-chart"></div>
@@ -159,7 +169,9 @@
           <div class="col-md-6 col-xl-4 col-12">
             <Card class="mt-4">
               <CardBody>
-                <div class="d-flex"><h3 class="card-title">Referrers</h3></div>
+                <div class="d-flex">
+                  <h3 class="card-title">{{ $t('Referrers') }}</h3>
+                </div>
 
                 <div class="row">
                   <div class="col">
@@ -191,8 +203,10 @@ import Button from '@/components/form/Button.vue';
 import { IconCopy, IconExternalLink } from '@tabler/icons-vue';
 import { useUserStore } from '@/stores/user';
 import ApexCharts from 'apexcharts';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
+const { t } = useI18n();
 
 const id = router.currentRoute.value.params.id;
 
@@ -200,7 +214,7 @@ const days = ref(30);
 const loading = ref(true);
 const loadingAnalytics = ref(false);
 const link = ref(new LinkModel());
-const title = computed(() => (link.value.title !== '' ? link.value.title : 'View link'));
+const title = computed(() => (link.value.title !== '' ? link.value.title : t('View link')));
 const store = useUserStore();
 
 // Analytics
@@ -256,7 +270,7 @@ function loadClicks() {
     theme: { mode: 'dark' /* TODO: by theme*/ },
     series: [
       {
-        name: 'Direct',
+        name: t('Direct'),
         data: directs.value
       },
       {
@@ -290,9 +304,9 @@ function loadDeviceBrands() {
   new ApexCharts(document.getElementById('device-brand-chart'), {
     theme: { mode: 'dark' /* TODO: by theme*/ },
     series: [
-      { name: 'Other', data: unknownBrand.value },
-      { name: 'Android', data: android.value },
-      { name: 'Apple', data: apple.value }
+      { name: t('Other'), data: unknownBrand.value },
+      { name: t('Android'), data: android.value },
+      { name: t('Apple'), data: apple.value }
     ],
     chart: { background: 'transparent', height: 240, type: 'area', toolbar: { show: false } },
     dataLabels: { enabled: false },
@@ -301,7 +315,7 @@ function loadDeviceBrands() {
       type: 'date',
       categories: clicks.value
     },
-    tooltip: { x: { format: 'dd/MM/yy' } }
+    tooltip: { x: { format: t('dd/MM/yy') } }
   }).render();
 }
 
@@ -309,9 +323,9 @@ function loadDeviceType() {
   new ApexCharts(document.getElementById('device-type-chart'), {
     theme: { mode: 'dark' /* TODO: by theme*/ },
     series: [
-      { name: 'Other', data: unknownType.value },
-      { name: 'Mobile', data: mobile.value },
-      { name: 'Desktop', data: desktop.value }
+      { name: t('Other'), data: unknownType.value },
+      { name: t('Mobile'), data: mobile.value },
+      { name: t('Desktop'), data: desktop.value }
     ],
     chart: { background: 'transparent', height: 240, type: 'area', toolbar: { show: false } },
     dataLabels: { enabled: false },
@@ -320,7 +334,7 @@ function loadDeviceType() {
       type: 'date',
       categories: clicks.value
     },
-    tooltip: { x: { format: 'dd/MM/yy' } }
+    tooltip: { x: { format: t('dd/MM/yy') } }
   }).render();
 }
 

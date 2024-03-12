@@ -4,7 +4,7 @@ import StillInWork from '@/components/view/StillInWork.vue';
 </script>
 
 <template>
-  <PageHeader title="Linkos" />
+  <PageHeader :title="$t('Linkos')" />
 
   <StillInWork />
 </template>

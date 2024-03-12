@@ -7,8 +7,10 @@
             <div class="card-stamp-icon bg-yellow"><IconClockFilled :size="70" /></div>
           </div>
           <div class="card-body">
-            <h2 class="h2 card-title">Still in the work</h2>
-            <p>This page is still in the working make sure to follow our <a href="https://github.com/byawitz/linkos">repo</a></p>
+            <h2 class="h2 card-title">{{ $t('Still in the work') }}</h2>
+            <p>
+              {{ $t('This page is still in the working make sure to follow our') }} <a href="https://github.com/byawitz/linkos">{{ $t('repo') }}</a>
+            </p>
           </div>
         </div>
       </div>

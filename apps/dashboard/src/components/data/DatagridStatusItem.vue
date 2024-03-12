@@ -2,7 +2,7 @@
   <div class="datagrid-item">
     <div class="datagrid-title">{{ itemTitle }}</div>
     <div class="datagrid-content">
-      <span class="status" :class="status"> {{ value ? 'On' : 'Off' }} </span>
+      <span class="status" :class="status"> {{ value ? $t('On') : $t('Off') }} </span>
       <slot></slot>
     </div>
   </div>

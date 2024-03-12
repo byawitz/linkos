@@ -1,5 +1,5 @@
 <template>
-  <template v-if="loading">loading</template>
+  <template v-if="loading">{{ $t('loading') }}</template>
 
   <template v-else>
     <PageHeader :title="pageTitle" :sub-title="pageSubTitle"></PageHeader>
@@ -9,7 +9,7 @@
           <div class="col">
             <form class="card" @submit.prevent="submitForm">
               <div class="card-header">
-                <h4 class="card-title">Link details</h4>
+                <h4 class="card-title">{{ $t('Link details') }}</h4>
               </div>
 
               <div class="card-body" :class="{ 'block-cover-overlay': submitting }">
@@ -17,40 +17,45 @@
                   <div class="col-xl-6">
                     <InputText
                       :is-invalid="titleInvalid"
-                      feedback="Title is required to be at least 3 characters"
+                      :feedback="$t('title_required_and_3')"
                       :required="true"
                       v-model="link.title"
-                      placeholder="YouTube Galaxy unboxing"
-                      label="Title"
+                      :placeholder="$t('link_title_example')"
+                      :label="$t('Title')"
                     />
 
                     <InputText
                       :is-invalid="destInvalid"
-                      feedback="Destination is required to be at least 5 characters, and a valid URL."
+                      :feedback="$t('destination_required_and_5')"
                       :required="true"
                       v-model="link.dest"
                       placeholder="https://www.youtube.com/watch?v=g186XVcuNUc"
-                      label="Destination"
+                      :label="$t('Destination')"
                     />
-                    <InputText v-model="link.short" placeholder="Leave empty for auto generating" label="Short link" />
+                    <InputText v-model="link.short" :placeholder="$t('empty_for_auto')" :label="$t('Short link')" />
 
-                    <TextArea v-model="link.description" placeholder="Mostly relevant when using Informal redirect " label="Link description" />
+                    <TextArea v-model="link.description" :placeholder="$t('when_desc_relevant')" :label="$t('Link description')" />
                   </div>
 
                   <div class="col-xl-6">
-                    <InputSelect label="Campaign" v-model="link.campaign_id" :options="[]" />
+                    <InputSelect :label="$t('Campaign')" v-model="link.campaign_id" :options="[]" />
 
                     <div class="mb-3">
-                      <div class="form-label">Link options</div>
-                      <SlideCheckbox label="Monitor link uptime" v-model="link.monitor" />
-                      <SlideCheckbox label="Informal redirect" v-model="link.informal_redirection" />
-                      <SlideCheckbox label="Enable Plus page" v-model="link.plus_enabled" />
+                      <div class="form-label">{{ $t('Link options') }}</div>
+                      <SlideCheckbox :label="$t('Monitor link uptime')" v-model="link.monitor" />
+                      <SlideCheckbox :label="$t('Informal redirect')" v-model="link.informal_redirection" />
+                      <SlideCheckbox :label="$t('Enable Plus page')" v-model="link.plus_enabled" />
 
-                      <SlideCheckbox label="Set expiration date" v-model="link.expiring_link" />
-                      <InputDate v-if="link.expiring_link" label="Expiration date" placeholder="Select a date" v-model="link.expiration_date" />
+                      <SlideCheckbox :label="$t('Set expiration date')" v-model="link.expiring_link" />
+                      <InputDate
+                        v-if="link.expiring_link"
+                        :label="$t('Expiration date')"
+                        :placeholder="$t('Select a date')"
+                        v-model="link.expiration_date"
+                      />
 
-                      <SlideCheckbox label="Password protected" v-model="link.password_protected" />
-                      <InputText v-model="link.password" placeholder="123456780" label="Link password" v-if="link.password_protected" />
+                      <SlideCheckbox :label="$t('Password protected')" v-model="link.password_protected" />
+                      <InputText v-model="link.password" placeholder="123456780" :label="$t('Link password')" v-if="link.password_protected" />
                     </div>
                   </div>
                 </div>
@@ -59,7 +64,7 @@
               <div class="card-footer text-end">
                 <div class="d-flex">
                   <button type="submit" class="btn btn-primary ms-auto" :class="{ 'btn-loading': submitting }">
-                    {{ isEdit ? 'Update' : 'Add' }} Link
+                    {{ isEdit ? $t('Update') : $t('Add') }} {{ $t('Link') }}
                   </button>
                 </div>
               </div>
@@ -84,12 +89,14 @@ import SlideCheckbox from '@/components/form/SlideCheckbox.vue';
 import InputDate from '@/components/form/InputDate.vue';
 import InputSelect from '@/components/form/InputSelect.vue';
 import Container from '@/components/layouts/Container.vue';
+import { useI18n } from 'vue-i18n';
 
 const router = useRouter();
+const { t } = useI18n();
 
 const id = router.currentRoute.value.params.id;
 
-const pageSubTitle = computed(() => (isEdit.value ? link.value.title : 'adding'));
+const pageSubTitle = computed(() => (isEdit.value ? link.value.title : t('adding')));
 const titleInvalid = computed(() => submittedOnce.value && link.value.title.length < 3);
 const destInvalid = computed(() => submittedOnce.value && (link.value.dest.length < 5 || !NetworkHelper.isURL(link.value.dest)));
 const isEdit = computed(() => {
@@ -101,7 +108,7 @@ const loading = ref(isEdit.value);
 const submitting = ref(false);
 const submittedOnce = ref(false);
 
-const pageTitle = computed(() => (isEdit.value ? 'Edit' : 'New link'));
+const pageTitle = computed(() => (isEdit.value ? t('Edit') : t('New link')));
 
 async function submitForm() {
   submittedOnce.value = true;

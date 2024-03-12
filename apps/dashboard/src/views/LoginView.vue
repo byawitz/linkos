@@ -2,22 +2,22 @@
   <Page :is-center="true">
     <Container :is-tight="true" class="py-4">
       <TextCenter class="mb-4">
-        <img src="@/assets/images/linkos-full.png" width="110" height="32" alt="Likos" class="navbar-brand-image" />
+        <img src="@/assets/images/linkos-full.png" width="110" height="32" alt="Linkos" class="navbar-brand-image" />
       </TextCenter>
 
       <Card card-size="card-md">
         <CardBody>
-          <h2 class="h2 text-center mb-4">Login to your account</h2>
+          <h2 class="h2 text-center mb-4">{{ $t('Login to your account') }}</h2>
 
           <form autocomplete="off" @submit.prevent="login">
             <div class="mb-3">
-              <FormLabel label="Email Address" />
+              <FormLabel :label="$t('Email Address')" />
               <input type="email" v-model="state.email" class="form-control" placeholder="your@email.com" autocomplete="off" />
             </div>
 
             <div class="mb-2">
-              <FormLabel label="Password" :with-description="true">
-                <RouterLink to="/forgot">I forgot password</RouterLink>
+              <FormLabel :label="$t('Password')" :with-description="true">
+                <RouterLink to="/forgot">{{ $t('Forgot password ?') }}</RouterLink>
               </FormLabel>
 
               <InputGroup :is-flat="true">
@@ -25,7 +25,7 @@
                   :type="state.showPassword ? 'text' : 'password'"
                   v-model="state.password"
                   class="form-control"
-                  placeholder="Your password"
+                  :placeholder="$t('Your password')"
                   autocomplete="off"
                 />
 
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-footer">
-              <Button type="submit" b-type="btn-primary" :class="{ 'btn-loading': state.submitting }">Sign in</Button>
+              <Button type="submit" b-type="btn-primary" :class="{ 'btn-loading': state.submitting }">{{ $t('Sign in') }}</Button>
             </div>
           </form>
         </CardBody>

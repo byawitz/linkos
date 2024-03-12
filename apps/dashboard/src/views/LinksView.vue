@@ -1,7 +1,7 @@
 <template>
-  <PageHeader title="Links" sub-title="all">
+  <PageHeader :title="$t('Links')" :sub-title="$t('all')">
     <template #buttons>
-      <Button :is-link="true" to="/links/add" b-type="btn-primary">New Link</Button>
+      <Button :is-link="true" to="/links/add" b-type="btn-primary">{{ $t('New Link') }}</Button>
     </template>
   </PageHeader>
 
@@ -15,17 +15,17 @@
                 <div class="table-loading" v-if="tableLoading">
                   <div class="tl-inner-text">
                     <div class="spinner-border text-blue" role="status"></div>
-                    <p>Just a moment</p>
+                    <p>{{ $t('Just a moment') }}</p>
                   </div>
                 </div>
                 <table class="table table-vcenter card-table">
                   <thead>
                     <tr>
                       <th class="w-1">#</th>
-                      <th>Title</th>
-                      <th>Short</th>
-                      <th class="w-1">Clicks</th>
-                      <th>Destination</th>
+                      <th>{{ $t('Title') }}</th>
+                      <th>{{ $t('Short') }}</th>
+                      <th class="w-1">{{ $t('Clicks') }}</th>
+                      <th>{{ $t('Destination') }}</th>
                       <th class="w-1"></th>
                     </tr>
                   </thead>
@@ -41,7 +41,7 @@
 
                           <a href="#" @click.prevent="copyToClipboard(link)" class="px-2">
                             <IconCopy :size="18" v-if="!link.copying" />
-                            <template v-else>copied</template>
+                            <template v-else>{{ $t('copied') }}</template>
                           </a>
 
                           <a :href="getShort(link)" target="_blank">
@@ -51,7 +51,7 @@
                       </td>
                       <td class="text-secondary">{{ parseInt(link.clicks.toString()).toLocaleString() }}</td>
                       <td class="text-secondary">
-                        <span :title="link.dest">{{ link.dest.substring(0, 50) }}...</span>
+                        <span :title="link.dest">{{ link.dest.substring(0, 50) }}{{ link.dest.length > 50 ? '...' : '' }}</span>
                       </td>
                       <td>
                         <div class="btn-list flex-nowrap">
@@ -60,8 +60,8 @@
                               <IconSettings :size="15" />
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" style="">
-                              <RouterLink class="dropdown-item" :to="`/links/${link.id}/edit`">Edit</RouterLink>
-                              <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link)" href="#"> Delete </a>
+                              <RouterLink class="dropdown-item" :to="`/links/${link.id}/edit`">{{ $t('Edit') }}</RouterLink>
+                              <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link)" href="#"> {{ $t('Delete') }} </a>
                             </div>
                           </div>
                         </div>
@@ -90,8 +90,10 @@ import PageHeader from '@/components/layouts/PageHeader.vue';
 import type { SweetAlertResult, SweetAlertCustomClass } from 'sweetalert2';
 import { useUserStore } from '@/stores/user';
 import Container from '@/components/layouts/Container.vue';
+import { useI18n } from 'vue-i18n';
 
 const store = useUserStore();
+const { t } = useI18n();
 
 const links: Ref<LinkModel[]> = ref([]);
 const tableLoading = ref(false);
@@ -117,8 +119,8 @@ async function deleteLink(deletingLink: LinkModel) {
     );
   } else {
     swal.fire({
-      title: 'Error',
-      text: 'Error while deleting link, please try again.',
+      title: t('Error'),
+      text: t('Error while deleting link, please try again.'),
       icon: 'error'
     });
   }
@@ -140,9 +142,9 @@ function getShort(link: LinkModel) {
 async function askToDeleteLink(link: LinkModel) {
   swal
     .fire({
-      title: 'Are you sure?',
+      title: t('Are you sure?'),
       showCancelButton: true,
-      confirmButtonText: 'Yes'
+      confirmButtonText: t('Yes')
     })
     .then((result: SweetAlertResult) => {
       if (result.isConfirmed) {

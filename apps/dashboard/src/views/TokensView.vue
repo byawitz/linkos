@@ -3,4 +3,7 @@ import PageHeader from '@/components/layouts/PageHeader.vue';
 import StillInWork from '@/components/view/StillInWork.vue';
 </script>
 
-<template><PageHeader title="Tokens"></PageHeader> <StillInWork /></template>
+<template>
+  <PageHeader :title="$t('Tokens')"></PageHeader>
+  <StillInWork />
+</template>

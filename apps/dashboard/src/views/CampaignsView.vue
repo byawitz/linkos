@@ -4,6 +4,6 @@ import StillInWork from '@/components/view/StillInWork.vue';
 </script>
 
 <template>
-  <PageHeader title="Campaigns"></PageHeader>
+  <PageHeader :title="$t('Campaigns')"></PageHeader>
   <StillInWork />
 </template>
