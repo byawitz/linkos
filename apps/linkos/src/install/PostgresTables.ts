@@ -5,7 +5,7 @@ export default class PostgresTables {
     public static WebHookContentType = `CREATE TYPE webhookcontenttype AS ENUM ('json', 'form');`;
 
     public static Users = `
-        CREATE TABLE IF NOT EXSITS  users
+        CREATE TABLE IF NOT EXISTS  users
         (
             id         BIGSERIAL PRIMARY KEY,
 
@@ -21,7 +21,7 @@ export default class PostgresTables {
     `
 
     public static Campaigns = `
-        CREATE TABLE IF NOT EXSITS  campaigns
+        CREATE TABLE IF NOT EXISTS  campaigns
         (
             id          BIGSERIAL PRIMARY KEY,
 
@@ -35,7 +35,7 @@ export default class PostgresTables {
     `
 
     public static Links = `
-        CREATE TABLE IF NOT EXSITS  links
+        CREATE TABLE IF NOT EXISTS  links
         (
             id                   BIGSERIAL PRIMARY KEY,
 
@@ -63,7 +63,7 @@ export default class PostgresTables {
     `
 
     public static Tags = `
-        CREATE TABLE IF NOT EXSITS  tags
+        CREATE TABLE IF NOT EXISTS  tags
         (
             id         BIGSERIAL PRIMARY KEY,
 
@@ -75,7 +75,7 @@ export default class PostgresTables {
     `
 
     public static TagsLinksPivot = `
-        CREATE TABLE IF NOT EXSITS  tags_links
+        CREATE TABLE IF NOT EXISTS  tags_links
         (
             id         BIGSERIAL PRIMARY KEY,
             link_id    BIGINT NOT NULL,
@@ -90,7 +90,7 @@ export default class PostgresTables {
     `
 
     public static DeviceTargeting = `
-        CREATE TABLE IF NOT EXSITS  device_targeting
+        CREATE TABLE IF NOT EXISTS  device_targeting
         (
             id           BIGSERIAL PRIMARY KEY,
             link_id      BIGINT,
@@ -106,7 +106,7 @@ export default class PostgresTables {
     `
 
     public static GeoTargeting = `
-        CREATE TABLE IF NOT EXSITS  geo_targeting
+        CREATE TABLE IF NOT EXISTS  geo_targeting
         (
             id          BIGSERIAL PRIMARY KEY,
             link_id     BIGINT,
@@ -121,7 +121,7 @@ export default class PostgresTables {
     `
 
     public static WebHooks = `
-        CREATE TABLE IF NOT EXSITS  webhooks
+        CREATE TABLE IF NOT EXISTS  webhooks
         (
             id              BIGSERIAL PRIMARY KEY,
             link_id         BIGINT,
@@ -139,7 +139,7 @@ export default class PostgresTables {
     `
 
     public static Tokens = `
-        CREATE TABLE IF NOT EXSITS tokens
+        CREATE TABLE IF NOT EXISTS tokens
         (
             id
             BIGSERIAL
