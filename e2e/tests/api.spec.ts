@@ -82,7 +82,6 @@ describe('All endpoints logged in', () => {
                 informal_redirection: false,
                 monitor             : false,
                 plus_enabled        : false,
-                deleted             : false,
             },)
         });
 

@@ -10,11 +10,13 @@ export default class Env {
     public static NANOID_LETTERS             = process.env.NANOID_LETTERS ?? '';
     public static NANOID_LENGTH              = process.env.NANOID_LENGTH ?? '';
     public static KAFKA_NUMBER_OF_PARTITIONS = process.env.KAFKA_NUMBER_OF_PARTITIONS ?? '1';
+
     public static MAIN_DOMAIN                = process.env.MAIN_DOMAIN ?? '';
+    public static MAIN_REDIRECT_TO           = process.env.MAIN_REDIRECT_TO ?? '';
+
     public static APPWRITE_ENDPOINT          = process.env.APPWRITE_ENDPOINT ?? '';
     public static APPWRITE_PROJECT_ID        = process.env.APPWRITE_PROJECT_ID ?? '';
     public static APPWRITE_API_KEY           = process.env.APPWRITE_API_KEY ?? '';
-
 
     public static REDIS_HOST = process.env.REDIS_HOST ?? '';
     public static REDIS_PORT = process.env.REDIS_PORT ?? '';
@@ -28,7 +30,6 @@ export default class Env {
     public static KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP = process.env.KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP ?? '';
     public static KAFKA_CFG_CONTROLLER_LISTENER_NAMES      = process.env.KAFKA_CFG_CONTROLLER_LISTENER_NAMES ?? '';
     public static KAFKA_CFG_INTER_BROKER_LISTENER_NAME     = process.env.KAFKA_CFG_INTER_BROKER_LISTENER_NAME ?? '';
-
 
     public static CLICKHOUSE_HOST     = process.env.CLICKHOUSE_HOST ?? '';
     public static CLICKHOUSE_PORT     = process.env.CLICKHOUSE_PORT ?? '';

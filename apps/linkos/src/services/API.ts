@@ -18,14 +18,11 @@ export default class API {
     private static appwriteSettings: AppwriteAuthConfig = {apiKey: Env.APPWRITE_API_KEY, endpoint: Env.APPWRITE_ENDPOINT, projectId: Env.APPWRITE_PROJECT_ID, cookieName: API.COOKIE};
 
     public static init() {
-        Log.info('Starting serving Linkos')
-
         const app = new Hono({strict: false});
 
         app.use('/dashboard/*', serveStatic({root: './frontend',}));
 
         const api = app.route(process.env.API_ENDPOINT ?? '/v1/api');
-
 
         // TODO: Load another address from settings
         api.use('*', cors({origin: 'http://localhost:5173', credentials: true,}))
@@ -38,19 +35,17 @@ export default class API {
         api.post('/login', appwriteEmailLogin());
 
         const closedApi = api.use('*', TokenMiddleware.getMiddleware(API.tokenSettings));
+
         closedApi.use('*', appwriteMiddleware());
-
-
         closedApi.get('/whoami', General.whoAmI)
-
         closedApi.post('/links', LevelMiddleware.getMiddleware({level: 'writer'}), Links.add);
         closedApi.get('/links', LevelMiddleware.getMiddleware({level: 'reader'}), Links.list);
-        closedApi.get('/links/:id', LevelMiddleware.getMiddleware({level: 'reader'}), Links.get);
-        closedApi.get('/links/stat/:id/:days', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getStats);
+        closedApi.get('/links/:id', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getLink);
+        closedApi.get('/links/stat/:id/:days', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getLinkStats);
         closedApi.patch('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.patch);
-        closedApi.delete('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.delete);
+        closedApi.delete('/links/:id/:short', LevelMiddleware.getMiddleware({level: 'editor'}), Links.delete);
 
-
+        Log.info('Starting serving Linkos')
         return app;
     }
 

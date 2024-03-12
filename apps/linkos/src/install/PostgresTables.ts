@@ -5,10 +5,11 @@ export default class PostgresTables {
     public static WebHookContentType = `CREATE TYPE webhookcontenttype AS ENUM ('json', 'form');`;
 
     public static Users = `
-        CREATE TABLE IF NOT EXISTS users
+        CREATE TABLE IF NOT EXSITS  users
         (
             id         BIGSERIAL PRIMARY KEY,
 
+            fullname   VARCHAR(255) NULL,
             email      VARCHAR(255) UNIQUE NOT NULL,
             level      userlevel default 'reader',
             deleted              BOOLEAN   default false,
@@ -20,7 +21,7 @@ export default class PostgresTables {
     `
 
     public static Campaigns = `
-        CREATE TABLE IF NOT EXISTS campaigns
+        CREATE TABLE IF NOT EXSITS  campaigns
         (
             id          BIGSERIAL PRIMARY KEY,
 
@@ -34,7 +35,7 @@ export default class PostgresTables {
     `
 
     public static Links = `
-        CREATE TABLE IF NOT EXISTS links
+        CREATE TABLE IF NOT EXSITS  links
         (
             id                   BIGSERIAL PRIMARY KEY,
 
@@ -51,7 +52,6 @@ export default class PostgresTables {
             informal_redirection BOOLEAN   DEFAULT false,
             monitor              BOOLEAN   DEFAULT false,
             plus_enabled         BOOLEAN   DEFAULT true,
-            deleted              BOOLEAN   DEFAULT false,
             
             expiration_date      TIMESTAMP NULL,
             created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -63,12 +63,11 @@ export default class PostgresTables {
     `
 
     public static Tags = `
-        CREATE TABLE IF NOT EXISTS tags
+        CREATE TABLE IF NOT EXSITS  tags
         (
             id         BIGSERIAL PRIMARY KEY,
 
             name       VARCHAR(255) UNIQUE NOT NULL,
-            deleted              BOOLEAN   default false,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -76,12 +75,11 @@ export default class PostgresTables {
     `
 
     public static TagsLinksPivot = `
-        CREATE TABLE IF NOT EXISTS tags_links
+        CREATE TABLE IF NOT EXSITS  tags_links
         (
             id         BIGSERIAL PRIMARY KEY,
             link_id    BIGINT NOT NULL,
             tag_id     BIGINT NOT NULL,
-            deleted              BOOLEAN   default false,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -92,11 +90,10 @@ export default class PostgresTables {
     `
 
     public static DeviceTargeting = `
-        CREATE TABLE IF NOT EXISTS device_targeting
+        CREATE TABLE IF NOT EXSITS  device_targeting
         (
             id           BIGSERIAL PRIMARY KEY,
             link_id      BIGINT,
-            deleted              BOOLEAN   default false,
 
             device_type  devicetype  default 'other',
             device_brand devicebrand default 'other',
@@ -109,7 +106,7 @@ export default class PostgresTables {
     `
 
     public static GeoTargeting = `
-        CREATE TABLE IF NOT EXISTS geo_targeting
+        CREATE TABLE IF NOT EXSITS  geo_targeting
         (
             id          BIGSERIAL PRIMARY KEY,
             link_id     BIGINT,
@@ -124,7 +121,7 @@ export default class PostgresTables {
     `
 
     public static WebHooks = `
-        CREATE TABLE IF NOT EXISTS webhooks
+        CREATE TABLE IF NOT EXSITS  webhooks
         (
             id              BIGSERIAL PRIMARY KEY,
             link_id         BIGINT,
@@ -133,7 +130,6 @@ export default class PostgresTables {
             secret          TEXT               NOT NULL,
             content_type    webhookcontenttype NOT NULL,
             headers         TEXT,
-            deleted              BOOLEAN   default false,
 
             created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -143,20 +139,32 @@ export default class PostgresTables {
     `
 
     public static Tokens = `
-        CREATE TABLE IF NOT EXISTS tokens
+        CREATE TABLE IF NOT EXSITS tokens
         (
-            id              BIGSERIAL PRIMARY KEY,
-            user_id         BIGINT,
+            id
+            BIGSERIAL
+            PRIMARY
+            KEY,
+            user_id
+            BIGINT,
 
-            title           VARCHAR(255) NOT NULL,
-            token           TEXT  UNIQUE NOT NULL,
-            expiration_date TIMESTAMP    NOT NULL,
-            deleted              BOOLEAN   default false,
+            title
+            VARCHAR
+        (
+            255
+        ) NOT NULL,
+            token TEXT UNIQUE NOT NULL,
+            expiration_date TIMESTAMP NOT NULL,
 
-            created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-            FOREIGN KEY (user_id) REFERENCES users (id)
-        );
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY
+        (
+            user_id
+        ) REFERENCES users
+        (
+            id
+        )
+            );
     `
 }

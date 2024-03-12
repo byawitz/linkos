@@ -61,7 +61,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end" style="">
                               <RouterLink class="dropdown-item" :to="`/links/${link.id}/edit`">Edit</RouterLink>
-                              <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link.id)" href="#"> Delete </a>
+                              <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link)" href="#"> Delete </a>
                             </div>
                           </div>
                         </div>
@@ -106,12 +106,13 @@ onMounted(async () => {
   }
 });
 
-async function deleteLink(id: string) {
+async function deleteLink(deletingLink: LinkModel) {
   tableLoading.value = true;
+  const deleteStatus = await NetworkHelper.delete(`${NetworkHelper.links}${deletingLink.id}/${deletingLink.short}`);
 
-  if (await NetworkHelper.delete(NetworkHelper.links + id)) {
+  if (deleteStatus.success) {
     links.value.splice(
-      links.value.findIndex((link) => link.id === id),
+      links.value.findIndex((link) => link.id === deletingLink.id),
       1
     );
   } else {
@@ -136,7 +137,7 @@ function getShort(link: LinkModel) {
   return `${store.server.host}/${link.short}`;
 }
 
-async function askToDeleteLink(id: string) {
+async function askToDeleteLink(link: LinkModel) {
   swal
     .fire({
       title: 'Are you sure?',
@@ -145,7 +146,7 @@ async function askToDeleteLink(id: string) {
     })
     .then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
-        deleteLink(id);
+        deleteLink(link);
       }
     });
 }

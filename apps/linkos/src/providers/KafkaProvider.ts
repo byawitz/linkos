@@ -37,7 +37,6 @@ export default class KafkaProvider {
     }
 
 
-
     public static async generateConsumer(topic: string, groupId: string): Promise<Consumer> {
         let tries = 0;
 
@@ -53,6 +52,7 @@ export default class KafkaProvider {
 
             Log.info('Kafka service is unreachable, trying again in 2 seconds.');
             Log.info(`This is try number ${tries++}.`);
+
             await Global.sleep(2000)
         }
 
@@ -68,6 +68,4 @@ export default class KafkaProvider {
 
         return consumer;
     }
-
-
 }

@@ -4,6 +4,7 @@ import LinkModel from "@@/db/LinkModel.ts";
 import {customAlphabet} from 'nanoid';
 import Env from "@/utils/Env.ts";
 import ClickhouseProvider from "@/providers/ClickhouseProvider.ts";
+import CHQueries from "@/providers/queries/CHQueries.ts";
 
 declare type MaybeLink = LinkModel | boolean;
 
@@ -24,7 +25,7 @@ export default class Link extends LinkModel {
                 return res.rows[0];
             }
         } catch (e: any) {
-            Log.error(e);
+            Log.debug(e);
         }
 
         return false;
@@ -34,10 +35,10 @@ export default class Link extends LinkModel {
         try {
             const ch = ClickhouseProvider.getClient();
 
-            const basic     = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkClickAndDevices(), query_params: {id, days}});
-            const cities    = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkCities(), query_params: {id, days}});
-            const countries = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkCountries(), query_params: {id, days}});
-            const referrers = await ch.query({format: 'JSONEachRow', query: ClickhouseProvider.getLinkReferrers(), query_params: {id, days}});
+            const basic     = await ch.query({format: 'JSONEachRow', query: CHQueries.getLinkClickAndDevices(), query_params: {id, days}});
+            const cities    = await ch.query({format: 'JSONEachRow', query: CHQueries.getTopGroup('city'), query_params: {id, days}});
+            const countries = await ch.query({format: 'JSONEachRow', query: CHQueries.getTopGroup('country'), query_params: {id, days}});
+            const referrers = await ch.query({format: 'JSONEachRow', query: CHQueries.getTopGroup('referer'), query_params: {id, days}});
 
             return {
                 basic    : await basic.json(),
@@ -46,8 +47,8 @@ export default class Link extends LinkModel {
                 referrers: await referrers.json(),
             };
 
-        } catch (e) {
-            // TODO
+        } catch (e: any) {
+            Log.debug(e)
         }
 
         return false;
@@ -57,10 +58,13 @@ export default class Link extends LinkModel {
         try {
             const pg = PostgresProvider.getClient();
 
-            // TODO: join user and campaign
-            const text   = `SELECT *
-                            FROM links
-                            WHERE ${by} = $1`;
+            const text   = `
+                SELECT l.*, u.fullname as username, c.title as campaign_title
+                FROM links l
+                         LEFT JOIN users u ON u.id = l.user_id
+                         LEFT JOIN campaigns c ON c.id = l.campaign_id
+                WHERE l.${by} = $1
+            `
             const values = [id]
 
             const res = await pg?.query<Link>(text, values);
@@ -72,16 +76,14 @@ export default class Link extends LinkModel {
         }
 
         return false;
-
     }
 
     public static async getAll() {
         try {
             const pg  = PostgresProvider.getClient();
-            // TODO: join user and campaign
+            // TODO pagination
             const res = await pg?.query<Link>(`SELECT id, title, short, dest, clicks
                                                FROM links
-                                               WHERE deleted = false
                                                ORDER BY id DESC`);
             if (res) {
                 return res.rows;
@@ -94,15 +96,13 @@ export default class Link extends LinkModel {
     }
 
     public static generateShortSlug(): string {
-        const nanoid = customAlphabet(Env.NANOID_LETTERS, parseInt(Env.NANOID_LENGTH))
-        return nanoid();
+        return customAlphabet(Env.NANOID_LETTERS, parseInt(Env.NANOID_LENGTH))()
     }
 
     static async update(link: Link) {
         try {
             const pg = PostgresProvider.getClient();
 
-            // TODO: update what needed!
             const text   = `UPDATE links
                             set dest                 = $1,
                                 description          = $2,
@@ -138,17 +138,15 @@ export default class Link extends LinkModel {
         try {
             const pg = PostgresProvider.getClient();
 
-            const text   = `UPDATE links
-                            set deleted    = true,
-                                updated_at = $1
-                            WHERE id = $2
-                            RETURNING *`
-            const values = [new Date(), id];
+            const text   = `DELETE
+                            FROM links
+                            WHERE id = $1`
+            const values = [id];
 
             const res = await pg?.query<Link>(text, values);
 
             if (res) {
-                return res.rows[0];
+                return true;
             }
         } catch (e: any) {
             Log.error(e);

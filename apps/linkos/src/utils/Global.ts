@@ -4,4 +4,13 @@ export default class Global {
             setTimeout(resolve, ms);
         });
     }
+
+    public static ParseOrFalse(json: string) {
+        try {
+            return JSON.parse(json);
+        } catch {
+            return false;
+        }
+
+    }
 }

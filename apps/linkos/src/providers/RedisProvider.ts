@@ -14,7 +14,6 @@ export default class RedisProvider {
             });
 
             this.client.on('error', err => console.log('Redis Client Error', err));
-
             await this.client.connect();
 
             process.on("SIGINT", async () => {

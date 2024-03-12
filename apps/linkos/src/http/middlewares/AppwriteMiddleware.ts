@@ -2,20 +2,17 @@ import {type Context} from 'hono'
 import {getCookie, setCookie} from 'hono/cookie'
 import {createMiddleware} from 'hono/factory'
 import {HTTPException} from 'hono/http-exception'
-import {Account, Client, type Models} from 'node-appwrite'
-import type User from "@/models/db/User.ts";
+import {Account, Client, type Models, Users} from 'node-appwrite'
+import User from "@/models/db/User.ts";
 import PostgresProvider from "@/providers/PostgresProvider.ts";
 import Log from "@/utils/Log.ts";
-
 
 export interface AppwriteAuthConfig {
     endpoint: string,
     projectId: string,
     apiKey: string,
     cookieName: string,
-
 }
-
 
 export const initAppwrite = (config: AppwriteAuthConfig) => {
     return createMiddleware(async (c, next) => {
@@ -67,7 +64,9 @@ export const appwriteMiddleware = () => {
             const user = await account.get()
 
             const linkosUser = await getUser(user.email);
-            c.set('user', linkosUser);
+            if (linkosUser) {
+                c.set('user', linkosUser);
+            }
 
             await next()
 
@@ -91,14 +90,19 @@ export const appwriteEmailLogin = () => {
         const adminClient       = c.get('adminClient')
         const config            = c.get('appwriteConfig')
         const account           = new Account(adminClient)
+        const users             = new Users(adminClient)
 
         try {
             const session = await account.createEmailPasswordSession(email, password)
 
+            const user = await users.get(session.userId);
+            await User.setName(email, user.name);
+
             setAppwriteCookie(c, config, session)
 
             return c.json({success: true})
-        } catch (e) {
+        } catch (e: any) {
+            Log.debug(e)
             throw new HTTPException(401, {
                 res: new Response('Unauthorized', {
                     status: 401,
