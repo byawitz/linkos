@@ -8,7 +8,7 @@ const LANG_EN: SystemLang = 'en';
 const LANG_HE: SystemLang = 'he';
 
 const i18n = createI18n({
-  locale: LANG_HE,
+  locale: LANG_EN,
   legacy: false,
   fallbackLocale: LANG_EN,
   messages: {

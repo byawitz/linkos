@@ -1,1 +1,6 @@
 @import "core";
+
+html[dir="rtl"] {
+  @import "tabler.rtl.min";
+}
+
