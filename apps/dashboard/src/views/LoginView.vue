@@ -87,11 +87,11 @@ const user = useUserStore();
 const router = useRouter();
 
 onMounted(() => {
-  DomHelper.addClassToApp('page', 'page-center');
+  DomHelper.addClassToID('page', 'page-center');
 });
 
 onUnmounted(() => {
-  DomHelper.removeClassFromApp('page', 'page-center');
+  DomHelper.removeClassFromID('page', 'page-center');
 });
 
 const state = reactive({

@@ -82,7 +82,6 @@ describe('All endpoints logged in', () => {
                 informal_redirection: false,
                 monitor             : false,
                 plus_enabled        : false,
-                deleted             : false,
             },)
         });
 
@@ -155,7 +154,7 @@ describe('All endpoints logged in', () => {
     });
 
     test("Deleting link", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/1`, {
+        const res  = await fetch(`${apiEndpoint}/links/1/1`, {
             headers: {'x-linkos-token': 'token'},
             method : 'DELETE',
         });

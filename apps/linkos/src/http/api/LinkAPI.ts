@@ -6,19 +6,18 @@ import Analytics from "@/services/Analytics.ts";
 import type {Producer} from "kafkajs";
 import AnalyticsMessage from "@/models/AnalyticsMessage.ts";
 import Log from "@/utils/Log.ts";
+import Global from "@/utils/Global.ts";
+import Env from "@/utils/Env.ts";
+import ClickMessage from "@/models/ClickMessage.ts";
 
 
-/**
- * public link accessing route
- */
 export default class LinkAPI {
     private static producer: Producer | false;
+    private static readonly path = '/usr/server/app/src/linkos/src/assets/';
 
     public static async init() {
         LinkAPI.producer = await KafkaProvider.initProducer();
-
     }
-
 
     public static async get(c: Context) {
         return LinkAPI.getRedirect(c);
@@ -29,34 +28,38 @@ export default class LinkAPI {
     }
 
     private static async getRedirect(c: Context, qr: boolean = false) {
+        const {link} = c.req.param();
 
-        const {link}      = c.req.param();
-        const appendQuery = LinkAPI.addUTM(c);
         try {
+            let shortLink: false | Link;
 
             const linkFormRedis = await RedisProvider.getClient().get(link);
             if (linkFormRedis !== null) {
-                const cachedLink: Link = JSON.parse(linkFormRedis);
-                await LinkAPI.missions(cachedLink, qr, c);
+                shortLink = Global.ParseOrFalse(linkFormRedis);
+            } else {
+                shortLink = await Link.getLink(link);
 
-                return LinkAPI.redirect(cachedLink.dest + appendQuery, c);
+                await RedisProvider.getClient().set(link, JSON.stringify(shortLink));
             }
 
-            const dbLink = await Link.getLink(link);
+            if (shortLink) {
+                await LinkAPI.missions(shortLink, qr, c);
 
-            if (dbLink) {
-                await RedisProvider.getClient().set(link, JSON.stringify(dbLink));
-
-                await LinkAPI.missions(dbLink, qr, c);
-                return LinkAPI.redirect(dbLink.dest + appendQuery, c);
+                return LinkAPI.redirect(this.appendQuery(shortLink.dest, c), c);
             }
-        } catch (e) {
-            // TODO
+        } catch (e: any) {
+            Log.debug(e);
         }
 
-        // TODO: Return 404
-        return c.json({Oops: '🤔🤔🤔🤔'}, 404);
+        return c.html(await new Response(Bun.file(LinkAPI.path + "404.html")).text(), 404);
+    }
 
+    public static async getPublic(c: Context) {
+        if (Env.MAIN_REDIRECT_TO !== '') {
+            return LinkAPI.redirect(Env.MAIN_REDIRECT_TO, c);
+        }
+
+        return c.html(await new Response(Bun.file(LinkAPI.path + "linkos.html")).text());
     }
 
     private static redirect(link: string, c: Context) {
@@ -69,20 +72,25 @@ export default class LinkAPI {
                 'cache-control'          : 'private, max-age = 90',
                 'content-security-policy': 'referrer always;',
                 'location'               : link
-
             }
         })
     }
 
     private static async missions(link: Link | false, qr: boolean, c: Context) {
-        if(!link) return;
+        if (!link) return;
 
         const start = +new Date();
 
-        const message = new AnalyticsMessage(link.id, qr, c.req.header('referer'), c.req.header('user-agent'), c.req.header('x-forwarded-for'), c.req.header('host'));
         if (LinkAPI.producer) {
-            await LinkAPI.producer.send({topic: Analytics.TOPIC_CLICKHOUSE, messages: [{value: message.toString()}]});
-            await LinkAPI.producer.send({topic: Analytics.TOPIC_POSTGRES, messages: [{value: message.toString()}]});
+            await LinkAPI.producer.send({
+                topic   : Analytics.TOPIC_CLICKHOUSE,
+                messages: [{value: (new AnalyticsMessage(link.id, qr, c.req.header())).toString()}]
+            });
+
+            await LinkAPI.producer.send({
+                topic   : Analytics.TOPIC_POSTGRES,
+                messages: [{value: (new ClickMessage(link.id)).toString()}]
+            });
 
             // TODO: with soketi in realtime.
             // await LinkAPI.producer.send({topic: Analytics.TOPIC_SOKETI, messages: [{value: message.toString()}]});
@@ -91,15 +99,19 @@ export default class LinkAPI {
         Log.debug(`Kafka took ${(+new Date()) - start}ms`);
     }
 
+    private static appendQuery(uri: string, c: Context) {
+        try {
+            const url = new URL(uri)
 
-    private static addUTM(c: Context) {
-        const {utm_content, utm_medium, utm_source, utm_campaign} = c.req.query();
+            for (const [key, value] of Object.entries(c.req.query())) {
+                url.searchParams.append(key, value);
+            }
 
-        // Add UTM with & or ? by parsing the url
-        if (utm_campaign && utm_content && utm_source && utm_medium) {
-            return `?utm_content=${utm_content}&utm_medium=${utm_medium}&utm_source=${utm_source}&utm_campaign=${utm_campaign}`;
+            return url.href
+        } catch {
+            return uri;
         }
-
-        return ''
     }
+
+
 }

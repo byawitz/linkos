@@ -2,6 +2,7 @@ import {type Context} from "hono";
 import API from "../../services/API.ts";
 import Link, {type MaybeLink} from "../../models/db/Link.ts";
 import RedisProvider from "@/providers/RedisProvider.ts";
+import ClickhouseProvider from "@/providers/ClickhouseProvider.ts";
 
 export default class Links {
     public static async add(c: Context) {
@@ -16,14 +17,14 @@ export default class Links {
 
         const link: MaybeLink = await Link.create(newLink)
 
-        if (link) {
-            return c.json(API.response(true, link));
+        if (!link) {
+            return c.json(API.response());
         }
 
-        return c.json(API.response());
+        return c.json(API.response(true, link));
     }
 
-    public static async getStats(c: Context) {
+    public static async getLinkStats(c: Context) {
         const {id, days} = c.req.param();
 
         const stats = await Link.getStats(parseInt(id), parseInt(days));
@@ -35,13 +36,13 @@ export default class Links {
         return c.json(API.response(true, stats));
     }
 
-    public static async get(c: Context) {
+    public static async getLink(c: Context) {
         const {id} = c.req.param();
 
-        const link = await Link.getLink(id, 'id');
+        const link: MaybeLink = await Link.getLink(id, 'id');
 
         if (!link) {
-            return c.json(API.response(false));
+            return c.json(API.response());
         }
 
         return c.json(API.response(true, link));
@@ -72,18 +73,20 @@ export default class Links {
             return c.json(API.response(true, link));
         }
 
-
         return c.json(API.response());
     }
 
     public static async delete(c: Context) {
-        const {id} = c.req.param()
-        const link = await Link.delete(id);
-        if (link !== false) {
-            await RedisProvider.getClient().del(link.short)
+        const {id, short}  = c.req.param()
+        const deleteStatus = await Link.delete(id);
+
+        if (deleteStatus) {
+            await RedisProvider.getClient().del(short)
+            await ClickhouseProvider.deleteForLink(id);
 
             return c.json(API.response(true))
         }
+
         return c.json(API.response());
     }
 

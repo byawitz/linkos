@@ -18,6 +18,7 @@ export default class PostgresProvider {
             await this.client.connect()
 
             Log.good('Successfully connected to Postgres');
+
             process.on("SIGINT", async () => {
                 if (this.client !== undefined)
                     await this.client.end();

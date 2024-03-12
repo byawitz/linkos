@@ -1,18 +1,16 @@
 import Log from "../utils/Log.ts";
 import KafkaProvider from "../providers/KafkaProvider.ts";
-import RedisProvider from "../providers/RedisProvider.ts";
 import ClickhouseProvider from "../providers/ClickhouseProvider.ts";
 import AnalyticsMessage from "@/models/AnalyticsMessage.ts";
-import PostgresProvider from "@/providers/PostgresProvider.ts";
 import Link from "@/models/db/Link.ts";
 import type {EachBatchPayload, KafkaMessage} from "kafkajs";
+import ClickMessage from "@/models/ClickMessage.ts";
 
 export default class Analytics {
     private static tries             = 1;
     static readonly TOPIC_CLICKHOUSE = 'linkos-analytics-clickhouse';
     static readonly TOPIC_POSTGRES   = 'linkos-analytics-postgres';
     static readonly TOPIC_SOKETI     = 'linkos-analytics-soketi';
-    static readonly GROUP            = 'linkos-analytics-group';
 
     public static async init(): Promise<void> {
         Log.instructions('Starting Linkos Analytics Kafka consumer.');
@@ -39,7 +37,7 @@ export default class Analytics {
     private static async initClickHouse() {
         Log.debug('Starting Linkos Clickhouse consumer.');
 
-        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC_CLICKHOUSE, Analytics.TOPIC_CLICKHOUSE + Analytics.GROUP);
+        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC_CLICKHOUSE, Analytics.TOPIC_CLICKHOUSE);
 
         await consumer.run({
             eachBatch: async (b) => {
@@ -58,12 +56,12 @@ export default class Analytics {
     private static async initPostgres() {
         Log.debug('Starting Linkos Postgres consumer.');
 
-        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC_POSTGRES, Analytics.TOPIC_POSTGRES + Analytics.GROUP);
+        const consumer = await KafkaProvider.generateConsumer(Analytics.TOPIC_POSTGRES, Analytics.TOPIC_POSTGRES);
 
         await consumer.run({
             eachBatch: async (b) => {
                 await Analytics.consumerCallback(b, async (msg) => {
-                    const aMessage = AnalyticsMessage.toJSON(msg.value!.toString());
+                    const aMessage = ClickMessage.toJSON(msg.value!.toString());
 
                     const pgUpdate = await Link.updateClicks(aMessage.linkId);
 
@@ -71,7 +69,6 @@ export default class Analytics {
                         Log.debug('Postgres clicks incremented');
                         b.resolveOffset(msg.offset);
                     }
-
                 });
             }
         })

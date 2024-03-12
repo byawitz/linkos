@@ -23,4 +23,25 @@ export default class User extends UserModel {
 
         return false;
     }
+
+    public static async setName(email: string, name: string) {
+        try {
+            const pg = PostgresProvider.getClient();
+
+            const text   = `UPDATE users
+                            SET fullname= $1
+                            WHERE email = $2 `
+            const values = [name, email]
+
+            const res = await pg?.query<User>(text, values);
+
+            if (res) {
+                return res.rows[0];
+            }
+        } catch (e: any) {
+            Log.error(e);
+        }
+
+        return false;
+    }
 }

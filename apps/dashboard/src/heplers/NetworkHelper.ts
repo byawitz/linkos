@@ -6,9 +6,7 @@ export default class NetworkHelper {
 
   public static async get(url: string) {
     try {
-      const res = await fetch(NetworkHelper.baseUrl(url), {
-        credentials: 'include'
-      });
+      const res = await fetch(NetworkHelper.baseUrl(url), { credentials: 'include' });
       return await res.json();
     } catch (e) {
       return { success: false };
@@ -33,9 +31,7 @@ export default class NetworkHelper {
         method,
         body: JSON.stringify(body),
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json;'
-        }
+        headers: { 'Content-Type': 'application/json;' }
       });
 
       return await res.json();

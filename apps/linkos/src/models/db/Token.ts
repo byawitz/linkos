@@ -5,8 +5,6 @@ import type User from "./User.ts";
 import TokenModel from "@@/db/TokenModel.ts";
 
 export default class Token extends TokenModel {
-
-
     public static async create(user_id: string, title: string, token: string, expiration_date: Date) {
         try {
             const pg = PostgresProvider.getClient();
@@ -57,7 +55,7 @@ export default class Token extends TokenModel {
                 return res.rows[0];
             }
         } catch (e: any) {
-            Log.error(e, 'ERROR');
+            Log.debug(e);
         }
 
         return undefined;

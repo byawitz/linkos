@@ -209,6 +209,7 @@ services:
       - POSTGRES_DB
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - MAIN_REDIRECT_TO
     depends_on:
       - kafka
       - postgres

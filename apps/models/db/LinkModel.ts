@@ -1,9 +1,9 @@
 import BaseDBModel from "./base/BaseDBModel";
 
 export default class LinkModel extends BaseDBModel {
-    public dest: string      = '';
-    public short: string     = '';
-    public title: string     = '';
+    public dest: string  = '';
+    public short: string = '';
+    public title: string = '';
     public password?: string;
     public description?: string;
 
@@ -18,6 +18,10 @@ export default class LinkModel extends BaseDBModel {
     public informal_redirection?: boolean;
 
     public expiration_date?: Date;
+
+    // For joins
+    public username: string       = '';
+    public campaign_title: string = '';
 
     // For view
     public copying = false;

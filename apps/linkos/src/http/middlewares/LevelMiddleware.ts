@@ -6,7 +6,6 @@ import type {UserLevel} from "@@/db/UserModel.ts";
 export interface LevelOptions {
     level: UserLevel,
 }
-
 export default class LevelMiddleware {
     public static getMiddleware(options: LevelOptions) {
 
