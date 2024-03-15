@@ -13,7 +13,7 @@ import ClickMessage from "@/models/ClickMessage.ts";
 
 export default class LinkAPI {
     private static producer: Producer | false;
-    private static readonly path = '/usr/server/app/src/linkos/src/assets/';
+    private static readonly path = '/usr/server/app/src/assets/';
 
     public static async init() {
         LinkAPI.producer = await KafkaProvider.initProducer();
