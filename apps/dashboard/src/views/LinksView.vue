@@ -88,11 +88,11 @@ import Button from '@/components/form/Button.vue';
 import NetworkHelper from '@/heplers/NetworkHelper';
 import PageHeader from '@/components/layouts/PageHeader.vue';
 import type { SweetAlertResult, SweetAlertCustomClass } from 'sweetalert2';
-import { useUserStore } from '@/stores/user';
+import { useAppStore } from '@/stores/user';
 import Container from '@/components/layouts/Container.vue';
 import { useI18n } from 'vue-i18n';
 
-const store = useUserStore();
+const store = useAppStore();
 const { t } = useI18n();
 
 const links: Ref<LinkModel[]> = ref([]);
