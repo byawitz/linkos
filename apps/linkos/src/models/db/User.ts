@@ -44,4 +44,26 @@ export default class User extends UserModel {
 
         return false;
     }
+
+    public static async setProfileOptions(email: string, theme: boolean | null, lang: string) {
+        try {
+            const pg = PostgresProvider.getClient();
+
+            const text   = `UPDATE users
+                            SET dark_theme= $1,
+                                lang= $2
+                            WHERE email = $3`
+            const values = [theme, lang, email]
+
+            const res = await pg?.query<User>(text, values);
+
+            if (res) {
+                return res.rows[0];
+            }
+        } catch (e: any) {
+            Log.error(e);
+        }
+
+        return false;
+    }
 }

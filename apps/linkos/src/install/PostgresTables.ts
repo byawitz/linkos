@@ -5,14 +5,17 @@ export default class PostgresTables {
     public static WebHookContentType = `CREATE TYPE webhookcontenttype AS ENUM ('json', 'form');`;
 
     public static Users = `
-        CREATE TABLE IF NOT EXISTS  users
+        CREATE TABLE IF NOT EXISTS users
         (
             id         BIGSERIAL PRIMARY KEY,
 
-            fullname   VARCHAR(255) NULL,
             email      VARCHAR(255) UNIQUE NOT NULL,
+            fullname   VARCHAR(255) NULL,
+            lang       VARCHAR(2) NULL,
+            
             level      userlevel default 'reader',
-            deleted              BOOLEAN   default false,
+            
+            dark_theme  BOOLEAN   NULL,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -21,13 +24,13 @@ export default class PostgresTables {
     `
 
     public static Campaigns = `
-        CREATE TABLE IF NOT EXISTS  campaigns
+        CREATE TABLE IF NOT EXISTS campaigns
         (
             id          BIGSERIAL PRIMARY KEY,
 
             title       VARCHAR(255) NOT NULL,
             description TEXT,
-            deleted              BOOLEAN   default false,
+            deleted     BOOLEAN   default false,
 
             created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -35,24 +38,24 @@ export default class PostgresTables {
     `
 
     public static Links = `
-        CREATE TABLE IF NOT EXISTS  links
+        CREATE TABLE IF NOT EXISTS links
         (
             id                   BIGSERIAL PRIMARY KEY,
 
             dest                 TEXT               NOT NULL,
-            description          TEXT               NULL, /*for informal redirection*/
+            description          TEXT NULL, /*for informal redirection*/
             short                VARCHAR(13) UNIQUE NOT NULL, /* aka 63B IDs */
             password             VARCHAR(255) NULL,
-            title                VARCHAR(255) NOT NULL, 
-            clicks               BIGINT       DEFAULT 0,
-            user_id              BIGINT       NOT NULL,
+            title                VARCHAR(255)       NOT NULL,
+            clicks               BIGINT    DEFAULT 0,
+            user_id              BIGINT             NOT NULL,
             campaign_id          BIGINT NULL,
             password_protected   BOOLEAN   DEFAULT false,
             expiring_link        BOOLEAN   DEFAULT false,
             informal_redirection BOOLEAN   DEFAULT false,
             monitor              BOOLEAN   DEFAULT false,
             plus_enabled         BOOLEAN   DEFAULT true,
-            
+
             expiration_date      TIMESTAMP NULL,
             created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -63,7 +66,7 @@ export default class PostgresTables {
     `
 
     public static Tags = `
-        CREATE TABLE IF NOT EXISTS  tags
+        CREATE TABLE IF NOT EXISTS tags
         (
             id         BIGSERIAL PRIMARY KEY,
 
@@ -75,7 +78,7 @@ export default class PostgresTables {
     `
 
     public static TagsLinksPivot = `
-        CREATE TABLE IF NOT EXISTS  tags_links
+        CREATE TABLE IF NOT EXISTS tags_links
         (
             id         BIGSERIAL PRIMARY KEY,
             link_id    BIGINT NOT NULL,
@@ -90,7 +93,7 @@ export default class PostgresTables {
     `
 
     public static DeviceTargeting = `
-        CREATE TABLE IF NOT EXISTS  device_targeting
+        CREATE TABLE IF NOT EXISTS device_targeting
         (
             id           BIGSERIAL PRIMARY KEY,
             link_id      BIGINT,
@@ -106,7 +109,7 @@ export default class PostgresTables {
     `
 
     public static GeoTargeting = `
-        CREATE TABLE IF NOT EXISTS  geo_targeting
+        CREATE TABLE IF NOT EXISTS geo_targeting
         (
             id          BIGSERIAL PRIMARY KEY,
             link_id     BIGINT,
@@ -121,7 +124,7 @@ export default class PostgresTables {
     `
 
     public static WebHooks = `
-        CREATE TABLE IF NOT EXISTS  webhooks
+        CREATE TABLE IF NOT EXISTS webhooks
         (
             id              BIGSERIAL PRIMARY KEY,
             link_id         BIGINT,
@@ -142,29 +145,26 @@ export default class PostgresTables {
         CREATE TABLE IF NOT EXISTS tokens
         (
             id
-            BIGSERIAL
-            PRIMARY
-            KEY,
+                            BIGSERIAL
+                PRIMARY
+                    KEY,
             user_id
-            BIGINT,
+                            BIGINT,
 
             title
-            VARCHAR
-        (
-            255
-        ) NOT NULL,
-            token TEXT UNIQUE NOT NULL,
-            expiration_date TIMESTAMP NOT NULL,
+                            VARCHAR(255) NOT NULL,
+            token           TEXT UNIQUE  NOT NULL,
+            expiration_date TIMESTAMP    NOT NULL,
 
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY
-        (
-            user_id
-        ) REFERENCES users
-        (
-            id
-        )
-            );
+                (
+                 user_id
+                    ) REFERENCES users
+                (
+                 id
+                    )
+        );
     `
 }
