@@ -9,7 +9,7 @@ import TokensView from '@/views/TokensView.vue';
 import BackupsView from '@/views/BackupsView.vue';
 import UsersView from '@/views/UsersView.vue';
 import LinksView from '@/views/LinksView.vue';
-import { useUserStore } from '@/stores/user';
+import { useAppStore } from '@/stores/user';
 import ProfileView from '@/views/ProfileView.vue';
 import LinkFormView from '@/views/LinkFormView.vue';
 import TagsView from '@/views/TagsView.vue';
@@ -37,7 +37,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const { user } = useUserStore();
+  const { user } = useAppStore();
 
   if (to.meta.authorizedOnly && !user.isLoggedIn) {
     next('/login');

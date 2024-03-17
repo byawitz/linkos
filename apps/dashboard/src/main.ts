@@ -6,7 +6,7 @@ import { createPinia } from 'pinia';
 
 import App from './App.vue';
 import router from './router';
-import { useUserStore } from '@/stores/user';
+import { useAppStore } from '@/stores/user';
 import VueSweetalert2 from 'vue-sweetalert2';
 import i18n from '@/locale/I18n';
 
@@ -16,7 +16,7 @@ app.use(i18n);
 app.use(createPinia());
 app.use(VueSweetalert2);
 
-useUserStore()
+useAppStore()
   .loadUser()
   .then(() => {
     app.use(router);
