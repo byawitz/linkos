@@ -1,4 +1,3 @@
-import {DEFAULT_LANG, type SystemLang,} from "../../dashboard/src/locale/I18n";
 import BaseDBModel from "./base/BaseDBModel";
 
 declare type UserLevel = 'owner' | 'admin' | 'editor' | 'writer' | 'reader';
@@ -11,7 +10,7 @@ export default class UserModel extends BaseDBModel {
     public fullname: string = '';
     public level: UserLevel = 'reader';
 
-    public lang?: SystemLang;
+    public lang?: any;
     public dark_theme: boolean | null = null;
 
     public last_login: Date = new Date();
@@ -23,7 +22,7 @@ export default class UserModel extends BaseDBModel {
         user.email      = json.email ?? '';
         user.fullname   = json.fullname ?? '';
         user.level      = json.level ?? 'reader';
-        user.lang       = json.lang ?? DEFAULT_LANG;
+        user.lang       = json.lang ?? 'en';
         user.dark_theme = json.dark_theme ?? null;
 
         user.last_login = json.last_login ?? new Date();
