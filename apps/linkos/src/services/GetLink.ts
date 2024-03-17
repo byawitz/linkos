@@ -10,6 +10,7 @@ export default class GetLink {
         app.get('/', LinkAPI.getPublic);
         app.get('/:link', LinkAPI.get);
         app.get('/qr/:link', LinkAPI.getQr);
+        app.post('/password/:link', LinkAPI.getWithPassword);
 
         Log.info('Starting serving Linkos getlink endpoint')
         return app;
