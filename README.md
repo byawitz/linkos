@@ -2,26 +2,28 @@
 
 <img src="assets/linkos-full.png" width="100" />
 
-Fully featured Open-source URL Shortener
+Fully featured Open-source URL Shortener | [Beta Documentation](https://github.com/byawitz/linkos/tree/docs/beta?tab=readme-ov-file#documentations)
 
 </div>
 
-<img src="assets/linkosbg2.jpg" />
+## About
 
-> [!NOTE]  
-> This project is still in development    
-> We would love you to tag along,   
-> Click [here](https://github.com/byawitz/linkos/wiki/Development-phases) to see the development planned process.
->
-> | 🏗️ Current | 👉 Next |
-> |-------------|---------|
-> | Alpha       | Beta    |
+Linkos is an open-source URL Shortener, packed with many useful features, realtime processing and custom audience targeting.
+
+**🏗 Development status:**
+
+- ✅ Idea
+- 👉 Alpha
+- 🏗 [Beta](https://github.com/byawitz/linkos/wiki/Development-phases#beta)
+- ⏳ Release
 
 ## Architecture
 
+Linkos is being built with microservice architecture, with stateless logic parts that are ready for a small and large scale.
+
 <img src="assets/linkos.svg" />
 
-## Stack:
+### Stack:
 
 | What          | Tech                                                                                        |
 |---------------|---------------------------------------------------------------------------------------------|
@@ -35,47 +37,22 @@ Fully featured Open-source URL Shortener
 | Cronjob       | [Croner](https://github.com/hexagon/croner)                                                 |
 | Realtime      | [Soketi](https://docs.soketi.app/)                                                          |
 
-#### Notes:
+<small>_For SSL use either Nginx & certbot, or any domain-level SSL as Cloudflare._</small>
 
-- _For SSL use either Nginx & certbot, or any domain-level SSL as Cloudflare._
+### Deploying
 
-# Installation
-
-As of now Linkos is still in alpha, that's why the installation instruction is concise  
-
-<details>
-<summary>Instructions</summary>
-
-Clone these two files to your server
-```shell
-curl https://raw.githubusercontent.com/byawitz/linkos/master/docker-compose.yml -o docker-compose.yml
-curl https://raw.githubusercontent.com/byawitz/linkos/master/.env.example -o .env
-```
-Edit the `.env` files and set the values for your `Appwrite.version >= 1.5.0` endpoint, project id and API key.
-```ini
-APPWRITE_ENDPOINT="https://cloud.appwrite.io/v1"
-APPWRITE_PROJECT_ID="project ID"
-APPWRITE_API_KEY="API key"
-```
-Run 
-```shell
-docker compose up -d
-```
-
-Now you'll need to install Linkos by entering the main container and running the following command
-```shell
-docker exec -it linkos bash
-bun src/index.ts --install
-```
-You'll be asked to enter email for the admin user; this should be a user that you've created in
-your Appwrite project.
-
-Now you can seed the database if you want to have some demo data by running
-```shell
-docker exec -it linkos bash
-bun src/index.ts --databases-seeder
-```
-</details>
+| Container    | Description         |                  Notes |
+|--------------|---------------------|-----------------------:|
+| Traefik      | Application Proxy   | Standalone application |
+| Postgres     | Clicks DB           | Standalone application |
+| ClickHouse   | OLAP DB             | Standalone application |
+| Redis        | Cache DB            | Standalone application |
+| Kafka        | Message Queue       | Standalone application |
+| Linkos       | A stateless backend |        API & Dashboard |
+| Linkos Links | Links entrypoint    |               Provider |
+| Analytics    | Kafka consumer      |                 Worker |
+| Webhooks     | Kafka consumer      |                 Worker |
+| Scheduler    | Cron                |                 Runner |
 
 ## Features:
 
@@ -119,23 +96,6 @@ bun src/index.ts --databases-seeder
 | Country  | Country origin                                                                                                         |
 | Device   | Device type, and brand                                                                                                 |
 | Referer  | URL referrer                                                                                                           |
-
-## Deploying
-
-| Container    | Description         |                  Notes |
-|--------------|---------------------|-----------------------:|
-| Traefik      | Application Proxy   | Standalone application |
-| Postgres     | Clicks DB           | Standalone application |
-| ClickHouse   | OLAP DB             | Standalone application |
-| Redis        | Cache DB            | Standalone application |
-| Kafka        | Message Queue       | Standalone application |
-| Linkos       | A stateless backend |        API & Dashboard |
-| Linkos Links | Links entrypoint    |               Provider |
-| Analytics    | Kafka consumer      |                 Worker |
-| Webhooks     | Kafka consumer      |                 Worker |
-| Scheduler    | Cron                |                 Runner |
-
-As the backend is stateless horizontal scaling is very easy.
 
 ## Tests
 
