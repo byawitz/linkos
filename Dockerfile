@@ -22,7 +22,7 @@ COPY apps/models /tmp/models
 
 RUN bun install
 
-FROM oven/bun:1.0.30-debian
+FROM oven/bun:1.0.32-debian
 
 RUN mkdir -p /usr/server/app
 
