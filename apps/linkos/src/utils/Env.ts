@@ -3,6 +3,7 @@ export default class Env {
     public static ENVIRONMENT_DEVELOPMENT = 'development';
 
     public static ENVIRONMENT                = process.env.ENVIRONMENT ?? '';
+    public static DEFAULT_LOCAL              = process.env.DEFAULT_LOCAL ?? '';
     public static TOKEN_DRIVER               = process.env.TOKEN_DRIVER ?? '';
     public static APP_SSL_KEY                = process.env.APP_SSL_KEY ?? '';
     public static API_ENDPOINT               = process.env.API_ENDPOINT ?? '';
@@ -11,12 +12,12 @@ export default class Env {
     public static NANOID_LENGTH              = process.env.NANOID_LENGTH ?? '';
     public static KAFKA_NUMBER_OF_PARTITIONS = process.env.KAFKA_NUMBER_OF_PARTITIONS ?? '1';
 
-    public static MAIN_DOMAIN                = process.env.MAIN_DOMAIN ?? '';
-    public static MAIN_REDIRECT_TO           = process.env.MAIN_REDIRECT_TO ?? '';
+    public static MAIN_DOMAIN      = process.env.MAIN_DOMAIN ?? '';
+    public static MAIN_REDIRECT_TO = process.env.MAIN_REDIRECT_TO ?? '';
 
-    public static APPWRITE_ENDPOINT          = process.env.APPWRITE_ENDPOINT ?? '';
-    public static APPWRITE_PROJECT_ID        = process.env.APPWRITE_PROJECT_ID ?? '';
-    public static APPWRITE_API_KEY           = process.env.APPWRITE_API_KEY ?? '';
+    public static APPWRITE_ENDPOINT   = process.env.APPWRITE_ENDPOINT ?? '';
+    public static APPWRITE_PROJECT_ID = process.env.APPWRITE_PROJECT_ID ?? '';
+    public static APPWRITE_API_KEY    = process.env.APPWRITE_API_KEY ?? '';
 
     public static REDIS_HOST = process.env.REDIS_HOST ?? '';
     public static REDIS_PORT = process.env.REDIS_PORT ?? '';

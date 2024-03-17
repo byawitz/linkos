@@ -63,12 +63,6 @@
           </template>
         </NavItem>
 
-        <NavItem :text="$t('Tokens')" href="/tokens">
-          <template #icon>
-            <IconKey class="icon" />
-          </template>
-        </NavItem>
-
         <NavItem :text="$t('Users')" href="/users">
           <template #icon>
             <IconUsers class="icon" />

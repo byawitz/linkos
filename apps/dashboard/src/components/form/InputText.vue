@@ -1,7 +1,7 @@
 <template>
   <div :class="`mb-${mb}`">
     <label class="form-label" :class="{ required: required }">{{ label }}</label>
-    <input :type="inputType" class="form-control" :class="{ 'is-invalid': isInvalid }" :placeholder="placeholder" v-model="model" />
+    <input :type="inputType" class="form-control" :class="{ 'is-invalid': isInvalid }" :disabled :placeholder="placeholder" v-model="model" />
     <div class="invalid-feedback" v-if="isInvalid">{{ feedback }}</div>
   </div>
 </template>
@@ -13,6 +13,7 @@ defineProps({
   inputType: { default: 'text', type: String },
   isInvalid: { default: false, type: Boolean },
   required: { default: false, type: Boolean },
+  disabled: { default: false, type: Boolean },
   placeholder: { default: '', type: String },
   feedback: { default: '', type: String },
   label: { default: '', type: String },

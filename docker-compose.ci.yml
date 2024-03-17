@@ -148,6 +148,7 @@ services:
     entrypoint: serve
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -197,6 +198,7 @@ services:
     entrypoint: serve-links
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -235,6 +237,7 @@ services:
       - postgres
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -268,6 +271,7 @@ services:
       - clickhouse
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -301,6 +305,7 @@ services:
       - clickhouse
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT

@@ -80,10 +80,10 @@ import InputGroupText from '@/components/form/InputGroupText.vue';
 import { IconEye, IconEyeOff } from '@tabler/icons-vue';
 import Button from '@/components/form/Button.vue';
 import NetworkHelper from '@/heplers/NetworkHelper';
-import { useUserStore } from '@/stores/user';
+import { useAppStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
 
-const user = useUserStore();
+const user = useAppStore();
 const router = useRouter();
 
 onMounted(() => {

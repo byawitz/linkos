@@ -201,7 +201,7 @@ import DatagridStatusItem from '@/components/data/DatagridStatusItem.vue';
 import CardHeader from '@/components/layouts/CardHeader.vue';
 import Button from '@/components/form/Button.vue';
 import { IconCopy, IconExternalLink } from '@tabler/icons-vue';
-import { useUserStore } from '@/stores/user';
+import { useAppStore } from '@/stores/user';
 import ApexCharts from 'apexcharts';
 import { useI18n } from 'vue-i18n';
 
@@ -215,7 +215,7 @@ const loading = ref(true);
 const loadingAnalytics = ref(false);
 const link = ref(new LinkModel());
 const title = computed(() => (link.value.title !== '' ? link.value.title : t('View link')));
-const store = useUserStore();
+const store = useAppStore();
 
 // Analytics
 const directs = ref(<number[]>[]);

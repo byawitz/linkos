@@ -61,6 +61,7 @@ jobs:
       - name: Load Linkos
         env:
           ENVIRONMENT: ${{secrets.ENVIRONMENT}}
+          DEFAULT_LOCAL: ${{secrets.DEFAULT_LOCAL}}
           TOKEN_DRIVER: ${{secrets.TOKEN_DRIVER}}
           APP_SSL_KEY: ${{secrets.APP_SSL_KEY}}
           API_ENDPOINT: ${{secrets.API_ENDPOINT}}

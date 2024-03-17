@@ -2,7 +2,7 @@
   <Container>
     <div class="row mt-4">
       <div class="col-6">
-        <div class="card text-primary-fg p-3">
+        <div class="card text-primary p-3">
           <div class="card-stamp">
             <div class="card-stamp-icon bg-yellow"><IconClockFilled :size="70" /></div>
           </div>

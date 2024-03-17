@@ -25,27 +25,38 @@ export default class API {
         const api = app.route(process.env.API_ENDPOINT ?? '/v1/api');
 
         // TODO: Load another address from settings
-        api.use('*', cors({origin: 'http://localhost:5173', credentials: true,}))
+        api.use('*', cors({origin: 'http://localhost:5173', credentials: true,}));
         api.use('*', initAppwrite(API.appwriteSettings));
 
+
+        api.get('/health', General.health);
+        api.get('/server', General.server);
+        api.post('/login', appwriteEmailLogin());
+
+        const auth = api
+            .use('*', TokenMiddleware.getMiddleware(API.tokenSettings))
+            .use('*', appwriteMiddleware());
+
+        const reader = auth.use('*', LevelMiddleware.getMiddleware({level: 'reader'}));
+        const writer = auth.use('*', LevelMiddleware.getMiddleware({level: 'writer'}));
+        const editor = auth.use('*', LevelMiddleware.getMiddleware({level: 'editor'}));
+
+        auth.get('/whoami', General.whoAmI);
+        auth.post('/user/update', UserAPI.updateProfile);
         // api.post('/reset', UserAPI.reset);
         // api.post('/forgot', UserAPI.forgot);
 
-        api.get('/health', General.health)
-        api.post('/login', appwriteEmailLogin());
+        reader.get('/links', Links.list);
+        reader.get('/links/:id', Links.getLink);
+        reader.get('/links/stat/:id/:days', Links.getLinkStats);
 
-        const closedApi = api.use('*', TokenMiddleware.getMiddleware(API.tokenSettings));
+        writer.post('/links', Links.add);
 
-        closedApi.use('*', appwriteMiddleware());
-        closedApi.get('/whoami', General.whoAmI)
-        closedApi.post('/links', LevelMiddleware.getMiddleware({level: 'writer'}), Links.add);
-        closedApi.get('/links', LevelMiddleware.getMiddleware({level: 'reader'}), Links.list);
-        closedApi.get('/links/:id', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getLink);
-        closedApi.get('/links/stat/:id/:days', LevelMiddleware.getMiddleware({level: 'reader'}), Links.getLinkStats);
-        closedApi.patch('/links/:id', LevelMiddleware.getMiddleware({level: 'editor'}), Links.patch);
-        closedApi.delete('/links/:id/:short', LevelMiddleware.getMiddleware({level: 'editor'}), Links.delete);
+        editor.patch('/links/:id', Links.patch);
+        editor.delete('/links/:id/:short', Links.delete);
 
-        Log.info('Starting serving Linkos')
+        Log.info('Starting serving Linkos');
+
         return app;
     }
 

@@ -1,48 +1,50 @@
-import { ref, computed, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import { defineStore } from 'pinia';
 import NetworkHelper from '@/heplers/NetworkHelper';
+import UserModel from '@@/db/UserModel';
+import { DEFAULT_LANG, type SystemLang } from '@/locale/I18n';
 
-interface User {
-  isLoggedIn: boolean;
-  created_at: Date;
-  updated_at: Date;
-  email: string;
-  id: string;
-  level: string;
-}
+type SystemTheme = 'dark' | 'light' | 'system';
 
 interface Server {
   host: string;
+  lang: SystemLang;
 }
 
-export const useUserStore = defineStore('user', () => {
-  const user: Ref<User> = ref({
-    isLoggedIn: false,
-    created_at: new Date(),
-    level: '',
-    id: '',
-    email: '',
-    updated_at: new Date()
-  });
+interface LinkosApp {
+  lang: SystemLang | null;
+  theme: SystemTheme;
+}
 
-  const server: Ref<Server> = ref({ host: '' });
+const useAppStore = defineStore('user', () => {
+  const user: Ref<UserModel> = ref(new UserModel());
+  const server: Ref<Server> = ref({ host: '', lang: DEFAULT_LANG });
+  const app: Ref<LinkosApp> = ref({ lang: null, theme: 'system' });
 
   async function loadUser() {
+    await loadServerData();
+
     const res = await NetworkHelper.get(NetworkHelper.whoAmI);
 
     if (res.success) {
-      const userData = res.data.user;
+      user.value = UserModel.fromJSON(res.data.user);
 
-      user.value.isLoggedIn = true;
-      user.value.id = userData.id ?? '';
-      user.value.created_at = userData.created_at ?? new Date();
-      user.value.updated_at = userData.updated_at ?? new Date();
-      user.value.email = userData.email ?? '';
-      user.value.level = userData.level ?? '';
-
-      server.value.host = res.data.server.host;
+      if (user.value.dark_theme !== null) {
+        app.value.theme = user.value.dark_theme ? 'dark' : 'light';
+      }
     }
   }
 
-  return { user, loadUser, server };
+  async function loadServerData() {
+    const res = await NetworkHelper.get(NetworkHelper.server);
+
+    if (res.success) {
+      server.value.lang = res.data.server.lang ?? DEFAULT_LANG;
+      server.value.host = res.data.server.host ?? null;
+    }
+  }
+
+  return { user, loadUser, server, app };
 });
+
+export { useAppStore, type SystemTheme };

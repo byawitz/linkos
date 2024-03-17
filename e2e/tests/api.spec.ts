@@ -33,6 +33,7 @@ describe('Installing & Seeding', () => {
         proc.stdin!.write(`bun /usr/server/app/src/index.ts -i\n`);
         proc.stdin!.write(`test@email.com\n`);
         proc.stdin!.flush();
+        proc.stdin!.end();
 
         const output = await new Response(proc.stdout).text();
         expect(output).toContain('Owner token created')

@@ -1,4 +1,6 @@
 {
+  "English": "English",
+  "Hebrew": "Hebrew",
   "Backups": "Backups",
   "Campaigns": "Campaigns",
   "Domains": "Domains",
@@ -94,5 +96,18 @@
   "Still in the work": "Still in the work",
   "This page is still in the working make sure to follow our": "This page is still in the working make sure to follow our",
   "repo": "repo",
-  "all": "all"
+  "all": "all",
+  "basic-details": "Basic details",
+  "advance": "Advance",
+  "user-details": "User details",
+  "Name": "Name",
+  "Email": "Email",
+  "data-is-available-to-edit-in-your-appwrite": "Editing this data is done in your Appwrite instance",
+  "preferences": "Preferences",
+  "Theme": "Theme",
+  "Language": "Language",
+  "Save": "Save",
+  "system-default": "System Default",
+  "dark": "Dark",
+  "light": "Light"
 }
