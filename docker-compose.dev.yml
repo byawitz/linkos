@@ -159,6 +159,7 @@ services:
     entrypoint: serve-watch
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -211,6 +212,7 @@ services:
     entrypoint: serve-links-watch
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -251,6 +253,7 @@ services:
       - postgres
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -286,6 +289,7 @@ services:
       - clickhouse
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
@@ -321,6 +325,7 @@ services:
       - clickhouse
     environment:
       - ENVIRONMENT
+      - DEFAULT_LOCAL
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT
