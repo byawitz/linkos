@@ -1,4 +1,6 @@
 {
+  "English": "אנגלית",
+  "Hebrew": "עברית",
   "Backups": "גיבויים",
   "Campaigns": "קמפיינים",
   "Domains": "דומיינים",
@@ -94,5 +96,18 @@
   "Still in the work": "עדיין בתהליך",
   "This page is still in the working make sure to follow our": "דף זה בתהליך פיתוח, עקבו אחרי התהליך בעמוד ",
   "repo": "repo",
-  "all": "כל"
+  "all": "כל",
+  "basic-details": "פרטים בסיסיים",
+  "advance": "מתקדם",
+  "user-details": "פרטי משתמש",
+  "Name": "שם",
+  "Email": "דוא\"ל",
+  "data-is-available-to-edit-in-your-appwrite": "יש להתחבר למערכת Appwrite בשביל לערוך מידע זה",
+  "preferences": "העדפות",
+  "Theme": "ערכת נושא",
+  "Language": "שפה",
+  "Save": "שמירה",
+  "system-default": "ברירת מחדל של המערכת",
+  "dark": "כהה",
+  "light": "בהירה"
 }
