@@ -18,7 +18,7 @@ interface LinkosApp {
 
 const useAppStore = defineStore('user', () => {
   const user: Ref<UserModel> = ref(new UserModel());
-  const server: Ref<Server> = ref({ host: '', lang: '' });
+  const server: Ref<Server> = ref({ host: '', lang: DEFAULT_LANG });
   const app: Ref<LinkosApp> = ref({ lang: null, theme: 'system' });
 
   async function loadUser() {
