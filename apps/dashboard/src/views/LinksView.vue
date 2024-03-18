@@ -6,75 +6,46 @@
   </PageHeader>
 
   <div class="page-body">
-    <Container :isXL="true">
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <div class="table-responsive">
-                <div class="table-loading" v-if="tableLoading">
-                  <div class="tl-inner-text">
-                    <div class="spinner-border text-blue" role="status"></div>
-                    <p>{{ $t('Just a moment') }}</p>
-                  </div>
-                </div>
-                <table class="table table-vcenter card-table">
-                  <thead>
-                    <tr>
-                      <th class="w-1">#</th>
-                      <th>{{ $t('Title') }}</th>
-                      <th>{{ $t('Short') }}</th>
-                      <th class="w-1">{{ $t('Clicks') }}</th>
-                      <th>{{ $t('Destination') }}</th>
-                      <th class="w-1"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="link in links" :key="link.id">
-                      <td>{{ link.id }}</td>
-                      <td class="text-secondary">
-                        <RouterLink :to="`/links/${link.id}`">{{ link.title }}</RouterLink>
-                      </td>
-                      <td class="text-secondary">
-                        <div class="badge py-2">
-                          {{ link.short }}
+    <Table :table-loading="tableLoading" :headings="headings">
+      <tr v-for="link in links" :key="link.id">
+        <td>{{ link.id }}</td>
+        <td class="text-secondary">
+          <RouterLink :to="`/links/${link.id}`">{{ link.title }}</RouterLink>
+        </td>
+        <td class="text-secondary">
+          <div class="badge py-2">
+            {{ link.short }}
 
-                          <a href="#" @click.prevent="copyToClipboard(link)" class="px-2">
-                            <IconCopy :size="18" v-if="!link.copying" />
-                            <template v-else>{{ $t('copied') }}</template>
-                          </a>
+            <a href="#" @click.prevent="copyToClipboard(link)" class="px-2">
+              <IconCopy :size="18" v-if="!link.copying" />
+              <template v-else>{{ $t('copied') }}</template>
+            </a>
 
-                          <a :href="getShort(link)" target="_blank">
-                            <IconExternalLink :size="18" />
-                          </a>
-                        </div>
-                      </td>
-                      <td class="text-secondary">{{ parseInt(link.clicks.toString()).toLocaleString() }}</td>
-                      <td class="text-secondary">
-                        <span :title="link.dest">{{ link.dest.substring(0, 50) }}{{ link.dest.length > 50 ? '...' : '' }}</span>
-                      </td>
-                      <td>
-                        <div class="btn-list flex-nowrap">
-                          <div class="dropdown">
-                            <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown" aria-expanded="false">
-                              <IconSettings :size="15" />
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" style="">
-                              <RouterLink class="dropdown-item" :to="`/links/${link.id}/edit`">{{ $t('Edit') }}</RouterLink>
-                              <a class="text-danger dropdown-item" @click.prevent="askToDeleteLink(link)" href="#"> {{ $t('Delete') }} </a>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <a :href="getShort(link)" target="_blank">
+              <IconExternalLink :size="18" />
+            </a>
+          </div>
+        </td>
+        <td class="text-secondary">{{ parseInt(link.clicks.toString()).toLocaleString() }}</td>
+        <td class="text-secondary">
+          <span :title="link.dest">{{ link.dest.substring(0, 50) }}{{ link.dest.length > 50 ? '...' : '' }}</span>
+        </td>
+        <td>
+          <div class="row">
+            <div class="col d-flex gap-2">
+              <RouterLink :to="`/links/${link.id}/edit`" class="btn btn-icon btn-sm btn-outline-primary">
+                <IconPencil :size="14" />
+              </RouterLink>
+
+              <a @click.prevent="askToDeleteLink(link)" href="#" class="btn btn-icon btn-sm btn-outline-danger">
+                <IconTrash :size="14" />
+              </a>
             </div>
           </div>
-        </div>
-      </div>
-    </Container>
+        </td>
+      </tr>
+    </Table>
+    <TablePagination :hasNext="hasNext" :hasPrev="hasPrev" @next="paginator.next()" @prev="paginator.prev()" />
   </div>
 
   <input type="hidden" name="tmp-link-holder" id="tmp-link-holder" />
@@ -83,29 +54,41 @@
 <script setup lang="ts">
 import type LinkModel from '@@/db/LinkModel';
 import { inject, onMounted, ref, type Ref } from 'vue';
-import { IconSettings, IconCopy, IconExternalLink } from '@tabler/icons-vue';
+import { IconCopy, IconExternalLink, IconPencil, IconTrash } from '@tabler/icons-vue';
 import Button from '@/components/form/Button.vue';
 import NetworkHelper from '@/heplers/NetworkHelper';
 import PageHeader from '@/components/layouts/PageHeader.vue';
-import type { SweetAlertResult, SweetAlertCustomClass } from 'sweetalert2';
+import type { SweetAlertResult } from 'sweetalert2';
 import { useAppStore } from '@/stores/user';
-import Container from '@/components/layouts/Container.vue';
 import { useI18n } from 'vue-i18n';
+import Table from '@/components/data/Table.vue';
+import TablePagination from '@/components/data/TablePagination.vue';
+import CursorPaginator from '@/heplers/CursorPaginator';
+import { useRouter } from 'vue-router';
 
 const store = useAppStore();
+const router = useRouter();
 const { t } = useI18n();
 
 const links: Ref<LinkModel[]> = ref([]);
 const tableLoading = ref(false);
+const hasPrev = ref(false);
+const hasNext = ref(false);
 const swal: any = inject('$swal');
 
+const paginator = new CursorPaginator(NetworkHelper.linksAll, links, tableLoading, hasNext, hasPrev, router);
+
+const headings = [
+  { title: '#', isNarrow: true },
+  { title: t('Title'), isNarrow: false },
+  { title: t('Short'), isNarrow: false },
+  { title: t('Clicks'), isNarrow: true },
+  { title: t('Destination'), isNarrow: false },
+  { title: '', isNarrow: true }
+];
+
 onMounted(async () => {
-  try {
-    const res = await NetworkHelper.get(NetworkHelper.links);
-    if (res.success) links.value = res.data;
-  } catch (e) {
-    // TODO: Toast for error
-  }
+  await paginator.init();
 });
 
 async function deleteLink(deletingLink: LinkModel) {

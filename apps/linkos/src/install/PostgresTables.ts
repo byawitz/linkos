@@ -131,6 +131,7 @@ export default class PostgresTables {
 
             destination_url TEXT               NOT NULL,
             secret          TEXT               NOT NULL,
+            method          VARCHAR(15)        NOT NULL,
             content_type    webhookcontenttype NOT NULL,
             headers         TEXT,
 

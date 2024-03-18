@@ -78,13 +78,19 @@ export default class Link extends LinkModel {
         return false;
     }
 
-    public static async getAll() {
+    public static async getAll(pageSize = 51, lastId = 0) {
+
         try {
+            const values = [];
+            if (lastId !== 0) {
+                values.push(lastId);
+            }
+
             const pg  = PostgresProvider.getClient();
-            // TODO pagination
             const res = await pg?.query<Link>(`SELECT id, title, short, dest, clicks
-                                               FROM links
-                                               ORDER BY id DESC`);
+                                               FROM links ${lastId !== 0 ? 'WHERE id < $1' : ''}
+                                               ORDER BY id DESC
+                                               LIMIT ${pageSize + 1}`, values);
             if (res) {
                 return res.rows;
             }

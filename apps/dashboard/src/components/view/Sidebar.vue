@@ -75,7 +75,7 @@
           </template>
         </NavItem>
 
-        <NavItem :text="$t('Profile')" href="profile">
+        <NavItem :text="$t('Profile')" href="/profile">
           <template #icon>
             <IconUser class="icon" />
           </template>

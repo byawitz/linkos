@@ -1,8 +1,11 @@
+import Global from "@/utils/Global.ts";
+
 export default class Env {
     public static ENVIRONMENT_PRODUCTION  = 'production';
     public static ENVIRONMENT_DEVELOPMENT = 'development';
 
     public static ENVIRONMENT                = process.env.ENVIRONMENT ?? '';
+    public static PAGINATION_SIZE            = Global.ParseOrValue(process.env.PAGINATION_SIZE, 50);
     public static DEFAULT_LOCAL              = process.env.DEFAULT_LOCAL ?? '';
     public static TOKEN_DRIVER               = process.env.TOKEN_DRIVER ?? '';
     public static APP_SSL_KEY                = process.env.APP_SSL_KEY ?? '';

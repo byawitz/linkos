@@ -46,7 +46,7 @@ export default class API {
         // api.post('/reset', UserAPI.reset);
         // api.post('/forgot', UserAPI.forgot);
 
-        reader.get('/links', Links.list);
+        reader.get('/links/all/:last_id?/:prev?', Links.list);
         reader.get('/links/:id', Links.getLink);
         reader.get('/links/stat/:id/:days', Links.getLinkStats);
 

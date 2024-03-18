@@ -3,6 +3,8 @@ import API from "../../services/API.ts";
 import Link, {type MaybeLink} from "../../models/db/Link.ts";
 import RedisProvider from "@/providers/RedisProvider.ts";
 import ClickhouseProvider from "@/providers/ClickhouseProvider.ts";
+import Global from "@/utils/Global.ts";
+import Env from "@/utils/Env.ts";
 
 export default class Links {
     public static async add(c: Context) {
@@ -49,14 +51,15 @@ export default class Links {
     }
 
     public static async list(c: Context) {
-        // TODO: pagination
-        const links = await Link.getAll();
+        const last_id = Global.ParseOrValue(c.req.param().last_id);
+
+        const links = await Link.getAll(Env.PAGINATION_SIZE, last_id);
 
         if (!links) {
             return c.json(API.response(false));
         }
 
-        return c.json(API.response(true, links));
+        return c.json(API.response(true, Global.paginationObject(links, Env.PAGINATION_SIZE, last_id)));
     }
 
     public static async patch(c: Context) {

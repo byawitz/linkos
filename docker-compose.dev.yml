@@ -160,6 +160,7 @@ services:
     environment:
       - ENVIRONMENT
       - DEFAULT_LOCAL
+      - PAGINATION_SIZE
       - TOKEN_DRIVER
       - APP_SSL_KEY
       - API_ENDPOINT

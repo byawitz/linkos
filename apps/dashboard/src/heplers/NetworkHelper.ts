@@ -3,6 +3,7 @@ export default class NetworkHelper {
   static readonly whoAmI = '/whoami';
   static readonly server = '/server';
   static readonly links = '/links/';
+  static readonly linksAll = '/links/all/';
   static readonly linkStats = '/links/stat/';
 
   static readonly updateProfile = '/user/update';
@@ -51,4 +52,5 @@ export default class NetworkHelper {
     const base = import.meta.env.MODE === 'development' ? 'http://localhost:8081/v1/api' : `${window.location.origin}/v1/api`;
     return `${base}${appendUrl}`;
   }
+
 }
