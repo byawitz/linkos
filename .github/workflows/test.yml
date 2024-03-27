@@ -59,7 +59,7 @@ jobs:
       KAFKA_NUMBER_OF_PARTITIONS: 1
       MAIN_DOMAIN: http://localhost
       APPWRITE_ENDPOINT: ${{secrets.APPWRITE_ENDPOINT}}
-      APPWRITE_PROJECT_ID: ${{secrets.APPWRITE_PROJECT_ID}}
+      APPWRITE_PROJECT_ID: linkos
       APPWRITE_API_KEY: ${{secrets.APPWRITE_API_KEY}}
       REDIS_HOST: redis
       REDIS_PORT: 6379
