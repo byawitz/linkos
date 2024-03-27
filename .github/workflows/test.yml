@@ -47,6 +47,43 @@ jobs:
     name: E2E API Test
     runs-on: ubuntu-latest
     needs: setup
+    env:
+      ENVIRONMENT: debug
+      DEFAULT_LOCAL: en
+      TOKEN_DRIVER: local
+      APP_SSL_KEY: randomLongKey
+      API_ENDPOINT: /v1/api
+      BACKUP_CRON: "* * * * *"
+      NANOID_LETTERS: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-"
+      NANOID_LENGTH: 8
+      KAFKA_NUMBER_OF_PARTITIONS: 1
+      MAIN_DOMAIN: http://localhost
+      APPWRITE_ENDPOINT: ${{secrets.APPWRITE_ENDPOINT}}
+      APPWRITE_PROJECT_ID: ${{secrets.APPWRITE_PROJECT_ID}}
+      APPWRITE_API_KEY: ${{secrets.APPWRITE_API_KEY}}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_HOSTS: kafka:9092
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      CLICKHOUSE_PROTOCOL: http
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: 8123
+      CLICKHOUSE_DB: linkos
+      CLICKHOUSE_USER: linkos
+      CLICKHOUSE_PASSWORD: strong_password
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: linkos
+      POSTGRES_USER: linkos
+      POSTGRES_PASSWORD: strong_password
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -59,43 +96,6 @@ jobs:
           fail-on-cache-miss: true
 
       - name: Load Linkos
-        env:
-          ENVIRONMENT: ${{secrets.ENVIRONMENT}}
-          DEFAULT_LOCAL: ${{secrets.DEFAULT_LOCAL}}
-          TOKEN_DRIVER: ${{secrets.TOKEN_DRIVER}}
-          APP_SSL_KEY: ${{secrets.APP_SSL_KEY}}
-          API_ENDPOINT: ${{secrets.API_ENDPOINT}}
-          BACKUP_CRON: ${{secrets.BACKUP_CRON}}
-          NANOID_LETTERS: ${{secrets.NANOID_LETTERS}}
-          NANOID_LENGTH: ${{secrets.NANOID_LENGTH}}
-          KAFKA_NUMBER_OF_PARTITIONS: ${{secrets.KAFKA_NUMBER_OF_PARTITIONS}}
-          MAIN_DOMAIN: ${{secrets.MAIN_DOMAIN}}
-          APPWRITE_ENDPOINT: ${{secrets.APPWRITE_ENDPOINT}}
-          APPWRITE_PROJECT_ID: ${{secrets.APPWRITE_PROJECT_ID}}
-          APPWRITE_API_KEY: ${{secrets.APPWRITE_API_KEY}}
-          REDIS_HOST: ${{secrets.REDIS_HOST}}
-          REDIS_PORT: ${{secrets.REDIS_PORT}}
-          KAFKA_HOSTS: ${{secrets.KAFKA_HOSTS}}
-          KAFKA_CFG_NODE_ID: ${{secrets.KAFKA_CFG_NODE_ID}}
-          KAFKA_CFG_PROCESS_ROLES: ${{secrets.KAFKA_CFG_PROCESS_ROLES}}
-          KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: ${{secrets.KAFKA_CFG_CONTROLLER_QUORUM_VOTERS}}
-          KAFKA_CFG_LISTENERS: ${{secrets.KAFKA_CFG_LISTENERS}}
-          KAFKA_CFG_ADVERTISED_LISTENERS: ${{secrets.KAFKA_CFG_ADVERTISED_LISTENERS}}
-          KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: ${{secrets.KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP}}
-          KAFKA_CFG_CONTROLLER_LISTENER_NAMES: ${{secrets.KAFKA_CFG_CONTROLLER_LISTENER_NAMES}}
-          KAFKA_CFG_INTER_BROKER_LISTENER_NAME: ${{secrets.KAFKA_CFG_INTER_BROKER_LISTENER_NAME}}
-          CLICKHOUSE_PROTOCOL: ${{secrets.CLICKHOUSE_PROTOCOL}}
-          CLICKHOUSE_HOST: ${{secrets.CLICKHOUSE_HOST}}
-          CLICKHOUSE_PORT: ${{secrets.CLICKHOUSE_PORT}}
-          CLICKHOUSE_DB: ${{secrets.CLICKHOUSE_DB}}
-          CLICKHOUSE_USER: ${{secrets.CLICKHOUSE_USER}}
-          CLICKHOUSE_PASSWORD: ${{secrets.CLICKHOUSE_PASSWORD}}
-          CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: ${{secrets.CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT}}
-          POSTGRES_HOST: ${{secrets.POSTGRES_HOST}}
-          POSTGRES_PORT: ${{secrets.POSTGRES_PORT}}
-          POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
         run: |
           docker load --input /tmp/${{ env.IMAGE }}.tar
           docker compose -f docker-compose.ci.yml up -d
