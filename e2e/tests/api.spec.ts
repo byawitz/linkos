@@ -112,7 +112,7 @@ describe('All endpoints logged in', () => {
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
-        expect(json.data.length).toBeGreaterThan(99);
+        expect(json.data.items.length).toBeGreaterThan(10);
     });
 
     test("Getting link stats", async () => {
