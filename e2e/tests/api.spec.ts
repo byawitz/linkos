@@ -105,7 +105,7 @@ describe('All endpoints logged in', () => {
     });
 
     test("Getting all links", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/all/`, {
+        const res  = await fetch(`${apiEndpoint}/links/all/100`, {
             headers: {'x-linkos-token': 'token'}
         });
         const json = await res.json();
