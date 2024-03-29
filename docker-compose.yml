@@ -125,7 +125,7 @@ services:
       retries: 5
 
   linkos:
-    image: byawitz/linkos:0.0.3
+    image: byawitz/linkos:CURRENT_LINKOS_VERSION
     hostname: linkos
     container_name: linkos
     restart: unless-stopped
@@ -176,7 +176,7 @@ services:
       - redis
 
   linkos-links:
-    image: byawitz/linkos:0.0.3
+    image: byawitz/linkos:CURRENT_LINKOS_VERSION
     hostname: linkos-links
     container_name: linkos-links
     restart: unless-stopped
@@ -219,7 +219,7 @@ services:
       - redis
 
   linkos-analytics-consumer:
-    image: byawitz/linkos:0.0.3
+    image: byawitz/linkos:CURRENT_LINKOS_VERSION
     hostname: linkos-analytics-consumer
     container_name: linkos-analytics-consumer
     restart: unless-stopped
@@ -253,7 +253,7 @@ services:
       - POSTGRES_PASSWORD
 
   linkos-webhooks-consumer:
-    image: byawitz/linkos:0.0.3
+    image: byawitz/linkos:CURRENT_LINKOS_VERSION
     hostname: linkos-webhooks-consumer
     container_name: linkos-webhooks-consumer
     restart: unless-stopped
@@ -287,7 +287,7 @@ services:
       - POSTGRES_PASSWORD
 
   linkos-scheduler:
-    image: byawitz/linkos:0.0.3
+    image: byawitz/linkos:CURRENT_LINKOS_VERSION
     hostname: linkos-scheduler
     container_name: linkos-scheduler
     restart: unless-stopped

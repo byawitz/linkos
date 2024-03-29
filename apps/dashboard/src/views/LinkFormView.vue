@@ -120,8 +120,8 @@ async function submitForm() {
   submitting.value = true;
 
   const res = !isEdit.value
-    ? await NetworkHelper.post(NetworkHelper.links, link.value)
-    : await NetworkHelper.patch(NetworkHelper.links + id, link.value);
+    ? await NetworkHelper.post(NetworkHelper.links, LinkModel.dbData(link.value))
+    : await NetworkHelper.patch(NetworkHelper.links + id, LinkModel.dbData(link.value));
   if (res.success) {
     await router.push('/links');
   } else {
