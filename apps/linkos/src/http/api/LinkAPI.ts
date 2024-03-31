@@ -10,6 +10,8 @@ import Global from "@/utils/Global.ts";
 import Env from "@/utils/Env.ts";
 import ClickMessage from "@/models/ClickMessage.ts";
 import nunjucks from 'nunjucks';
+import P from "@/providers/Providers.ts";
+import Links from "@/http/api/Links.ts";
 
 export default class LinkAPI {
     private static producer: Producer | false;
@@ -35,7 +37,7 @@ export default class LinkAPI {
 
         let shortLink = await LinkAPI.getLink(link);
 
-        if (shortLink !== false && shortLink.password === password) {
+        if (shortLink !== undefined && shortLink.password === password) {
             return LinkAPI.redirect(shortLink.dest, c);
         }
 
@@ -56,7 +58,6 @@ export default class LinkAPI {
         } catch (e: any) {
             Log.debug(e);
         }
-
 
         return LinkAPI.its404(c);
     }
@@ -157,7 +158,7 @@ export default class LinkAPI {
             link_target_text         : 'Link destination',
             password_placeholder_text: 'e.g. Aa123456',
             enter_password_text      : 'Password is required to access this short link destination',
-            form_target              : `${Env.MAIN_DOMAIN}/password/${link.id}`,
+            form_target              : `${Env.MAIN_DOMAIN}/password/${link.short}`,
 
 
             title      : link.title,
@@ -169,14 +170,16 @@ export default class LinkAPI {
     private static async getLink(linkID: string) {
         linkID = linkID.replace(/\+$/, '');
 
-        let shortLink: false | Link = false;
+        let shortLink: Link | undefined = undefined;
 
         const linkFormRedis = await RedisProvider.getClient().get(linkID);
+
         if (linkFormRedis !== null) {
             shortLink = Global.ParseOrFalse(linkFormRedis);
         } else {
-            shortLink = await Link.getLink(linkID);
+            const link = await P.db(Links.TABLE).where('short', linkID);
 
+            shortLink = link[0];
             await RedisProvider.getClient().set(linkID, JSON.stringify(shortLink));
         }
 

@@ -1,3 +1,6 @@
+import {customAlphabet} from "nanoid";
+import Env from "@/utils/Env.ts";
+
 export default class Global {
     public static async sleep(ms: number): Promise<void> {
         return new Promise((resolve) => {
@@ -11,7 +14,6 @@ export default class Global {
         } catch {
             return false;
         }
-
     }
 
     static ParseOrValue(last_id: any, value = 0) {
@@ -41,5 +43,9 @@ export default class Global {
             hasNext,
             items
         }
+    }
+
+    public static generateShortSlug(): string {
+        return customAlphabet(Env.NANOID_LETTERS, parseInt(Env.NANOID_LENGTH))()
     }
 }
