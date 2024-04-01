@@ -7,17 +7,23 @@ alias rm :=remove-dev
 alias rmi :=remove-dev-image
 alias build :=build-dev-image
 
-start-dev:
-    docker compose -f docker-compose.dev.yml up -d
+start-dev WHAT='dev':
+    docker compose -f docker-compose.{{WHAT}}.yml up -d
 
-stop-dev:
-    docker compose -f docker-compose.dev.yml down
+stop-dev WHAT='dev':
+    docker compose -f docker-compose.{{WHAT}}.yml down
 
-remove-dev:
-    docker compose -f docker-compose.dev.yml down -v
+remove-dev WHAT='dev':
+    docker compose -f docker-compose.{{WHAT}}.yml down -v
 
 remove-dev-image:
     docker rmi linkos/linkos
 
 build-dev-image:
     docker build -t linkos/linkos .
+
+shell WHAT='linkos':
+     docker exec -it {{WHAT}} bash
+
+logs:
+    docker compose logs
