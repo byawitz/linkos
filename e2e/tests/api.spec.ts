@@ -9,16 +9,16 @@ interface response {
 
 describe('Basic endpoints, user not logged in', () => {
     test("Health endpoint", async () => {
-        const res  = await fetch(`${apiEndpoint}/health`);
-        const json = await res.json();
+        const res       = await fetch(`${apiEndpoint}/health`);
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
     });
 
     test("Guest gets 401", async () => {
-        const res  = await fetch(`${apiEndpoint}/whoami`);
-        const json = await res.json();
+        const res       = await fetch(`${apiEndpoint}/whoami`);
+        const json: any = await res.json();
 
         expect(res.status).toBe(401);
         expect(json.success).toBe(false);
@@ -57,10 +57,10 @@ describe('All endpoints logged in', () => {
     let generatedLinkId = 0;
 
     test("Get user details with token", async () => {
-        const res  = await fetch(`${apiEndpoint}/whoami`, {
+        const res       = await fetch(`${apiEndpoint}/whoami`, {
             headers: {'x-linkos-token': 'token'}
         });
-        const json = await res.json();
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
@@ -86,7 +86,81 @@ describe('All endpoints logged in', () => {
             },)
         });
 
-        const json = await res.json();
+        const json: any = await res.json();
+
+        expect(res.status).toBe(200);
+        expect(json.success).toBe(true)
+        generatedLinkId = json.data.id;
+    });
+
+    test("Adding link with password", async () => {
+        const res = await fetch(`${apiEndpoint}/links/`, {
+            headers: {'x-linkos-token': 'token'},
+            method : 'POST',
+            body   : JSON.stringify({
+                dest                : "https://github.com/",
+                description         : "GitHub",
+                short               : "gh2",
+                password            : '1234',
+                title               : "Testing GitHub link with password",
+                user_id             : "1",
+                campaign_id         : null,
+                password_protected  : true,
+                expiring_link       : false,
+                informal_redirection: false,
+                monitor             : false,
+                plus_enabled        : false,
+            },)
+        });
+
+        const json: any = await res.json();
+
+        expect(res.status).toBe(200);
+        expect(json.success).toBe(true)
+        generatedLinkId = json.data.id;
+    });
+
+    test("Adding link with already passed date", async () => {
+        const res = await fetch(`${apiEndpoint}/links/`, {
+            headers: {'x-linkos-token': 'token'},
+            method : 'POST',
+            body   : JSON.stringify({
+                dest           : "https://github.com/",
+                description    : "GitHub",
+                short          : "gh3",
+                title          : "Testing GitHub link with expiration date",
+                user_id        : "1",
+                campaign_id    : null,
+                expiring_link  : true,
+                expiration_date: new Date()
+            },)
+        });
+
+        const json: any = await res.json();
+
+        expect(res.status).toBe(200);
+        expect(json.success).toBe(true)
+        generatedLinkId = json.data.id;
+    });
+
+    test("Adding link with plus page and informal redirect", async () => {
+        const res = await fetch(`${apiEndpoint}/links/`, {
+            headers: {'x-linkos-token': 'token'},
+            method : 'POST',
+            body   : JSON.stringify({
+                dest                : "https://github.com/",
+                description         : "This is the description of this link!",
+                short               : "gh4",
+                title               : "Testing GitHub link with plus page and informal redirect",
+                user_id             : "1",
+                campaign_id         : null,
+                informal_redirection: true,
+                plus_enabled        : true,
+
+            },)
+        });
+
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true)
@@ -94,10 +168,10 @@ describe('All endpoints logged in', () => {
     });
 
     test("Getting link details", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/${generatedLinkId}`, {
+        const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}`, {
             headers: {'x-linkos-token': 'token'}
         });
-        const json = await res.json();
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
@@ -105,10 +179,10 @@ describe('All endpoints logged in', () => {
     });
 
     test("Getting all links", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/all/100`, {
+        const res       = await fetch(`${apiEndpoint}/links/all/100`, {
             headers: {'x-linkos-token': 'token'}
         });
-        const json = await res.json();
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
@@ -116,10 +190,10 @@ describe('All endpoints logged in', () => {
     });
 
     test("Getting link stats", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/stat/1/30`, {
+        const res       = await fetch(`${apiEndpoint}/links/stat/1/30`, {
             headers: {'x-linkos-token': 'token'}
         });
-        const json = await res.json();
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
@@ -127,7 +201,7 @@ describe('All endpoints logged in', () => {
     });
 
     test("Updating link", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/1`, {
+        const res       = await fetch(`${apiEndpoint}/links/1`, {
             headers: {'x-linkos-token': 'token'},
             method : 'PATCH',
             body   : JSON.stringify({
@@ -148,18 +222,18 @@ describe('All endpoints logged in', () => {
                 updated_at          : new Date(),
             })
         });
-        const json = await res.json();
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
     });
 
     test("Deleting link", async () => {
-        const res  = await fetch(`${apiEndpoint}/links/1/1`, {
+        const res       = await fetch(`${apiEndpoint}/links/1/1`, {
             headers: {'x-linkos-token': 'token'},
             method : 'DELETE',
         });
-        const json = await res.json();
+        const json: any = await res.json();
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true);
