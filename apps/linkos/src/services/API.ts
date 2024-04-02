@@ -2,7 +2,7 @@ import {Hono} from "hono";
 import Log from "../utils/Log.ts";
 import Links from "../http/api/Links.ts";
 import {serveStatic} from "hono/bun";
-import UserAPI from "../http/api/UserAPI.ts";
+import Users from "../http/api/Users.ts";
 import General from "../http/api/General.ts";
 import TokenMiddleware, {type TokenOptions} from "../http/middlewares/TokenMiddleware.ts";
 import type User from "../models/db/User.ts";
@@ -10,6 +10,7 @@ import {cors} from "hono/cors";
 import LevelMiddleware from "../http/middlewares/LevelMiddleware.ts";
 import {type AppwriteAuthConfig, appwriteEmailLogin, appwriteMiddleware, initAppwrite} from "@/http/middlewares/AppwriteMiddleware.ts";
 import Env from "@/utils/Env.ts";
+import Campaigns from "@/http/api/Campaigns.ts";
 
 export default class API {
     static readonly COOKIE                              = 'linkos_cookie';
@@ -42,18 +43,26 @@ export default class API {
         const editor = auth.use('*', LevelMiddleware.getMiddleware({level: 'editor'}));
 
         auth.get('/whoami', General.whoAmI);
-        auth.post('/user/update', UserAPI.updateProfile);
+        auth.post('/user/update', Users.updateProfile);
         // api.post('/reset', UserAPI.reset);
         // api.post('/forgot', UserAPI.forgot);
 
-        reader.get('/links/all/:last_id?/:prev?', Links.list);
-        reader.get('/links/:id', Links.getLink);
-        reader.get('/links/stat/:id/:days', Links.getLinkStats);
+        reader.get('/links/all/:last_id?/:prev?', (c) => Links.list(c));
+        reader.get('/links/:id', (c) => Links.getLink(c));
+        reader.get('/links/stat/:id/:days', (c) => Links.getLinkStats(c));
 
-        writer.post('/links', Links.add);
+        writer.post('/links', (c) => Links.add(c));
 
-        editor.patch('/links/:id', Links.patch);
-        editor.delete('/links/:id/:short', Links.delete);
+        editor.patch('/links/:id', (c) => Links.patch(c));
+        editor.delete('/links/:id/:short', (c) => Links.delete(c));
+
+        reader.get('/campaigns/all/:last_id?/:prev?', (c) => Campaigns.list(c));
+        reader.get('/campaigns/:id', (c) => Campaigns.get(c));
+
+        writer.post('/campaigns', (c) => Campaigns.add(c));
+
+        editor.patch('/campaigns/:id', (c) => Campaigns.patch(c));
+        editor.delete('/campaigns/:id', (c) => Campaigns.delete(c));
 
         Log.info('Starting serving Linkos');
 
