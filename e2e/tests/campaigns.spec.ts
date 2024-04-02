@@ -9,7 +9,7 @@ interface response {
 
 let generatedCampaignID = 0;
 const title             = "First Campaign";
-describe.only('Testing Campaigns', () => {
+describe('Testing Campaigns', () => {
     test("Adding Campaign", async () => {
         const res = await fetch(`${apiEndpoint}/campaigns/`, {
             headers: {'x-linkos-token': 'token'},
