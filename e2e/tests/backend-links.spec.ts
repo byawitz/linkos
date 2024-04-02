@@ -7,65 +7,9 @@ interface response {
     data: any
 }
 
-describe('Basic endpoints, user not logged in', () => {
-    test("Health endpoint", async () => {
-        const res       = await fetch(`${apiEndpoint}/health`);
-        const json: any = await res.json();
-
-        expect(res.status).toBe(200);
-        expect(json.success).toBe(true);
-    });
-
-    test("Guest gets 401", async () => {
-        const res       = await fetch(`${apiEndpoint}/whoami`);
-        const json: any = await res.json();
-
-        expect(res.status).toBe(401);
-        expect(json.success).toBe(false);
-    });
-});
-
-describe('Installing & Seeding', () => {
-    test('Installing', async () => {
-        const proc = Bun.spawn(["docker", "exec", "-i", "linkos", "bash"], {
-            stdin: "pipe",
-        });
-        proc.stdin!.write(`bun /usr/server/app/src/index.ts -i\n`);
-        proc.stdin!.write(`test@email.com\n`);
-        proc.stdin!.flush();
-        proc.stdin!.end();
-
-        const output = await new Response(proc.stdout).text();
-        expect(output).toContain('Owner token created')
-    });
-
-    test('Seeding', async () => {
-        const proc = Bun.spawn(["docker", "exec", "-i", "linkos", "bash"], {
-            stdin: "pipe",
-        });
-
-        proc.stdin!.write(`bun /usr/server/app/src/index.ts -dbs\n`);
-        proc.stdin!.flush();
-        proc.stdin!.end();
-
-        const output = await new Response(proc.stdout).text();
-        expect(output).toContain('Finished seeding')
-    }, 80000);
-});
-
-describe('All endpoints logged in', () => {
-    let generatedLinkId = 0;
-
-    test("Get user details with token", async () => {
-        const res       = await fetch(`${apiEndpoint}/whoami`, {
-            headers: {'x-linkos-token': 'token'}
-        });
-        const json: any = await res.json();
-
-        expect(res.status).toBe(200);
-        expect(json.success).toBe(true);
-    });
-
+let generatedLinkId = 0;
+const short         = 'aaefeaf';
+describe('Adding links', () => {
     test("Adding link", async () => {
         const res = await fetch(`${apiEndpoint}/links/`, {
             headers: {'x-linkos-token': 'token'},
@@ -73,7 +17,7 @@ describe('All endpoints logged in', () => {
             body   : JSON.stringify({
                 dest                : "https://github.com/",
                 description         : "GitHub",
-                short               : "gh",
+                short               : short,
                 password            : false,
                 title               : "Testing GitHub link",
                 user_id             : "1",
@@ -100,7 +44,7 @@ describe('All endpoints logged in', () => {
             body   : JSON.stringify({
                 dest                : "https://github.com/",
                 description         : "GitHub",
-                short               : "gh2",
+                short               : `${short}2`,
                 password            : '1234',
                 title               : "Testing GitHub link with password",
                 user_id             : "1",
@@ -127,7 +71,7 @@ describe('All endpoints logged in', () => {
             body   : JSON.stringify({
                 dest           : "https://github.com/",
                 description    : "GitHub",
-                short          : "gh3",
+                short          : `${short}3`,
                 title          : "Testing GitHub link with expiration date",
                 user_id        : "1",
                 campaign_id    : null,
@@ -150,7 +94,7 @@ describe('All endpoints logged in', () => {
             body   : JSON.stringify({
                 dest                : "https://github.com/",
                 description         : "This is the description of this link!",
-                short               : "gh4",
+                short               : `${short}4`,
                 title               : "Testing GitHub link with plus page and informal redirect",
                 user_id             : "1",
                 campaign_id         : null,
@@ -166,7 +110,8 @@ describe('All endpoints logged in', () => {
         expect(json.success).toBe(true)
         generatedLinkId = json.data.id;
     });
-
+});
+describe('Getting links', () => {
     test("Getting link details", async () => {
         const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}`, {
             headers: {'x-linkos-token': 'token'}
@@ -190,7 +135,7 @@ describe('All endpoints logged in', () => {
     });
 
     test("Getting link stats", async () => {
-        const res       = await fetch(`${apiEndpoint}/links/stat/1/30`, {
+        const res       = await fetch(`${apiEndpoint}/links/stat/${generatedLinkId}/30`, {
             headers: {'x-linkos-token': 'token'}
         });
         const json: any = await res.json();
@@ -199,16 +144,17 @@ describe('All endpoints logged in', () => {
         expect(json.success).toBe(true);
         expect(Object.keys(json.data)).toEqual(["basic", "cities", "countries", "referrers"]);
     });
-
+});
+describe('Manipulating links', () => {
     test("Updating link", async () => {
-        const res       = await fetch(`${apiEndpoint}/links/1`, {
+        const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}`, {
             headers: {'x-linkos-token': 'token'},
             method : 'PATCH',
             body   : JSON.stringify({
-                id                  : 1,
+                id                  : generatedLinkId,
                 dest                : "https://github.com/",
                 description         : "GitHub",
-                short               : "gh2",
+                short               : `${short}2aa`,
                 password            : false,
                 title               : "Testing GitHub link",
                 user_id             : "1",
@@ -229,7 +175,7 @@ describe('All endpoints logged in', () => {
     });
 
     test("Deleting link", async () => {
-        const res       = await fetch(`${apiEndpoint}/links/1/1`, {
+        const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}/gh`, {
             headers: {'x-linkos-token': 'token'},
             method : 'DELETE',
         });
@@ -239,3 +185,4 @@ describe('All endpoints logged in', () => {
         expect(json.success).toBe(true);
     });
 });
+
