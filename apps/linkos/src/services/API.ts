@@ -64,6 +64,14 @@ export default class API {
         editor.patch('/campaigns/:id', (c) => Campaigns.patch(c));
         editor.delete('/campaigns/:id', (c) => Campaigns.delete(c));
 
+        reader.get('/users/all/:last_id?/:prev?', (c) => Users.list(c));
+        reader.get('/users/:id', (c) => Users.get(c));
+
+        writer.post('/users', (c) => Users.add(c));
+
+        editor.patch('/users/:id', (c) => Users.patch(c));
+        editor.delete('/users/:id', (c) => Users.delete(c));
+
         Log.info('Starting serving Linkos');
 
         return app;

@@ -1,8 +1,11 @@
 import type {Context} from "hono";
 import API from "../../services/API.ts";
 import User from "@/models/db/User.ts";
+import BaseResource from "@/http/api/Base/BaseResource.ts";
 
-export default class UserAPI {
+export default class Users extends BaseResource {
+    protected static TABLE = 'users';
+
     static async updateProfile(c: Context) {
         const user          = c.get('user');
         const {theme, lang} = await c.req.json();
