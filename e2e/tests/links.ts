@@ -8,7 +8,7 @@ interface response {
 }
 
 let generatedLinkId = 0;
-const short         = 'aaefeaf';
+const short         = 'ga';
 describe('Adding links', () => {
     test("Adding link", async () => {
         const res = await fetch(`${apiEndpoint}/links/`, {
