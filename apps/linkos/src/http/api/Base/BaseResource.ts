@@ -43,7 +43,7 @@ export default class BaseResource {
         const resource = await P.db(this.TABLE).where('id', id);
 
         if (!resource.length) {
-            return c.json(API.response());
+            return c.json(API.response(), 404);
         }
 
         return c.json(API.response(true, resource[0]));
@@ -64,7 +64,7 @@ export default class BaseResource {
         const resources = await query;
 
         if (!resources) {
-            return c.json(API.response(false));
+            return c.json(API.response(),404);
         }
 
         return c.json(API.response(true, Global.paginationObject(resources, Env.PAGINATION_SIZE, last_id)));
