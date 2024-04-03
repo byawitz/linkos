@@ -169,6 +169,10 @@ export default class LinkAPI {
     }
 
     private static async getLink(linkID: string) {
+        if (linkID === 'favicon.ico') {
+            return undefined
+        }
+
         linkID = linkID.replace(/\+$/, '');
 
         let shortLink: Link | undefined = undefined;
@@ -180,7 +184,6 @@ export default class LinkAPI {
             } else {
                 const link = await P.db(LinkAPI.LINKS_TABLE).where('short', linkID);
 
-                console.log(P.db(LinkAPI.LINKS_TABLE).where('short', linkID).toQuery());
                 shortLink = link[0];
                 await RedisProvider.getClient().set(linkID, JSON.stringify(shortLink));
             }
