@@ -9,7 +9,7 @@ interface response {
 
 let generatedUserID = 0;
 const fullname      = "Test User";
-describe.only('Testing Users', () => {
+describe('Testing Users', () => {
     test("Adding User", async () => {
         const res = await fetch(`${apiEndpoint}/users/`, {
             headers: {'x-linkos-token': 'token'},

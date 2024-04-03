@@ -27,3 +27,9 @@ shell WHAT='linkos':
 
 logs:
     docker compose logs
+
+test:
+    just rm
+    just start
+    sleep 5
+    cd e2e && bun test

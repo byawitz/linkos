@@ -8,7 +8,8 @@ interface response {
 }
 
 let generatedLinkId = 0;
-const short         = 'aaefeaf';
+let deletingId      = 0;
+const short         = 'gh';
 describe('Adding links', () => {
     test("Adding link", async () => {
         const res = await fetch(`${apiEndpoint}/links/`, {
@@ -37,6 +38,33 @@ describe('Adding links', () => {
         generatedLinkId = json.data.id;
     });
 
+    test("Adding link for deleting", async () => {
+        const res = await fetch(`${apiEndpoint}/links/`, {
+            headers: {'x-linkos-token': 'token'},
+            method : 'POST',
+            body   : JSON.stringify({
+                dest                : "https://github.com/",
+                description         : "GitHub",
+                short               : `${short}deleting`,
+                password            : false,
+                title               : "Testing GitHub link",
+                user_id             : "1",
+                campaign_id         : null,
+                password_protected  : false,
+                expiring_link       : false,
+                informal_redirection: false,
+                monitor             : false,
+                plus_enabled        : false,
+            },)
+        });
+
+        const json: any = await res.json();
+
+        expect(res.status).toBe(200);
+        expect(json.success).toBe(true)
+        deletingId = json.data.id;
+    });
+
     test("Adding link with password", async () => {
         const res = await fetch(`${apiEndpoint}/links/`, {
             headers: {'x-linkos-token': 'token'},
@@ -61,7 +89,6 @@ describe('Adding links', () => {
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true)
-        generatedLinkId = json.data.id;
     });
 
     test("Adding link with already passed date", async () => {
@@ -84,7 +111,6 @@ describe('Adding links', () => {
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true)
-        generatedLinkId = json.data.id;
     });
 
     test("Adding link with plus page and informal redirect", async () => {
@@ -108,7 +134,6 @@ describe('Adding links', () => {
 
         expect(res.status).toBe(200);
         expect(json.success).toBe(true)
-        generatedLinkId = json.data.id;
     });
 });
 describe('Getting links', () => {
@@ -147,14 +172,14 @@ describe('Getting links', () => {
 });
 describe('Manipulating links', () => {
     test("Updating link", async () => {
-        const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}`, {
+        const res       = await fetch(`${apiEndpoint}/links/${deletingId}`, {
             headers: {'x-linkos-token': 'token'},
             method : 'PATCH',
             body   : JSON.stringify({
-                id                  : generatedLinkId,
+                id                  : deletingId,
                 dest                : "https://github.com/",
                 description         : "GitHub",
-                short               : `${short}2aa`,
+                short               : `${short}Updated`,
                 password            : false,
                 title               : "Testing GitHub link",
                 user_id             : "1",
@@ -175,7 +200,7 @@ describe('Manipulating links', () => {
     });
 
     test("Deleting link", async () => {
-        const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}/gh`, {
+        const res       = await fetch(`${apiEndpoint}/links/${deletingId}/${short}deleting`, {
             headers: {'x-linkos-token': 'token'},
             method : 'DELETE',
         });

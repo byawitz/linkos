@@ -30,7 +30,7 @@ export default class BaseResource {
         const resource: any = await P.db(this.TABLE).returning('*').update(updatedResource).where('id', updatedResource.id);
 
         if (resource.length) {
-            await this.afterUpdate(resource);
+            await this.afterUpdate(resource[0]);
             return c.json(API.response(true, resource[0]));
         }
 
