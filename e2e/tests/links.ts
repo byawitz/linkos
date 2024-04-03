@@ -172,14 +172,14 @@ describe('Getting links', () => {
 });
 describe('Manipulating links', () => {
     test("Updating link", async () => {
-        const res       = await fetch(`${apiEndpoint}/links/${generatedLinkId}`, {
+        const res       = await fetch(`${apiEndpoint}/links/${deletingId}`, {
             headers: {'x-linkos-token': 'token'},
             method : 'PATCH',
             body   : JSON.stringify({
-                id                  : generatedLinkId,
+                id                  : deletingId,
                 dest                : "https://github.com/",
                 description         : "GitHub",
-                short               : `${short}2aa`,
+                short               : `${short}Updated`,
                 password            : false,
                 title               : "Testing GitHub link",
                 user_id             : "1",
