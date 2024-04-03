@@ -1,4 +1,4 @@
-import './basic.ts'
+// import './basic.ts'
 import './links.ts'
 import './campaigns.ts'
 import './users.ts'

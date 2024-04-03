@@ -16,7 +16,7 @@ import Links from "@/http/api/Links.ts";
 export default class LinkAPI {
     private static readonly LINKS_TABLE = 'links';
     private static producer: Producer | false;
-    private static readonly path = '/usr/server/app/src/assets/';
+    private static readonly path        = '/usr/server/app/src/assets/';
 
     public static async init() {
         LinkAPI.producer = await KafkaProvider.initProducer();
@@ -172,16 +172,20 @@ export default class LinkAPI {
         linkID = linkID.replace(/\+$/, '');
 
         let shortLink: Link | undefined = undefined;
+        const linkFormRedis             = await RedisProvider.getClient().get(linkID);
 
-        const linkFormRedis = await RedisProvider.getClient().get(linkID);
+        try {
+            if (linkFormRedis !== null) {
+                shortLink = Global.ParseOrFalse(linkFormRedis);
+            } else {
+                const link = await P.db(LinkAPI.LINKS_TABLE).where('short', linkID);
 
-        if (linkFormRedis !== null) {
-            shortLink = Global.ParseOrFalse(linkFormRedis);
-        } else {
-            const link = await P.db(LinkAPI.LINKS_TABLE).where('short', linkID);
-
-            shortLink = link[0];
-            await RedisProvider.getClient().set(linkID, JSON.stringify(shortLink));
+                console.log(P.db(LinkAPI.LINKS_TABLE).where('short', linkID).toQuery());
+                shortLink = link[0];
+                await RedisProvider.getClient().set(linkID, JSON.stringify(shortLink));
+            }
+        } catch (e: any) {
+            Log.debug(e);
         }
 
         return shortLink;
