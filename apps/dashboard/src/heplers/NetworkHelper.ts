@@ -49,8 +49,7 @@ export default class NetworkHelper {
   }
 
   public static baseUrl(appendUrl = '') {
-    const base = import.meta.env.MODE === 'development' ? 'http://localhost:8081/v1/api' : `${window.location.origin}/v1/api`;
+    const base = import.meta.env.MODE === 'development' ? 'http://localhost/v1/api' : `${window.location.origin}/v1/api`;
     return `${base}${appendUrl}`;
   }
-
 }

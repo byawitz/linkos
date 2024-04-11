@@ -27,6 +27,7 @@ import Footer from '@/components/view/Footer.vue';
 import PageWrapper from '@/components/layouts/PageWrapper.vue';
 import { isRTL, type SystemLang } from '@/locale/I18n';
 import { useI18n } from 'vue-i18n';
+import DomHelper from '@/heplers/DomHelper';
 
 const isPageLoading = ref(true);
 const store = useAppStore();
@@ -35,7 +36,7 @@ const i18n = useI18n();
 
 function setTheme(theme: SystemTheme) {
   if (theme === 'system') {
-    theme = window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    theme = DomHelper.getTheme();
   }
 
   document.querySelector('body')?.setAttribute('data-bs-theme', theme);

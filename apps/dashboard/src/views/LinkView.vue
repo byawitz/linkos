@@ -87,100 +87,41 @@
         </div>
 
         <template v-else>
-          <div class="col-md-6 col-xl-4 col-12">
-            <Card class="mt-4">
-              <CardBody>
-                <div class="d-flex">
-                  <h3 class="card-title">{{ $t('Clicks') }}</h3>
-                </div>
+          <AreaStats
+            class="mt-4"
+            :title="$t('Clicks')"
+            :categories="clicks"
+            :series="[
+              { name: t('Direct'), data: directs },
+              { name: 'QR', data: qrs }
+            ]"
+          />
 
-                <div class="row">
-                  <div class="col">
-                    <div id="clicks-chart" class="chart-lg"></div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
+          <AreaStats
+            class="mt-4"
+            :title="$t('Device Type')"
+            :categories="clicks"
+            :series="[
+              { name: t('Other'), data: unknownType },
+              { name: t('Mobile'), data: mobile },
+              { name: t('Desktop'), data: desktop }
+            ]"
+          />
 
-          <div class="col-md-6 col-xl-4 col-12">
-            <Card class="mt-4">
-              <CardBody>
-                <div class="d-flex">
-                  <h3 class="card-title">{{ $t('Device Type') }}</h3>
-                </div>
+          <AreaStats
+            class="mt-4"
+            :title="$t('Device Brand')"
+            :categories="clicks"
+            :series="[
+              { name: t('Other'), data: unknownBrand },
+              { name: t('Android'), data: android },
+              { name: t('Apple'), data: apple }
+            ]"
+          />
 
-                <div class="row">
-                  <div class="col">
-                    <div id="device-type-chart" class="chart-lg"></div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
-
-          <div class="col-md-6 col-xl-4 col-12">
-            <Card class="mt-4">
-              <CardBody>
-                <div class="d-flex">
-                  <h3 class="card-title">{{ $t('Device Brand') }}</h3>
-                </div>
-
-                <div class="row">
-                  <div class="col">
-                    <div id="device-brand-chart" class="chart-lg"></div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
-
-          <div class="col-md-6 col-xl-4 col-12">
-            <Card class="mt-4">
-              <CardBody>
-                <div class="d-flex">
-                  <h3 class="card-title">{{ $t('Countries') }}</h3>
-                </div>
-
-                <div class="row">
-                  <div class="col">
-                    <div id="countries-chart"></div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
-
-          <div class="col-md-6 col-xl-4 col-12">
-            <Card class="mt-4">
-              <CardBody>
-                <div class="d-flex">
-                  <h3 class="card-title">{{ $t('Cities') }}</h3>
-                </div>
-                <div class="row">
-                  <div class="col">
-                    <div id="cities-chart"></div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
-
-          <div class="col-md-6 col-xl-4 col-12">
-            <Card class="mt-4">
-              <CardBody>
-                <div class="d-flex">
-                  <h3 class="card-title">{{ $t('Referrers') }}</h3>
-                </div>
-
-                <div class="row">
-                  <div class="col">
-                    <div id="referrers-chart"></div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </div>
+          <TopTen class="mt-4" :title="$t('Countries')" :categories="countryNames" :series="countryCount" />
+          <TopTen class="mt-4" :title="$t('Cities')" :categories="cityNames" :series="countryCount" />
+          <TopTen class="mt-4" :title="$t('Referrers')" :categories="refererNames" :series="refererCount" />
         </template>
       </template>
     </div>
@@ -204,6 +145,8 @@ import { IconCopy, IconExternalLink } from '@tabler/icons-vue';
 import { useAppStore } from '@/stores/user';
 import ApexCharts from 'apexcharts';
 import { useI18n } from 'vue-i18n';
+import TopTen from '@/components/stats/TopTen.vue';
+import AreaStats from '@/components/stats/AreaStats.vue';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -212,7 +155,7 @@ const id = router.currentRoute.value.params.id;
 
 const days = ref(30);
 const loading = ref(true);
-const loadingAnalytics = ref(false);
+const loadingAnalytics = ref(true);
 const link = ref(new LinkModel());
 const title = computed(() => (link.value.title !== '' ? link.value.title : t('View link')));
 const store = useAppStore();
@@ -254,150 +197,6 @@ async function copyToClipboard(link: LinkModel) {
 
 function getShort(link: LinkModel) {
   return `${store.server.host}/${link.short}`;
-}
-
-function loadCharts() {
-  loadDeviceType();
-  loadDeviceBrands();
-  loadClicks();
-  loadCountries();
-  loadCities();
-  loadReferrers();
-}
-
-function loadClicks() {
-  new ApexCharts(document.querySelector('#clicks-chart'), {
-    theme: { mode: 'dark' /* TODO: by theme*/ },
-    series: [
-      {
-        name: t('Direct'),
-        data: directs.value
-      },
-      {
-        name: 'QR',
-        data: qrs.value
-      }
-    ],
-    chart: {
-      background: 'transparent',
-      type: 'area',
-      toolbar: { show: false },
-
-      height: 240,
-      zoom: { enabled: false }
-    },
-    dataLabels: { enabled: false },
-    stroke: {
-      curve: 'straight'
-    },
-    labels: clicks.value,
-    yaxis: {
-      opposite: true
-    },
-    legend: {
-      horizontalAlign: 'left'
-    }
-  }).render();
-}
-
-function loadDeviceBrands() {
-  new ApexCharts(document.getElementById('device-brand-chart'), {
-    theme: { mode: 'dark' /* TODO: by theme*/ },
-    series: [
-      { name: t('Other'), data: unknownBrand.value },
-      { name: t('Android'), data: android.value },
-      { name: t('Apple'), data: apple.value }
-    ],
-    chart: { background: 'transparent', height: 240, type: 'area', toolbar: { show: false } },
-    dataLabels: { enabled: false },
-    stroke: { curve: 'smooth' },
-    xaxis: {
-      type: 'date',
-      categories: clicks.value
-    },
-    tooltip: { x: { format: t('dd/MM/yy') } }
-  }).render();
-}
-
-function loadDeviceType() {
-  new ApexCharts(document.getElementById('device-type-chart'), {
-    theme: { mode: 'dark' /* TODO: by theme*/ },
-    series: [
-      { name: t('Other'), data: unknownType.value },
-      { name: t('Mobile'), data: mobile.value },
-      { name: t('Desktop'), data: desktop.value }
-    ],
-    chart: { background: 'transparent', height: 240, type: 'area', toolbar: { show: false } },
-    dataLabels: { enabled: false },
-    stroke: { curve: 'smooth' },
-    xaxis: {
-      type: 'date',
-      categories: clicks.value
-    },
-    tooltip: { x: { format: t('dd/MM/yy') } }
-  }).render();
-}
-
-function loadCountries() {
-  new ApexCharts(document.querySelector('#countries-chart'), {
-    theme: { mode: 'dark' /* TODO: by theme*/ },
-    series: [{ data: countryCount.value }],
-    chart: {
-      background: 'transparent',
-      type: 'bar',
-      height: 240,
-      toolbar: { show: false }
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true
-      }
-    },
-    dataLabels: {
-      enabled: true
-    },
-    xaxis: { categories: countryNames.value },
-    grid: { xaxis: { lines: { show: false } } },
-    yaxis: { axisTicks: { show: true } }
-  }).render();
-}
-
-function loadCities() {
-  new ApexCharts(document.querySelector('#cities-chart'), {
-    theme: { mode: 'dark' /* TODO: by theme*/ },
-    series: [{ data: citiesCount.value }],
-    chart: {
-      background: 'transparent',
-      type: 'bar',
-      height: 240,
-      toolbar: { show: false }
-    },
-    plotOptions: {
-      bar: {
-        borderRadius: 4,
-
-        horizontal: true
-      }
-    },
-    dataLabels: {
-      enabled: true
-    },
-    xaxis: { categories: cityNames.value }
-  }).render();
-}
-
-function loadReferrers() {
-  new ApexCharts(document.querySelector('#referrers-chart'), {
-    theme: { mode: 'dark' /* TODO: by theme*/ },
-    series: [{ data: refererCount.value }],
-
-    chart: { background: 'transparent', type: 'bar', height: 240, toolbar: { show: false } },
-    plotOptions: {
-      bar: { borderRadius: 4, horizontal: true }
-    },
-    dataLabels: { enabled: false },
-    xaxis: { categories: refererNames.value }
-  }).render();
 }
 
 async function loadAnalytics() {
@@ -478,7 +277,7 @@ async function loadAnalytics() {
     refererCount.value = _refererCount;
   }
 
-  loadCharts();
+  loadingAnalytics.value = false;
 }
 
 onMounted(async () => {
