@@ -25,7 +25,6 @@ export default class API {
 
         const api = app.route(process.env.API_ENDPOINT ?? '/v1/api');
 
-        // TODO: Load another address from settings
         api.use('*', cors({origin: 'http://localhost:5173', credentials: true,}));
         api.use('*', initAppwrite(API.appwriteSettings));
 
