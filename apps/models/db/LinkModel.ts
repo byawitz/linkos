@@ -14,6 +14,7 @@ export default class LinkModel extends BaseDBModel {
     public monitor?: boolean;
     public plus_enabled?: boolean;
     public expiring_link?: boolean;
+    public pass_parameters?: boolean;
     public password_protected?: boolean;
     public informal_redirection?: boolean;
 

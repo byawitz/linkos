@@ -43,6 +43,7 @@
 
                     <div class="mb-3">
                       <div class="form-label">{{ $t('Link options') }}</div>
+                      <SlideCheckbox :label="$t('Pass parameters')" v-model="link.pass_parameters" />
                       <SlideCheckbox :label="$t('Monitor link uptime')" v-model="link.monitor" />
                       <SlideCheckbox :label="$t('Informal redirect')" v-model="link.informal_redirection" />
                       <SlideCheckbox :label="$t('Enable Plus page')" v-model="link.plus_enabled" />
