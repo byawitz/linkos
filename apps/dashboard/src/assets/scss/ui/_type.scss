@@ -105,7 +105,11 @@ dl {
   }
 }
 
-pre {
+.log-holder{
+  height: 223px;
+  overflow-y: scroll;
+}
+pre, .log {
   padding: $pre-padding;
   background: $pre-bg;
   color: $pre-color;
