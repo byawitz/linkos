@@ -110,5 +110,12 @@
   "system-default": "System Default",
   "dark": "Dark",
   "light": "Light",
-  "no-results-for": "No results found for"
+  "no-results-for": "No results found for",
+  "Shorts": "Shorts",
+  "All links": "All links",
+  "Settings": "Settings",
+  "QR Customizer": "QR Customizer",
+  "Live Location": "Live Location",
+  "Live Clicks": "Live Clicks",
+  "Devices": "Devices"
 }

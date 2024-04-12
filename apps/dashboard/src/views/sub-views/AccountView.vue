@@ -1,5 +1,5 @@
 <template>
-  <PageHeader :title="$t('Profile')"></PageHeader>
+  <PageHeader :title="$t('Settings')"></PageHeader>
 
   <Container class="mt-4">
     <Card>
@@ -8,12 +8,15 @@
           <div class="card-body">
             <h4 class="subheader">{{ $t('basic-details') }}</h4>
             <div class="list-group list-group-transparent">
-              <RouterLink to="/profile" class="list-group-item list-group-item-action" active-class="active">{{ $t('Profile') }}</RouterLink>
+              <RouterLink to="/settings" class="list-group-item list-group-item-action" active-class="active">{{ $t('Profile') }}</RouterLink>
             </div>
 
             <h4 class="subheader mt-4">{{ $t('advance') }}</h4>
             <div class="list-group list-group-transparent">
               <RouterLink to="/tokens" class="list-group-item list-group-item-action" active-class="active">{{ $t('Tokens') }}</RouterLink>
+              <RouterLink to="/qr-customizer" class="list-group-item list-group-item-action" active-class="active">{{
+                $t('QR Customizer')
+              }}</RouterLink>
             </div>
           </div>
         </div>

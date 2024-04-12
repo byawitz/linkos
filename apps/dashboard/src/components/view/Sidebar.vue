@@ -75,9 +75,9 @@
           </template>
         </NavItem>
 
-        <NavItem :text="$t('Profile')" href="/profile">
+        <NavItem :text="$t('Settings')" href="/settings">
           <template #icon>
-            <IconUser class="icon" />
+            <IconSettings2 class="icon" />
           </template>
         </NavItem>
 
@@ -96,7 +96,7 @@ import NavBar from '@/components/view/NavBar.vue';
 import NavItem from '@/components/view/NavItem.vue';
 import {
   IconUsers,
-  IconUser,
+  IconSettings2,
   IconLogout,
   IconLink,
   IconDashboard,

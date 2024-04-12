@@ -32,7 +32,7 @@ const router = createRouter({
     { path: '/tokens', name: 'tokens', component: TokensView, meta: { authorizedOnly: true } },
     { path: '/backups', name: 'backups', component: BackupsView, meta: { authorizedOnly: true } },
     { path: '/users', name: 'users', component: UsersView, meta: { authorizedOnly: true } },
-    { path: '/profile', name: 'profile', component: ProfileView, meta: { authorizedOnly: true } }
+    { path: '/settings', name: 'settings', component: ProfileView, meta: { authorizedOnly: true } }
   ]
 });
 

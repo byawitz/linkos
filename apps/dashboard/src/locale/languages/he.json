@@ -110,5 +110,12 @@
   "system-default": "ברירת מחדל של המערכת",
   "dark": "כהה",
   "light": "בהירה",
-  "no-results-for": "לא נמצאו תוצאות עבור"
+  "no-results-for": "לא נמצאו תוצאות עבור",
+  "Shorts": "מקוצרים",
+  "All links": "כל הקישורים",
+  "Settings": "הגדרות",
+  "QR Customizer": "מעצב ה-QR",
+  "Live Location": "מיקומים בשידור חי",
+  "Live Clicks": "הקלקות בשידור חי",
+  "Devices": "מכשירים"
 }
