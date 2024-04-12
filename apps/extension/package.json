@@ -20,8 +20,8 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.1",
     "@vue/tsconfig": "^0.5.1",
-    "typescript": "^5.4.3",
-    "vue-tsc": "^2.0.7",
-    "wxt": "^0.17.11"
+    "typescript": "^5.4.4",
+    "vue-tsc": "^2.0.11",
+    "wxt": "^0.17.12"
   }
 }
