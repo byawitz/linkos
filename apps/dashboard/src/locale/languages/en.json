@@ -109,5 +109,6 @@
   "Save": "Save",
   "system-default": "System Default",
   "dark": "Dark",
-  "light": "Light"
+  "light": "Light",
+  "no-results-for": "No results found for"
 }

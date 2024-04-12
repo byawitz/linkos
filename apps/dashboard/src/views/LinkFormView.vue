@@ -39,6 +39,7 @@
 
                   <div class="col-xl-6">
                     <InputSelect :label="$t('Campaign')" v-model="link.campaign_id" :options="[]" />
+                    <TomSelect :label="$t('Tags')" v-model="tags" :options="[{ text: 'Tag', value: 'Tag' }]" />
 
                     <div class="mb-3">
                       <div class="form-label">{{ $t('Link options') }}</div>
@@ -90,6 +91,7 @@ import InputDate from '@/components/form/InputDate.vue';
 import InputSelect from '@/components/form/InputSelect.vue';
 import Container from '@/components/layouts/Container.vue';
 import { useI18n } from 'vue-i18n';
+import TomSelect from '@/components/form/TomSelect.vue';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -107,6 +109,7 @@ const link: Ref<LinkModel> = ref(new LinkModel());
 const loading = ref(isEdit.value);
 const submitting = ref(false);
 const submittedOnce = ref(false);
+const tags = ref([]);
 
 const pageTitle = computed(() => (isEdit.value ? t('Edit') : t('New link')));
 
