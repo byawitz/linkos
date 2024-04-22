@@ -43,7 +43,7 @@
     "npm-run-all2": "^6.1.1",
     "prettier": "^3.0.3",
     "typescript": "~5.4.5",
-    "vite": "^5.2.7",
+    "vite": "^5.2.10",
     "vitest": "^1.4.0",
     "vue-tsc": "^2.0.11"
   }
