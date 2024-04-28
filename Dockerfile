@@ -11,7 +11,7 @@ RUN npm ci
 
 RUN npm run build
 
-FROM oven/bun:1.1.3-debian as backendBuild
+FROM oven/bun:1.1.4-debian as backendBuild
 
 RUN mkdir -p /tmp/backend
 
@@ -22,7 +22,7 @@ COPY apps/models /tmp/models
 
 RUN bun install
 
-FROM oven/bun:1.1.3-debian
+FROM oven/bun:1.1.4-debian
 
 RUN mkdir -p /usr/server/app
 
