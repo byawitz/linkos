@@ -1,4 +1,4 @@
-FROM node:21-bookworm as dashboardBuild
+FROM node:22-bookworm as dashboardBuild
 
 RUN mkdir -p /tmp/frontend
 
