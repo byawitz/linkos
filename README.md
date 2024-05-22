@@ -13,7 +13,7 @@ Linkos is an open-source URL Shortener, packed with many useful features, realti
 **🏗 Development status:**
 
 - ✅ Idea
-- 👉 Alpha
+- 👉 Alpha!
 - 🏗 [Beta](https://github.com/byawitz/linkos/wiki/Development-phases#beta)
 - ⏳ Release
 
