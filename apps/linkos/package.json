@@ -24,7 +24,7 @@
     "kafkajs": "^2.2.4",
     "knex": "^3.1.0",
     "nanoid": "^5.0.6",
-    "node-appwrite": "^12.0.0",
+    "node-appwrite": "^13.0.0",
     "nunjucks": "^3.2.4",
     "pg": "^8.11.3",
     "redis": "^4.6.13",
