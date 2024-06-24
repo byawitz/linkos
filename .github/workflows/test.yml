@@ -104,7 +104,7 @@ jobs:
       - name: curl health
         run: curl localhost/v1/api/health
       - name: Install bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
       - name: run tests
         working-directory: ./e2e
         run: bun test
